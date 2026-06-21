@@ -1,136 +1,645 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-<title>Kurarcha Ekdant Mandal</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kurarcha Ekdant Ganesh Mandal · Mumbai 400097</title>
+<meta name="description" content="Official website of Kurarcha Ekdant Ganesh Mandal, Mumbai — aarti timings, Ganeshotsav schedule, gallery, donations and contact.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Mukta:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#2a0f0c;
+    --maroon-deep:#330d0f;
+    --maroon:#43151a;
+    --maroon-light:#5c1f24;
+    --vermillion:#c23a1f;
+    --vermillion-dim:#9c2e18;
+    --gold:#d79921;
+    --gold-light:#eec463;
+    --paper:#f3e2bd;
+    --paper-light:#faf1dc;
+    --green:#516b41;
+    --cream:#fbecd2;
+    --ink-soft:#5a3b2d;
 
-<link rel="stylesheet" href="style.css">
+    --font-display:'Yatra One', 'Noto Sans Devanagari', serif;
+    --font-body:'Mukta', 'Noto Sans Devanagari', sans-serif;
 
+    --container:1100px;
+    --radius:14px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
+  }
+
+  body{
+    margin:0;
+    font-family:var(--font-body);
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  img,svg{max-width:100%;display:block;}
+  a{color:inherit;}
+  h1,h2,h3{font-family:var(--font-display); font-weight:400; margin:0;}
+
+  a:focus-visible, button:focus-visible, [tabindex]:focus-visible{
+    outline:3px solid var(--gold-light);
+    outline-offset:3px;
+  }
+
+  .container{max-width:var(--container); margin:0 auto; padding:0 24px;}
+
+  .eyebrow{
+    font-family:var(--font-body);
+    font-weight:700;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    font-size:.74rem;
+    color:var(--gold-light);
+  }
+  section .eyebrow{color:var(--vermillion-dim);}
+
+  /* ---------- trunk curve divider ---------- */
+  .tusk-divider{width:100%; height:40px; display:block; margin:0 auto;}
+  .tusk-divider path{fill:none; stroke-width:3; stroke-linecap:round;}
+
+  /* ---------- NAV ---------- */
+  header.site-nav{
+    position:sticky; top:0; z-index:50;
+    background:var(--maroon-deep);
+    border-bottom:1px solid rgba(238,196,99,.25);
+  }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px;
+    max-width:var(--container); margin:0 auto;
+  }
+  .brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
+  .brand-mark{width:34px; height:34px; flex-shrink:0;}
+  .brand-text{font-family:var(--font-display); color:var(--cream); font-size:1.15rem; line-height:1.1;}
+  .brand-text small{display:block; font-family:var(--font-body); font-weight:600; letter-spacing:.08em; text-transform:uppercase; font-size:.58rem; color:var(--gold-light); margin-top:2px;}
+
+  nav.links{display:flex; gap:28px; list-style:none; margin:0; padding:0;}
+  nav.links a{
+    text-decoration:none; color:var(--cream); font-weight:600; font-size:.92rem;
+    position:relative; padding:4px 0;
+  }
+  nav.links a::after{
+    content:""; position:absolute; left:0; bottom:-3px; width:0; height:2px;
+    background:var(--gold); transition:width .25s ease;
+  }
+  nav.links a:hover::after, nav.links a:focus-visible::after{width:100%;}
+
+  .nav-toggle{
+    display:none; background:none; border:1px solid var(--gold-light); color:var(--cream);
+    border-radius:8px; width:42px; height:38px; cursor:pointer;
+  }
+  .nav-toggle span{display:block; width:18px; height:2px; background:var(--cream); margin:4px auto;}
+
+  @media (max-width:880px){
+    nav.links{
+      position:absolute; top:100%; left:0; right:0; background:var(--maroon-deep);
+      flex-direction:column; gap:0; padding:8px 0; max-height:0; overflow:hidden;
+      border-bottom:1px solid rgba(238,196,99,.25);
+      transition:max-height .3s ease;
+    }
+    nav.links.open{max-height:340px;}
+    nav.links a{display:block; padding:12px 24px;}
+    nav.links a::after{display:none;}
+    .nav-toggle{display:block;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    background:radial-gradient(ellipse at 30% -10%, var(--maroon-light) 0%, var(--maroon) 38%, var(--maroon-deep) 78%);
+    color:var(--cream);
+    padding:84px 24px 60px;
+    overflow:hidden;
+    text-align:center;
+  }
+  .hero-inner{max-width:760px; margin:0 auto; position:relative; z-index:2;}
+  .hero .eyebrow{display:block; margin-bottom:18px; color:var(--gold-light); font-size:.82rem;}
+  .hero h1{
+    font-size:clamp(2.1rem, 6vw, 3.6rem);
+    color:var(--cream);
+    margin-bottom:6px;
+  }
+  .hero h1 .deva{display:block; font-size:.62em; color:var(--gold-light); margin-bottom:6px;}
+  .hero .place{
+    font-weight:700; letter-spacing:.06em; text-transform:uppercase; font-size:.92rem;
+    color:var(--gold); margin-top:14px;
+  }
+  .hero p.tagline{
+    max-width:520px; margin:22px auto 0; color:rgba(251,236,210,.85); font-size:1.02rem;
+  }
+
+  .hero-curve-wrap{margin:34px auto 8px; max-width:480px;}
+  #trunk-path-hero{stroke:var(--gold); fill:none; stroke-width:3.5; stroke-linecap:round;}
+
+  .hero-ctas{
+    display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:30px;
+  }
+  .btn{
+    display:inline-block; padding:13px 26px; border-radius:999px; font-weight:700;
+    text-decoration:none; font-size:.92rem; letter-spacing:.02em; border:2px solid transparent;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{background:var(--gold); color:var(--maroon-deep);}
+  .btn-primary:hover{box-shadow:0 8px 22px rgba(215,153,33,.35);}
+  .btn-ghost{border-color:var(--gold-light); color:var(--cream);}
+
+  .countdown{
+    margin:42px auto 0; max-width:420px;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
+  }
+  .countdown .unit{
+    background:rgba(251,236,210,.06); border:1px solid rgba(238,196,99,.3);
+    border-radius:10px; padding:12px 4px;
+  }
+  .countdown .num{font-family:var(--font-display); font-size:1.5rem; color:var(--gold-light); display:block;}
+  .countdown .label{font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(251,236,210,.7);}
+  .countdown-caption{margin-top:12px; font-size:.78rem; color:rgba(251,236,210,.65);}
+
+  /* ---------- SECTION SHELL ---------- */
+  section{padding:74px 0;}
+  .section-head{max-width:620px; margin:0 0 38px;}
+  .section-head h2{font-size:clamp(1.7rem,3.4vw,2.3rem); color:var(--ink); margin-top:8px;}
+  .section-head p{color:var(--ink-soft); margin-top:12px; font-size:1rem;}
+  .section-alt{background:var(--paper-light);}
+  .section-dark{background:var(--maroon-deep); color:var(--cream);}
+  .section-dark .section-head p{color:rgba(251,236,210,.78);}
+  .section-dark .section-head h2{color:var(--cream);}
+  .section-dark .eyebrow{color:var(--gold-light);}
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:48px; align-items:center;}
+  .about-grid p + p{margin-top:14px;}
+  .about-grid p{color:var(--ink-soft);}
+  .about-art{
+    position:relative; border-radius:var(--radius); overflow:hidden;
+    background:linear-gradient(155deg, var(--vermillion) 0%, var(--vermillion-dim) 100%);
+    aspect-ratio:4/5; display:flex; align-items:center; justify-content:center;
+    clip-path:polygon(0 0,100% 0,100% 88%,84% 100%,0 100%);
+  }
+  .about-art svg{width:58%; opacity:.92;}
+  @media (max-width:880px){
+    .about-grid{grid-template-columns:1fr; gap:30px;}
+    .about-art{order:-1; max-width:340px; margin:0 auto;}
+  }
+
+  .stat-row{display:flex; gap:30px; margin-top:30px; flex-wrap:wrap;}
+  .stat-row .stat{min-width:110px;}
+  .stat .num{font-family:var(--font-display); font-size:1.9rem; color:var(--vermillion);}
+  .stat .lbl{font-size:.74rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft);}
+
+  /* ---------- AARTI / SCHEDULE ---------- */
+  .schedule-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:16px;
+  }
+  .schedule-card{
+    background:var(--cream); border:1px solid rgba(67,21,26,.12);
+    border-radius:var(--radius); padding:22px 18px; text-align:center;
+    border-top:4px solid var(--vermillion);
+  }
+  .schedule-card .time{font-family:var(--font-display); font-size:1.5rem; color:var(--vermillion); display:block;}
+  .schedule-card .name{font-weight:700; margin-top:6px; font-size:.95rem;}
+  .schedule-card .desc{font-size:.82rem; color:var(--ink-soft); margin-top:4px;}
+  @media (max-width:700px){.schedule-grid{grid-template-columns:repeat(2,1fr);}}
+
+  .special-dates{
+    margin-top:30px; background:var(--paper-light); border-radius:var(--radius);
+    padding:26px 28px; border:1px solid rgba(67,21,26,.1);
+  }
+  .special-dates h3{font-size:1.1rem; color:var(--vermillion-dim); margin-bottom:14px;}
+  .special-dates ul{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(2,1fr); gap:12px 24px;}
+  .special-dates li{display:flex; justify-content:space-between; gap:10px; font-size:.92rem; border-bottom:1px dashed rgba(67,21,26,.18); padding-bottom:8px;}
+  .special-dates li b{font-weight:700;}
+  .special-dates .note{font-size:.76rem; color:var(--ink-soft); margin-top:14px;}
+  @media (max-width:600px){.special-dates ul{grid-template-columns:1fr;}}
+
+  /* ---------- GALLERY ---------- */
+  .gallery-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:16px;
+  }
+  .gallery-item{
+    aspect-ratio:1/1; border-radius:var(--radius); position:relative; overflow:hidden;
+    background:linear-gradient(150deg, var(--maroon-light), var(--maroon));
+    display:flex; align-items:center; justify-content:center; color:rgba(251,236,210,.55);
+    font-size:.8rem; font-weight:600; text-align:center; padding:14px;
+  }
+  .gallery-item:nth-child(3n+2){background:linear-gradient(150deg, var(--vermillion), var(--vermillion-dim));}
+  .gallery-item:nth-child(3n){background:linear-gradient(150deg, #8a6a1f, var(--green)); }
+  .gallery-item:nth-child(2),.gallery-item:nth-child(5){clip-path:polygon(0 0,100% 0,100% 100%,18% 100%,0 78%);}
+  @media (max-width:700px){.gallery-grid{grid-template-columns:repeat(2,1fr);}}
+
+  /* ---------- DONATION ---------- */
+  .donate-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
+  .tier{
+    background:rgba(251,236,210,.06); border:1px solid rgba(238,196,99,.28);
+    border-radius:var(--radius); padding:24px 18px; text-align:center;
+  }
+  .tier .modak{width:34px; height:34px; margin:0 auto 12px;}
+  .tier .amt{font-family:var(--font-display); font-size:1.3rem; color:var(--gold-light); display:block;}
+  .tier .tname{font-weight:700; font-size:.86rem; margin-top:4px;}
+  @media (max-width:880px){.donate-grid{grid-template-columns:repeat(2,1fr);}}
+
+  .donate-details{
+    margin-top:36px; display:grid; grid-template-columns:1fr 1fr; gap:20px;
+    background:rgba(251,236,210,.06); border:1px solid rgba(238,196,99,.28);
+    border-radius:var(--radius); padding:26px 28px;
+  }
+  .donate-details div h4{margin:0 0 8px; color:var(--gold-light); font-size:.82rem; letter-spacing:.06em; text-transform:uppercase; font-family:var(--font-body); font-weight:700;}
+  .donate-details div p{margin:0; font-size:.95rem; color:rgba(251,236,210,.88);}
+  @media (max-width:700px){.donate-details{grid-template-columns:1fr;}}
+
+  /* ---------- COMMITTEE ---------- */
+  .committee-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:24px;}
+  .member{text-align:center;}
+  .member .avatar{
+    width:96px; height:96px; border-radius:50%; margin:0 auto 14px;
+    background:linear-gradient(160deg, var(--gold-light), var(--gold));
+    display:flex; align-items:center; justify-content:center;
+    border:3px solid var(--vermillion);
+  }
+  .member .avatar svg{width:46%;}
+  .member .mname{font-weight:700; font-size:.96rem;}
+  .member .role{font-size:.78rem; color:var(--vermillion-dim); font-weight:600; letter-spacing:.04em; text-transform:uppercase; margin-top:2px;}
+  @media (max-width:700px){.committee-grid{grid-template-columns:repeat(2,1fr);}}
+
+  /* ---------- CONTACT ---------- */
+  .contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:40px;}
+  .contact-info dl{margin:0;}
+  .contact-info dt{font-size:.74rem; letter-spacing:.08em; text-transform:uppercase; color:var(--gold-light); margin-top:20px;}
+  .contact-info dt:first-child{margin-top:0;}
+  .contact-info dd{margin:4px 0 0; font-size:1rem; color:var(--cream);}
+  .map-frame{border-radius:var(--radius); overflow:hidden; border:1px solid rgba(238,196,99,.3); min-height:280px;}
+  .map-frame iframe{width:100%; height:100%; min-height:280px; border:0; display:block;}
+  @media (max-width:880px){.contact-grid{grid-template-columns:1fr;}}
+
+  footer{
+    background:var(--maroon-deep); color:rgba(251,236,210,.6);
+    text-align:center; padding:30px 24px; font-size:.84rem;
+    border-top:1px solid rgba(238,196,99,.2);
+  }
+  footer .foot-mark{font-family:var(--font-display); color:var(--gold-light); font-size:1rem; display:block; margin-bottom:6px;}
+
+  /* reveal on scroll */
+  .reveal{opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1; transform:none;}
+  @media (prefers-reduced-motion: reduce){.reveal{opacity:1; transform:none;}}
+</style>
 </head>
-
-
 <body>
 
-<header>
+<!-- shared SVG defs -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <path id="trunk-curve" d="M5,30 C 45,2 95,58 140,28 C 175,4 230,46 280,22"></path>
+    <symbol id="icon-modak" viewBox="0 0 48 48">
+      <path d="M24 6c8 4 14 12 14 22 0 9-6 14-14 14S10 37 10 28c0-10 6-18 14-22z" fill="currentColor"/>
+      <path d="M24 6c2 3 3 7 3 10s-1 5-3 5-3-2-3-5 1-7 3-10z" fill="#fff" opacity=".55"/>
+    </symbol>
+    <symbol id="icon-ganesha" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-width="2" opacity=".5"/>
+      <path d="M50 20c-9 0-16 7-16 16 0 6 3 11 8 14-7 2-13 8-13 16 0 9 9 16 21 16s21-7 21-16c0-8-6-14-13-16 5-3 8-8 8-14 0-9-7-16-16-16z" fill="currentColor" opacity=".85"/>
+      <path d="M50 50c4 6 4 14 0 20-3-6-3-14 0-20z" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
 
-<h1>🙏 Kurarcha Ekdant Mandal 🙏</h1>
-
-<p>Ganpati Bappa Morya</p>
-
-<nav>
-<a href="#about">About</a>
-<a href="#events">Events</a>
-<a href="#gallery">Gallery</a>
-<a href="#contact">Contact</a>
-</nav>
-
+<header class="site-nav">
+  <div class="nav-inner">
+    <a href="#top" class="brand">
+      <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="24" cy="24" r="22" fill="none" stroke="#d79921" stroke-width="2"/>
+        <use href="#icon-ganesha" width="30" height="30" x="9" y="9" style="color:#eec463"></use>
+      </svg>
+      <span class="brand-text">Kurarcha Ekdant
+        <small>Ganesh Mandal · Mumbai</small>
+      </span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#aarti">Aarti &amp; Schedule</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#donate">Donate</a></li>
+      <li><a href="#committee">Committee</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
 </header>
 
+<main id="top">
 
-<section id="home">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <span class="eyebrow">॥ श्री गणेशाय नमः ॥</span>
+      <h1><span class="deva">कुरारचा एकदंत गणेश मंडळ</span>Kurarcha Ekdant Ganesh Mandal</h1>
+      <div class="place">Mumbai · 400097</div>
+      <p class="tagline">A neighbourhood Ganeshotsav, run by volunteers, for ten days every year — built on devotion, daily aarti and community seva. This year, Bappa returns home once again.</p>
 
-<h2>Welcome</h2>
+      <div class="hero-curve-wrap">
+        <svg class="tusk-divider" viewBox="0 0 280 60" aria-hidden="true">
+          <use id="trunk-path-hero" href="#trunk-curve" x="0" y="14"></use>
+        </svg>
+      </div>
 
-<p>
-Welcome to Kurarcha Ekdant Mandal.
-A place of devotion, unity and culture.
-</p>
+      <div class="hero-ctas">
+        <a href="#aarti" class="btn btn-primary">Aarti Timings</a>
+        <a href="#donate" class="btn btn-ghost">Contribute</a>
+      </div>
 
-</section>
+      <div class="countdown" id="countdown" aria-label="Countdown to Ganesh Chaturthi 2026">
+        <div class="unit"><span class="num" id="cd-days">--</span><span class="label">Days</span></div>
+        <div class="unit"><span class="num" id="cd-hours">--</span><span class="label">Hours</span></div>
+        <div class="unit"><span class="num" id="cd-min">--</span><span class="label">Mins</span></div>
+        <div class="unit"><span class="num" id="cd-sec">--</span><span class="label">Secs</span></div>
+      </div>
+      <p class="countdown-caption">until Ganesh Chaturthi · Monday, 14 September 2026</p>
+    </div>
+  </section>
 
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid reveal">
+        <div>
+          <span class="eyebrow">Our story</span>
+          <h2>Ten days of Bappa, all year of seva</h2>
+          <p>Kurarcha Ekdant Ganesh Mandal began as a small chowk celebration among a handful of families in the neighbourhood and has grown into a full Ganeshotsav — daily aarti, cultural programs, annadan, and a Visarjan procession that brings the whole gully together. <em>(Replace this paragraph with your mandal's real founding year and story.)</em></p>
+          <p>Everything is organised by volunteers: pandal setup, decoration, prasad, security, and cleanup. The mandal also runs a small community fund through the year for local seva — from blood donation camps to festival-season cleanup drives.</p>
+          <div class="stat-row">
+            <div class="stat"><span class="num">10</span><span class="lbl">Days of Utsav</span></div>
+            <div class="stat"><span class="num">4</span><span class="lbl">Daily Aartis</span></div>
+            <div class="stat"><span class="num">100%</span><span class="lbl">Volunteer-run</span></div>
+          </div>
+        </div>
+        <div class="about-art">
+          <svg viewBox="0 0 100 100" aria-hidden="true" style="color:#fbecd2"><use href="#icon-ganesha"/></svg>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- AARTI / SCHEDULE -->
+  <section id="aarti" class="section-alt">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Daily darshan</span>
+        <h2>Aarti &amp; Ganeshotsav schedule</h2>
+        <p>Darshan is open to all through the day. Daily aartis are as below — timings may shift slightly on Sthapana and Visarjan days.</p>
+      </div>
 
-<section id="about">
+      <div class="schedule-grid reveal">
+        <div class="schedule-card">
+          <span class="time">6:30 AM</span>
+          <div class="name">Kakad Aarti</div>
+          <div class="desc">Morning wake-up aarti</div>
+        </div>
+        <div class="schedule-card">
+          <span class="time">12:30 PM</span>
+          <div class="name">Madhyahna Naivedya</div>
+          <div class="desc">Midday offering</div>
+        </div>
+        <div class="schedule-card">
+          <span class="time">7:30 PM</span>
+          <div class="name">Sandhya Aarti</div>
+          <div class="desc">Evening aarti, open darshan</div>
+        </div>
+        <div class="schedule-card">
+          <span class="time">10:00 PM</span>
+          <div class="name">Shej Aarti</div>
+          <div class="desc">Night aarti, pandal closes</div>
+        </div>
+      </div>
 
-<h2>About Mandal</h2>
+      <div class="special-dates reveal">
+        <h3>Ganeshotsav 2026 — key dates</h3>
+        <ul>
+          <li><span>Ganesh Sthapana</span><b>Mon, 14 Sept 2026</b></li>
+          <li><span>Maha Aarti (weekends)</span><b>Sat &amp; Sun, 7:30 PM</b></li>
+          <li><span>Cultural programs</span><b>16–22 Sept 2026</b></li>
+          <li><span>Anant Chaturdashi · Visarjan</span><b>~23 Sept 2026</b></li>
+        </ul>
+        <p class="note">Dates follow the Bhadrapada Shukla Chaturthi tithi and are confirmed closer to the festival against the local Panchang — please treat the Visarjan date as provisional until the mandal's final announcement.</p>
+      </div>
+    </div>
+  </section>
 
-<p>
-Kurarcha Ekdant Mandal celebrates
-Ganesh Chaturthi with devotion,
-cultural programs and community unity.
-</p>
+  <!-- GALLERY -->
+  <section id="gallery">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Moments</span>
+        <h2>Gallery</h2>
+        <p>Photos from past Ganeshotsav celebrations — Sthapana, daily aarti, cultural nights and Visarjan. Swap these placeholders with your own photos.</p>
+      </div>
+      <div class="gallery-grid reveal">
+        <div class="gallery-item">Sthapana<br>day photo</div>
+        <div class="gallery-item">Evening<br>aarti</div>
+        <div class="gallery-item">Cultural<br>program</div>
+        <div class="gallery-item">Decoration<br>&amp; pandal</div>
+        <div class="gallery-item">Visarjan<br>procession</div>
+        <div class="gallery-item">Volunteer<br>team</div>
+      </div>
+    </div>
+  </section>
 
-</section>
+  <!-- DONATE -->
+  <section id="donate" class="section-dark">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Vargani / contribution</span>
+        <h2>Support the mandal</h2>
+        <p>The mandal runs entirely on community contributions. Every vargani — big or small — goes toward the idol, decoration, prasad and local seva activities.</p>
+      </div>
 
+      <div class="donate-grid reveal">
+        <div class="tier">
+          <svg class="modak" viewBox="0 0 48 48" style="color:#eec463"><use href="#icon-modak"/></svg>
+          <span class="amt">₹501</span>
+          <div class="tname">Bhakt Sahayog</div>
+        </div>
+        <div class="tier">
+          <svg class="modak" viewBox="0 0 48 48" style="color:#eec463"><use href="#icon-modak"/></svg>
+          <span class="amt">₹1,101</span>
+          <div class="tname">Mahaprasad Sahayog</div>
+        </div>
+        <div class="tier">
+          <svg class="modak" viewBox="0 0 48 48" style="color:#eec463"><use href="#icon-modak"/></svg>
+          <span class="amt">₹2,100</span>
+          <div class="tname">Pradhan Donor</div>
+        </div>
+        <div class="tier">
+          <svg class="modak" viewBox="0 0 48 48" style="color:#eec463"><use href="#icon-modak"/></svg>
+          <span class="amt">₹5,100+</span>
+          <div class="tname">Mukhya Pratishthan</div>
+        </div>
+      </div>
 
+      <div class="donate-details reveal">
+        <div>
+          <h4>UPI</h4>
+          <p>kurarcha.ekdant@upi <em>(replace with your actual UPI ID)</em></p>
+        </div>
+        <div>
+          <h4>Bank transfer</h4>
+          <p>Account name, number, IFSC &amp; bank branch — add your mandal's trust/committee bank details here.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<section id="events">
-<section id="countdown">
+  <!-- COMMITTEE -->
+  <section id="committee" class="section-alt">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Karyakarini</span>
+        <h2>Committee</h2>
+        <p>The volunteers who organise Ganeshotsav each year. Replace these with your committee's actual names and photos.</p>
+      </div>
+      <div class="committee-grid reveal">
+        <div class="member">
+          <div class="avatar"><svg viewBox="0 0 100 100" style="color:#43151a"><use href="#icon-ganesha"/></svg></div>
+          <div class="mname">Committee Member Name</div>
+          <div class="role">President</div>
+        </div>
+        <div class="member">
+          <div class="avatar"><svg viewBox="0 0 100 100" style="color:#43151a"><use href="#icon-ganesha"/></svg></div>
+          <div class="mname">Committee Member Name</div>
+          <div class="role">Secretary</div>
+        </div>
+        <div class="member">
+          <div class="avatar"><svg viewBox="0 0 100 100" style="color:#43151a"><use href="#icon-ganesha"/></svg></div>
+          <div class="mname">Committee Member Name</div>
+          <div class="role">Treasurer</div>
+        </div>
+        <div class="member">
+          <div class="avatar"><svg viewBox="0 0 100 100" style="color:#43151a"><use href="#icon-ganesha"/></svg></div>
+          <div class="mname">Committee Member Name</div>
+          <div class="role">Karyakarta</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<h2>Ganpati Arrival Countdown</h2>
+  <!-- CONTACT -->
+  <section id="contact" class="section-dark">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Visit / reach us</span>
+        <h2>Contact</h2>
+      </div>
+      <div class="contact-grid reveal">
+        <div class="contact-info">
+          <dl>
+            <dt>Mandal location</dt>
+            <dd>Kurarcha, Mumbai – 400097</dd>
+            <dt>Phone</dt>
+            <dd>+91 XXXXX XXXXX <em style="opacity:.6">(add committee contact number)</em></dd>
+            <dt>Email</dt>
+            <dd>info@kurarchaekdant.org <em style="opacity:.6">(replace with real email)</em></dd>
+            <dt>Follow</dt>
+            <dd>Instagram · Facebook <em style="opacity:.6">(add your handles)</em></dd>
+          </dl>
+        </div>
+        <div class="map-frame">
+          <iframe
+            title="Map showing Mumbai 400097"
+            loading="lazy"
+            src="https://www.google.com/maps?q=Mumbai+400097&output=embed">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<h1 id="timer">Loading...</h1>
-
-</section>
-<h2>Upcoming Events</h2>
-
-<ul>
-
-<li>Ganpati Sthapana</li>
-
-<li>Aarti & Bhajan</li>
-
-<li>Cultural Programs</li>
-
-<li>Visarjan Ceremony</li>
-
-</ul>
-
-</section>
-
-
-
-<section id="gallery">
-
-<h2>Gallery</h2>
-
-<div class="gallery">
-
-<img src="ganpati.png">
-<img src="ganpati1.jpg">
-<img src="ganpati2.jpg">
-
-</div>
-
-</section>
-
-<h2>Gallery</h2>
-
-<p>
-Ganpati photos and event memories will be added here.
-</p>
-
-</section>
-
-
-
-<section id="home" class="hero">
-
-
-<h2>Welcome to Kurarcha Ekdant Mandal</h2>
-
-<p>
-A place of devotion, unity and culture.
-Ganpati Bappa Morya 🙏
-</p>
-
-<button>Explore Mandal</button>
-
-</section>
-
-
+</main>
 
 <footer>
-
-<p>
-© 2026 Kurarcha Ekdant Mandal
-</p>
-
+  <span class="foot-mark">गणपती बाप्पा मोरया</span>
+  <div>© <span id="year"></span> Kurarcha Ekdant Ganesh Mandal · Mumbai 400097</div>
 </footer>
 
-<script src="script.js"></script>
+<script>
+  // mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open);
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', false);
+  }));
+
+  // footer year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // hero trunk-curve draw-on animation
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const heroPath = document.getElementById('trunk-path-hero');
+  if (heroPath && !reduceMotion) {
+    try {
+      const len = heroPath.getTotalLength();
+      heroPath.style.strokeDasharray = len;
+      heroPath.style.strokeDashoffset = len;
+      heroPath.style.transition = 'stroke-dashoffset 1.8s ease-out';
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        heroPath.style.strokeDashoffset = '0';
+      }));
+    } catch (e) {}
+  }
+
+  // scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el => io.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('in'));
+  }
+
+  // countdown to Ganesh Chaturthi 2026 (14 Sept 2026, 00:00 IST)
+  const target = new Date('2026-09-14T00:00:00+05:30').getTime();
+  function tick() {
+    const now = Date.now();
+    const diff = Math.max(0, target - now);
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-days').textContent = d;
+    document.getElementById('cd-hours').textContent = String(h).padStart(2, '0');
+    document.getElementById('cd-min').textContent = String(m).padStart(2, '0');
+    document.getElementById('cd-sec').textContent = String(s).padStart(2, '0');
+  }
+  tick();
+  setInterval(tick, 1000);
+</script>
 
 </body>
-
 </html>
