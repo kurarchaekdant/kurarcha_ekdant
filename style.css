@@ -1,0 +1,225 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+
+body{
+
+    background:#fff7e6;
+    color:#333;
+
+}
+
+
+header{
+
+    background:linear-gradient(135deg,#ff9933,#ffcc66);
+
+    padding:40px 20px;
+
+    text-align:center;
+
+    color:white;
+
+}
+
+
+header h1{
+
+    font-size:32px;
+
+}
+
+
+header p{
+
+    font-size:20px;
+
+    margin-top:10px;
+
+}
+
+
+nav{
+
+    margin-top:25px;
+
+}
+
+
+nav a{
+
+    color:white;
+
+    text-decoration:none;
+
+    margin:10px;
+
+    font-weight:bold;
+
+}
+
+
+
+section{
+
+    padding:30px 20px;
+
+    text-align:center;
+
+}
+
+
+
+h2{
+
+    color:#d35400;
+
+    margin-bottom:15px;
+
+}
+
+
+
+ul{
+
+    list-style:none;
+
+}
+
+
+li{
+
+    background:white;
+
+    margin:10px;
+
+    padding:15px;
+
+    border-radius:10px;
+
+}
+
+
+
+footer{
+
+    background:#333;
+
+    color:white;
+
+    text-align:center;
+
+    padding:15px;
+
+}
+.hero{
+
+    padding:40px 20px;
+
+}
+
+
+.hero png{
+
+    width:90%;
+
+    max-width:400px;
+
+    border-radius:20px;
+
+    margin-bottom:20px;
+
+}
+
+
+
+.hero button{
+
+    margin-top:20px;
+
+    padding:12px 25px;
+
+    border:none;
+
+    border-radius:25px;
+
+    background:#ff9933;
+
+    color:white;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+}
+
+
+
+.hero button:hover{
+
+    background:#d35400;
+
+}
+
+.hero{
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+    url('images/ganpati.png');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 60px 20px;
+    border-radius: 0 0 30px 30px;
+}
+
+.hero img{
+    display:none;
+}
+
+.hero h2{
+    font-size: 28px;
+    margin-top: 20px;
+}
+
+.hero p{
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.hero button{
+    margin-top: 20px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    background: #ff9933;
+    color: white;
+    font-size: 16px;
+}
+
+.gallery{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    padding: 20px;
+}
+
+.gallery img{
+    width: 100%;
+    border-radius: 10px;
+    height: 120px;
+    object-fit: cover;
+}
+#countdown{
+    background:#ff9933;
+    color:white;
+    padding:30px;
+    text-align:center;
+}
+
+#timer{
+    font-size:30px;
+    margin-top:10px;
+}
