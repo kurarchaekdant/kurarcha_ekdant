@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kurarcha Ekdant · Mumbai 400097</title>
-<meta name="description" content="Official website of Kurarcha Ekdant, Mumbai — aarti timings, Ganeshotsav schedule, gallery, donations and contact.">
+<meta name="description" content="Official Website of Kurarcha Ekdant, Malad — East, Mumbai — 400097">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Mukta:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -83,40 +83,11 @@
     padding:14px 24px;
     max-width:var(--container); margin:0 auto;
   }
-  .brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
-  .brand-mark{width:34px; height:34px; flex-shrink:0;}
+  .brand{display:flex; align-items:center; gap:-5px; text-decoration:none; margin-left:-20px;}
+  .brand-mark{width:65px; height:65px; flex-shrink:0;}
   .brand-text{font-family:var(--font-display); color:var(--cream); font-size:1.15rem; line-height:1.1;}
   .brand-text small{display:block; font-family:var(--font-body); font-weight:600; letter-spacing:.08em; text-transform:uppercase; font-size:.58rem; color:var(--gold-light); margin-top:2px;}
 
-  nav.links{display:flex; gap:28px; list-style:none; margin:0; padding:0;}
-  nav.links a{
-    text-decoration:none; color:var(--cream); font-weight:600; font-size:.92rem;
-    position:relative; padding:4px 0;
-  }
-  nav.links a::after{
-    content:""; position:absolute; left:0; bottom:-3px; width:0; height:2px;
-    background:var(--gold); transition:width .25s ease;
-  }
-  nav.links a:hover::after, nav.links a:focus-visible::after{width:100%;}
-
-  .nav-toggle{
-    display:none; background:none; border:1px solid var(--gold-light); color:var(--cream);
-    border-radius:8px; width:42px; height:38px; cursor:pointer;
-  }
-  .nav-toggle span{display:block; width:18px; height:2px; background:var(--cream); margin:4px auto;}
-
-  @media (max-width:880px){
-    nav.links{
-      position:absolute; top:100%; left:0; right:0; background:var(--maroon-deep);
-      flex-direction:column; gap:0; padding:8px 0; max-height:0; overflow:hidden;
-      border-bottom:1px solid rgba(238,196,99,.25);
-      transition:max-height .3s ease;
-    }
-    nav.links.open{max-height:340px;}
-    nav.links a{display:block; padding:12px 24px;}
-    nav.links a::after{display:none;}
-    .nav-toggle{display:block;}
-  }
 
   /* ---------- HERO ---------- */
   .hero{
@@ -298,6 +269,22 @@
   .reveal{opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease;}
   .reveal.in{opacity:1; transform:none;}
   @media (prefers-reduced-motion: reduce){.reveal{opacity:1; transform:none;}}
+  
+#navLinks li a{
+  display:block;
+  padding:13px 24px;
+  text-decoration:none;
+  color:#fbecd2;
+  font-weight:600;
+  font-size:.95rem;
+  border-bottom:1px solid rgba(238,196,99,.08);
+}
+#navLinks li a:hover{
+  background:rgba(238,196,99,.08);
+}
+#navLinks li{
+  list-style:none;
+}
 </style>
 </head>
 <body>
@@ -320,22 +307,25 @@
 
 <header class="site-nav">
   <div class="nav-inner">
-    <a href="#top" class="brand">
-      <img class="brand-mark" src="logo-nav.png" alt="Kurarcha Ekdant Ganesh Mandal logo">
+  <a href="#top" class="brand">
+      <img class="brand-mark" src="images/logo-nav.png" alt="Kurarcha Ekdant Ganesh Mandal logo">
       <span class="brand-text">Kurarcha Ekdant
-        <small>Ganesh Mandal · Mumbai</small>
+        <small>Mumbai - 400 097</small>
       </span>
     </a>
-    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
-    <ul class="links" id="navLinks">
+    <button id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle menu" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:transparent;border:1.5px solid #eec463;border-radius:6px;width:38px;height:34px;cursor:pointer;padding:0;flex-shrink:0;">
+  <span style="display:block;width:18px;height:2px;background:#eec463;border-radius:2px;"></span>
+  <span style="display:block;width:18px;height:2px;background:#eec463;border-radius:2px;"></span>
+  <span style="display:block;width:18px;height:2px;background:#eec463;border-radius:2px;"></span>
+</button>
+<ul id="navLinks" style="display:none;position:absolute;top:100%;left:0;right:0;background:#330d0f;flex-direction:column;list-style:none;margin:0;padding:8px 0;border-bottom:1px solid rgba(238,196,99,.3);z-index:999;">
       <li><a href="#about">About</a></li>
       <li><a href="#aarti">Aarti &amp; Schedule</a></li>
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#donate">Donate</a></li>
       <li><a href="#committee">Committee</a></li>
       <li><a href="#contact">Contact</a></li>
+      <li><a href="admin-login.html">Admin Login</a></li>
     </ul>
   </div>
 </header>
@@ -345,10 +335,10 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-inner">
-      <img class="hero-logo" src="logo-512.png" alt="Kurarcha Ekdant Ganesh Mandal emblem">
+      <img class="hero-logo" src="images/logo-512.png" alt="Kurarcha Ekdant Ganesh Mandal emblem">
       <span class="eyebrow">॥ श्री गणेशाय नमः ॥</span>
       <h1><span class="deva">शिवाजी नगर सार्वजनिक गणेशोत्सव मंडळ</span>कुरारचा एकदंत</h1> 
-      <div class="place">——  Mumbai · 400097  ——</div>
+      <div class="place">——   Mumbai · 400097   ——</div>
       <p class="tagline">श्रद्धा आणि एकतेचा पवित्र उत्सव.</br>
 प्रत्येक हृदय बाप्पासाठी एकत्र येते
 भक्ती,</br>  संस्कृती आणि आनंदाचे दहा दिवस.</p>
@@ -381,8 +371,8 @@
         <div>
           <span class="eyebrow">Our story</span>
           <h2>Ten days of Bappa, all year of seva</h2>
-          <p>Kurarcha Ekdant Ganesh Mandal began as a small chowk celebration among a handful of families in the neighbourhood and has grown into a full Ganeshotsav — daily aarti, cultural programs, annadan, and a Visarjan procession that brings the whole gully together. <em>(Replace this paragraph with your mandal's real founding year and story.)</em></p>
-          <p>Everything is organised by volunteers: pandal setup, decoration, prasad, security, and cleanup. The mandal also runs a small community fund through the year for local seva — from blood donation camps to festival-season cleanup drives.</p>
+          <p>Since 1975, our Mandal has been a symbol of devotion, unity, and cultural heritage, proudly completing 52 years of a journey built on faith and community spirit. Founded with a vision to bring people together through the blessings of Lord Ganesh, our Mandal has grown from a humble beginning into a cherished tradition embraced by generations.</p>
+          <p>Over the years, we have continued to preserve the values of Ganeshotsav through devotion, cultural celebrations, and dedicated community service. This 52-year legacy stands as a testament to the commitment of our volunteers, the blessings of Bappa, and the love and support of every devotee who has been a part of our journey. We continue to move forward with the same dedication, carrying our traditions into the future.</p>
           <div class="stat-row">
             <div class="stat"><span class="num">10</span><span class="lbl">Days of Utsav</span></div>
             <div class="stat"><span class="num">4</span><span class="lbl">Daily Aartis</span></div>
@@ -390,7 +380,7 @@
           </div>
         </div>
         <div class="about-art">
-  <img src="ganpati.png" alt="Ganesha">
+  <img src="images/ganpati.png" alt="Ganesha">
 </div>
       </div>
     </div>
@@ -511,7 +501,7 @@
       <div class="section-head reveal">
         <span class="eyebrow">Karyakarini</span>
         <h2>Committee</h2>
-        <p>The volunteers who organise Ganeshotsav each year. Replace these with your committee's actual names and photos.</p>
+        <p>The volunteers who organise Ganeshotsav each year.</p>
       </div>
       <div class="committee-grid reveal">
         <div class="member">
@@ -549,13 +539,21 @@
         <div class="contact-info">
           <dl>
             <dt>Mandal location</dt>
-            <dd>Shivaji Nagar, Kurar Village, Malad - East, Mumbai – 400097</dd>
+            <dd>Shivaji Nagar, Kurar Village, Malad– East, Mumbai– 400 097</dd>
             <dt>Phone</dt>
             <dd>+91 XXXXX XXXXX <em style="opacity:.6">(add committee contact number)</em></dd>
             <dt>Email</dt>
             <dd>kurar.cha.ekdant2026@gmail.com <em style="opacity:.6"></em></dd>
             <dt>Follow</dt>
-            <dd>Instagram · Facebook <em style="opacity:.6">https://www.instagram.com/kurarcha_ekdant?igsh=MWRiaGFrcWF3ZDdhbg==</em></dd>
+<dd>
+  <a href="https://www.instagram.com/kurarcha_ekdant?igsh=MWRiaGFrcWF3ZDdhbg==" target="_blank">
+    Instagram
+  </a>
+  ·
+  <a href="https://www.facebook.com/kurarcha.ekdant" target="_blank">
+    Facebook
+  </a>
+</dd>
           </dl>
         </div>
         <div class="map-frame">
@@ -573,21 +571,34 @@
 
 <footer>
   <span class="foot-mark">गणपती बाप्पा मोरया</span>
-  <div>© <span id="year"></span> Kurarcha Ekdant Ganesh Mandal · Mumbai 400097</div>
+  <div>© <span id="year"></span> Kurarcha Ekdant  ·  All Rights Reserved</div>
 </footer>
 
 <script>
   // mobile nav toggle
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');
-  navToggle.addEventListener('click', () => {
-    const open = navLinks.classList.toggle('open');
-    navToggle.setAttribute('aria-expanded', open);
-  });
-  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    navLinks.classList.remove('open');
-    navToggle.setAttribute('aria-expanded', false);
-  }));
+  const navSpans = navToggle.querySelectorAll('span');
+let navOpen = false;
+
+function setHamburgerColor(open) {
+  const color = open ? '#d79921' : '#eec463';
+  navToggle.style.borderColor = color;
+  navSpans.forEach(s => s.style.background = color);
+}
+
+navToggle.addEventListener('click', () => {
+  navOpen = !navOpen;
+  navLinks.style.display = navOpen ? 'flex' : 'none';
+  navToggle.setAttribute('aria-expanded', navOpen);
+  setHamburgerColor(navOpen);
+});
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  navOpen = false;
+  navLinks.style.display = 'none';
+  navToggle.setAttribute('aria-expanded', false);
+  setHamburgerColor(false);
+}));
 
   // footer year
   document.getElementById('year').textContent = new Date().getFullYear();
