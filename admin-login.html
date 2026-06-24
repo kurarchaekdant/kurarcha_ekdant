@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login · Kurarcha Ekdant Ganesh Mandal</title>
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Mukta:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --maroon-deep:#330d0f;
+    --maroon:#43151a;
+    --maroon-light:#5c1f24;
+    --vermillion:#c23a1f;
+    --gold:#d79921;
+    --gold-light:#eec463;
+    --cream:#fbecd2;
+    --ink-soft:#5a3b2d;
+    --paper:#f3e2bd;
+    --error:#e05252;
+    --success:#4caf7d;
+  }
+
+  * { box-sizing:border-box; margin:0; padding:0; }
+
+  body {
+    font-family:'Mukta', sans-serif;
+    background:var(--maroon-deep);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* Background decorative circles */
+  body::before {
+    content:'';
+    position:fixed;
+    width:600px; height:600px;
+    border-radius:50%;
+    border:1px solid rgba(238,196,99,.06);
+    top:-200px; left:-200px;
+    pointer-events:none;
+  }
+  body::after {
+    content:'';
+    position:fixed;
+    width:500px; height:500px;
+    border-radius:50%;
+    border:1px solid rgba(238,196,99,.06);
+    bottom:-180px; right:-150px;
+    pointer-events:none;
+  }
+
+  /* Card */
+  .login-card {
+    background:linear-gradient(160deg, #3d1015 0%, var(--maroon-deep) 100%);
+    border:1px solid rgba(238,196,99,.25);
+    border-radius:20px;
+    padding:44px 40px 38px;
+    width:100%;
+    max-width:420px;
+    box-shadow:0 24px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(238,196,99,.08);
+    position:relative;
+    z-index:1;
+  }
+
+  /* Top gold line accent */
+  .login-card::before {
+    content:'';
+    position:absolute;
+    top:0; left:40px; right:40px;
+    height:2px;
+    background:linear-gradient(to right, transparent, var(--gold), transparent);
+    border-radius:999px;
+  }
+
+  /* Header */
+  .card-header {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+    margin-bottom:32px;
+    text-align:center;
+  }
+
+  .logo-wrap {
+    width:64px; height:64px;
+    border-radius:50%;
+    border:2px solid var(--gold);
+    padding:3px;
+    box-shadow:0 0 20px rgba(215,153,33,.4);
+  }
+  .logo-wrap img {
+    width:100%; height:100%;
+    border-radius:50%;
+    object-fit:contain;
+  }
+
+  .card-header h1 {
+    font-family:'Yatra One', serif;
+    font-size:1.35rem;
+    color:var(--cream);
+    line-height:1.2;
+  }
+  .card-header p {
+    font-size:.78rem;
+    color:var(--gold-light);
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    font-weight:700;
+  }
+  .card-header .subtitle {
+    display:inline-block;
+    font-size:.65rem;
+    color:var(--maroon-deep);
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    font-weight:800;
+    margin-top:6px;
+    background:var(--gold);
+    padding:3px 12px;
+    border-radius:999px;
+  }
+
+  /* Divider */
+  .divider {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:28px;
+  }
+  .divider::before, .divider::after {
+    content:'';
+    flex:1;
+    height:1px;
+    background:rgba(238,196,99,.2);
+  }
+  .divider span {
+    font-size:.65rem;
+    color:rgba(238,196,99,.5);
+    letter-spacing:.1em;
+    text-transform:uppercase;
+  }
+
+  /* Form */
+  .form-group {
+    margin-bottom:18px;
+  }
+  label {
+    display:block;
+    font-size:.78rem;
+    font-weight:700;
+    color:var(--gold-light);
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    margin-bottom:7px;
+  }
+
+  .input-wrap {
+    position:relative;
+  }
+  .input-wrap .icon {
+    position:absolute;
+    left:14px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:1rem;
+    opacity:.55;
+    pointer-events:none;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    width:100%;
+    padding:12px 14px 12px 42px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(238,196,99,.2);
+    border-radius:10px;
+    color:var(--cream);
+    font-family:'Mukta', sans-serif;
+    font-size:.96rem;
+    outline:none;
+    transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+  }
+  input[type="text"]::placeholder,
+  input[type="password"]::placeholder {
+    color:rgba(251,236,210,.25);
+  }
+  input[type="text"]:focus,
+  input[type="password"]:focus {
+    border-color:var(--gold);
+    background:rgba(255,255,255,.07);
+    box-shadow:0 0 0 3px rgba(215,153,33,.15);
+  }
+
+  /* Show/hide password toggle */
+  .toggle-pw {
+    position:absolute;
+    right:13px;
+    top:50%;
+    transform:translateY(-50%);
+    background:none;
+    border:none;
+    cursor:pointer;
+    color:rgba(238,196,99,.5);
+    font-size:.85rem;
+    padding:4px;
+    line-height:1;
+    transition:color .2s;
+  }
+  .toggle-pw:hover { color:var(--gold-light); }
+
+  /* Remember + forgot row */
+  .form-row {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:24px;
+  }
+
+  .forgot {
+    font-size:.78rem;
+    color:var(--gold-light);
+    text-decoration:none;
+    font-weight:600;
+    opacity:.8;
+    transition:opacity .2s;
+  }
+  .forgot:hover { opacity:1; }
+
+  /* Error message */
+  .error-msg {
+    display:none;
+    background:rgba(224,82,82,.12);
+    border:1px solid rgba(224,82,82,.35);
+    border-radius:8px;
+    padding:10px 14px;
+    font-size:.82rem;
+    color:#f08080;
+    margin-bottom:18px;
+    text-align:center;
+  }
+  .error-msg.show { display:block; }
+
+  /* Submit button */
+  .btn-login {
+    width:100%;
+    padding:13px;
+    background:linear-gradient(135deg, var(--gold) 0%, #c47f10 100%);
+    color:var(--maroon-deep);
+    border:none;
+    border-radius:10px;
+    font-family:'Mukta', sans-serif;
+    font-size:1rem;
+    font-weight:800;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    box-shadow:0 4px 18px rgba(215,153,33,.35);
+    position:relative;
+    overflow:hidden;
+  }
+  .btn-login::after {
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(135deg, rgba(255,255,255,.15), transparent);
+    border-radius:10px;
+  }
+  .btn-login:hover {
+    transform:translateY(-2px);
+    box-shadow:0 8px 28px rgba(215,153,33,.5);
+  }
+  .btn-login:active {
+    transform:translateY(0);
+    filter:brightness(.95);
+  }
+  .btn-login.loading {
+    pointer-events:none;
+    filter:brightness(.8);
+  }
+
+  /* Loading spinner inside button */
+  .spinner {
+    display:none;
+    width:16px; height:16px;
+    border:2px solid rgba(51,13,15,.3);
+    border-top-color:var(--maroon-deep);
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+    margin:0 auto;
+  }
+  @keyframes spin { to{ transform:rotate(360deg); } }
+
+  /* Footer note */
+  .card-footer {
+    text-align:center;
+    margin-top:22px;
+    font-size:.7rem;
+    color:rgba(251,236,210,.3);
+    line-height:1.6;
+  }
+  .card-footer strong {
+    color:rgba(238,196,99,.45);
+    font-weight:700;
+  }
+
+  /* Success state */
+  .success-overlay {
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    padding:20px 0 10px;
+    text-align:center;
+  }
+  .success-icon {
+    font-size:2.8rem;
+    animation:pop .4s ease;
+  }
+  @keyframes pop {
+    0%{ transform:scale(0); }
+    70%{ transform:scale(1.2); }
+    100%{ transform:scale(1); }
+  }
+  .success-overlay p {
+    color:var(--gold-light);
+    font-size:.96rem;
+    font-weight:600;
+  }
+  .success-overlay small {
+    color:rgba(251,236,210,.5);
+    font-size:.76rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <!-- Header -->
+  <div class="card-header">
+    <div class="logo-wrap">
+      <img src="images/logo-nav.png" alt="Mandal Logo">
+    </div>
+    <div>
+      <h1>Kurarcha Ekdant</h1>
+      <p>शिवाजी नगर सार्वजनिक गणेशोत्सव मंडळ</p>
+    </div>
+    <div class="subtitle">⚙️ Admin Login</div>
+  </div>
+
+  <div class="divider"><span>Secure Login</span></div>
+
+  <!-- Error message -->
+  <div class="error-msg" id="errorMsg">⚠️ Incorrect username or password. Please try again.</div>
+
+  <!-- Login form -->
+  <div id="loginForm">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <div class="input-wrap">
+        <span class="icon">👤</span>
+        <input type="text" id="username" placeholder="Enter admin username" autocomplete="username">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <div class="input-wrap">
+        <span class="icon">🔐</span>
+        <input type="password" id="password" placeholder="Enter password" autocomplete="current-password">
+        <button class="toggle-pw" id="togglePw" type="button" title="Show/hide password">👁</button>
+      </div>
+    </div>
+
+    <div style="text-align:right; margin-bottom:20px;">
+      <a href="#" class="forgot">Forgot password?</a>
+    </div>
+
+    <button class="btn-login" id="loginBtn" type="button" onclick="handleLogin()">
+      <span id="btnText">Login to Admin Panel</span>
+      <div class="spinner" id="spinner"></div>
+    </button>
+  </div>
+
+  <!-- Success state -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-icon">✅</div>
+    <p>Login Successful!</p>
+    <small>Redirecting to dashboard...</small>
+  </div>
+
+  <div class="card-footer">
+    © 2026 Kurarcha Ekdant · Authorised access only
+  </div>
+</div>
+
+<script>
+  // Demo credentials — replace with real backend auth
+  const ADMIN_USER = 'admin';
+  const ADMIN_PASS = 'akarsh';
+
+  // Show/hide password
+  const pwInput = document.getElementById('password');
+  document.getElementById('togglePw').addEventListener('click', function() {
+    const isText = pwInput.type === 'text';
+    pwInput.type = isText ? 'password' : 'text';
+    this.textContent = isText ? '👁' : '🙈';
+  });
+
+  // Enter key submits
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleLogin();
+  });
+
+  function handleLogin() {
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value;
+    const errorMsg = document.getElementById('errorMsg');
+    const btn = document.getElementById('loginBtn');
+    const spinner = document.getElementById('spinner');
+    const btnText = document.getElementById('btnText');
+
+    // Basic validation
+    if (!user || !pass) {
+      errorMsg.textContent = '⚠️ Please enter both username and password.';
+      errorMsg.classList.add('show');
+      return;
+    }
+
+    // Loading state
+    errorMsg.classList.remove('show');
+    btn.classList.add('loading');
+    btnText.style.display = 'none';
+    spinner.style.display = 'block';
+
+    // Simulate auth check (replace with real API call)
+    setTimeout(() => {
+      btn.classList.remove('loading');
+      btnText.style.display = 'block';
+      spinner.style.display = 'none';
+
+      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        // Success
+        document.getElementById('loginForm').style.display = 'none';
+        const overlay = document.getElementById('successOverlay');
+        overlay.style.display = 'flex';
+        // Redirect after 2 seconds
+        setTimeout(() => {
+          alert('Redirect to admin dashboard here — connect your backend.');
+        }, 2000);
+      } else {
+        // Fail
+        errorMsg.textContent = '⚠️ Incorrect username or password. Please try again.';
+        errorMsg.classList.add('show');
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+      }
+    }, 1200);
+  }
+</script>
+
+</body>
+</html>
