@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Cache-Control" content="no-store">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<title>Admin Dashboard · Kurarcha Ekdant</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+
+body{
+
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:#050505;
+    color:#00ff66;
+
+    font-family:"Courier New", monospace;
+
+}
+
+
+/* Main terminal window */
+
+.dashboard{
+
+    width:450px;
+
+    background:#000;
+
+    border:2px solid #00ff66;
+
+    border-radius:12px;
+
+    padding:30px;
+
+    box-shadow:
+    0 0 20px #00ff66;
+
+}
+
+
+
+/* Heading */
+
+h1{
+
+    color:#00ff66;
+
+    text-align:center;
+
+    font-size:28px;
+
+    letter-spacing:2px;
+
+    text-shadow:
+    0 0 10px #00ff66;
+
+}
+
+
+
+#adminEmail{
+
+    color:#00cc55;
+
+    border-bottom:1px solid #00ff66;
+
+    padding-bottom:15px;
+
+}
+
+
+
+/* Cards */
+
+
+.card{
+
+    margin-top:25px;
+
+    padding:20px;
+
+    border:1px solid #00ff66;
+
+    background:#080808;
+
+    border-radius:8px;
+
+}
+
+
+
+.card h3{
+
+    color:#00ff66;
+
+}
+
+
+
+/* Buttons */
+
+button{
+
+    width:100%;
+
+    margin-top:20px;
+
+    padding:12px;
+
+    background:#000;
+
+    color:#00ff66;
+
+    border:1px solid #00ff66;
+
+    border-radius:5px;
+
+    font-family:"Courier New", monospace;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+
+
+button:hover{
+
+    background:#00ff66;
+
+    color:#000;
+
+    box-shadow:
+    0 0 15px #00ff66;
+
+}
+
+
+
+/* Terminal cursor effect */
+
+
+body::after{
+
+    content:"_";
+
+    position:fixed;
+
+    bottom:20px;
+
+    right:30px;
+
+    color:#00ff66;
+
+    animation:blink 1s infinite;
+
+}
+
+
+
+@keyframes blink{
+
+50%{
+
+opacity:0;
+
+}
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="dashboard">
+
+<h1>ADMIN_PANEL</h1>
+
+
+<p id="adminEmail">
+Checking admin...
+</p>
+
+
+<div class="card">
+
+<h3>> SYSTEM CONTROL</h3>
+
+<p>
+Content management will be added here.
+</p>
+
+</div>
+
+
+<button onclick="logout()">
+Logout
+</button>
+
+
+</div>
+
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import { 
+getAuth,
+onAuthStateChanged,
+signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyA047eYqffjrP5ITWxYzjP0mA9SKHwipDI",
+
+authDomain: "kurarcha-ekdant.firebaseapp.com",
+
+projectId: "kurarcha-ekdant",
+
+storageBucket: "kurarcha-ekdant.firebasestorage.app",
+
+messagingSenderId: "485489045109",
+
+appId: "1:485489045109:web:6a59b2b7843ed49d18d23c"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+window.logout = function(){
+
+signOut(auth)
+.then(()=>{
+
+window.location.replace("index.html");
+
+});
+
+};
+
+
+
+onAuthStateChanged(auth,(user)=>{
+
+if(!user){
+
+window.location.replace("index.html");
+
+}
+else{
+
+document.body.style.display = "flex";
+
+document.getElementById("adminEmail").innerText =
+"Logged in as: " + user.email;
+
+}
+
+});
+
+</script>
+
+<script>
+
+window.addEventListener("beforeunload", function(){
+
+window.scrollTo(0,0);
+
+});
+
+</script>
+</body>
+</html>
+
