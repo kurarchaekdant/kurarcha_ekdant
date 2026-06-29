@@ -4,233 +4,653 @@
 <meta http-equiv="Cache-Control" content="no-store">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard · Kurarcha Ekdant</title>
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 
-*{
-    box-sizing:border-box;
+/* ===== RESET ===== */
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+/* ===== ROOT VARIABLES ===== */
+:root{
+  --gold:#d79921;
+  --gold-light:#eec463;
+  --gold-dim:rgba(215,153,33,.15);
+  --glass:rgba(255,255,255,.04);
+  --glass-border:rgba(255,255,255,.08);
+  --glass-hover:rgba(255,255,255,.07);
+  --text:#f1f5f9;
+  --text-muted:#94a3b8;
+  --text-dim:#64748b;
+  --success-bg:rgba(34,197,94,.1);
+  --success-border:rgba(34,197,94,.3);
+  --success-text:#4ade80;
+  --error-bg:rgba(239,68,68,.1);
+  --error-border:rgba(239,68,68,.3);
+  --error-text:#f87171;
+  --info-bg:rgba(59,130,246,.1);
+  --info-border:rgba(59,130,246,.3);
+  --info-text:#93c5fd;
+  --radius:16px;
+  --radius-sm:10px;
 }
 
-
+/* ===== BACKGROUND ===== */
 body{
-
-    margin:0;
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    background:#050505;
-    color:#00ff66;
-
-    font-family:"Courier New", monospace;
-
+  font-family:'Inter', sans-serif;
+  background:#020617;
+  color:var(--text);
+  min-height:100vh;
+  position:relative;
+  overflow-x:hidden;
 }
 
-
-/* Main terminal window */
-
-.dashboard{
-
-    width:450px;
-
-    background:#000;
-
-    border:2px solid #00ff66;
-
-    border-radius:12px;
-
-    padding:30px;
-
-    box-shadow:
-    0 0 20px #00ff66;
-
+/* Animated gradient background */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(120,53,15,.35) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(30,27,75,.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(15,23,42,1) 0%, transparent 100%);
+  z-index:0;
+  pointer-events:none;
 }
 
-
-
-/* Heading */
-
-h1{
-
-    color:#00ff66;
-
-    text-align:center;
-
-    font-size:28px;
-
-    letter-spacing:2px;
-
-    text-shadow:
-    0 0 10px #00ff66;
-
-}
-
-
-
-#adminEmail{
-
-    color:#00cc55;
-
-    border-bottom:1px solid #00ff66;
-
-    padding-bottom:15px;
-
-}
-
-
-
-/* Cards */
-
-
-.card{
-
-    margin-top:25px;
-
-    padding:20px;
-
-    border:1px solid #00ff66;
-
-    background:#080808;
-
-    border-radius:8px;
-
-}
-
-
-
-.card h3{
-
-    color:#00ff66;
-
-}
-
-
-
-/* Buttons */
-
-button{
-
-    width:100%;
-
-    margin-top:20px;
-
-    padding:12px;
-
-    background:#000;
-
-    color:#00ff66;
-
-    border:1px solid #00ff66;
-
-    border-radius:5px;
-
-    font-family:"Courier New", monospace;
-
-    font-weight:bold;
-
-    cursor:pointer;
-
-    transition:.3s;
-
-}
-
-
-
-button:hover{
-
-    background:#00ff66;
-
-    color:#000;
-
-    box-shadow:
-    0 0 15px #00ff66;
-
-}
-
-
-
-/* Terminal cursor effect */
-
-
+/* Floating orbs */
 body::after{
+  content:'';
+  position:fixed;
+  width:400px; height:400px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(215,153,33,.08) 0%, transparent 70%);
+  top:-100px; right:-100px;
+  z-index:0;
+  pointer-events:none;
+  animation:float 8s ease-in-out infinite;
+}
+@keyframes float{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(30px); }
+}
 
-    content:"_";
+/* ===== LAYOUT WRAPPER ===== */
+.wrapper{
+  position:relative;
+  z-index:1;
+  max-width:900px;
+  margin:0 auto;
+  padding:24px 16px 60px;
+}
 
-    position:fixed;
+/* ===== TOP HEADER BAR ===== */
+.top-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 24px;
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  margin-bottom:24px;
+}
+.top-bar-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.top-bar img{
+  width:36px; height:36px;
+  border-radius:50%;
+  border:1.5px solid var(--gold);
+}
+.top-bar-title{
+  font-size:.95rem;
+  font-weight:700;
+  color:var(--gold-light);
+  letter-spacing:.5px;
+}
+.top-bar-subtitle{
+  font-size:.7rem;
+  color:var(--text-muted);
+  margin-top:1px;
+}
+.admin-badge{
+  background:var(--gold-dim);
+  border:1px solid rgba(215,153,33,.3);
+  color:var(--gold-light);
+  font-size:.68rem;
+  font-weight:700;
+  padding:3px 10px;
+  border-radius:999px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+#adminEmail{
+  font-size:.72rem;
+  color:var(--text-dim);
+  margin-top:2px;
+}
 
-    bottom:20px;
+/* ===== LOGOUT BUTTON ===== */
+.btn-logout{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  color:var(--text-muted);
+  padding:8px 16px;
+  border-radius:var(--radius-sm);
+  cursor:pointer;
+  font-size:.8rem;
+  font-weight:600;
+  transition:all .2s;
+  white-space:nowrap;
+}
+.btn-logout:hover{
+  background:var(--error-bg);
+  border-color:var(--error-border);
+  color:var(--error-text);
+}
 
-    right:30px;
+/* ===== STATS ROW ===== */
+.stats-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:24px;
+}
 
-    color:#00ff66;
+/* ===== GLASS CARD ===== */
+.glass-card{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  padding:20px 22px;
+  transition:background .2s;
+}
+.glass-card:hover{ background:var(--glass-hover); }
 
-    animation:blink 1s infinite;
+/* Stat card */
+.stat-card{
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.stat-card::before{
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height:2px;
+  background:linear-gradient(to right, transparent, var(--gold), transparent);
+}
+.stat-num{
+  font-size:2.4rem;
+  font-weight:700;
+  color:var(--gold-light);
+  line-height:1;
+  margin-bottom:6px;
+}
+.stat-label{
+  font-size:.72rem;
+  font-weight:600;
+  color:var(--text-muted);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+/* Category stats card */
+.category-card{ grid-column:1 / -1; }
+.category-card h3{
+  font-size:.75rem;
+  font-weight:700;
+  color:var(--text-muted);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
+.cat-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.cat-item{
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius-sm);
+  padding:10px 12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.cat-item .cat-name{
+  font-size:.78rem;
+  color:var(--text-muted);
+  font-weight:500;
+}
+.cat-item .cat-count{
+  font-size:.9rem;
+  font-weight:700;
+  color:var(--gold-light);
+}
+
+/* ===== SECTION TITLE ===== */
+.section-title{
+  font-size:.72rem;
+  font-weight:700;
+  color:var(--text-muted);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+  padding-left:2px;
+}
+
+/* ===== UPLOAD CARD ===== */
+.upload-zone{
+  border:2px dashed rgba(215,153,33,.3);
+  border-radius:var(--radius);
+  padding:28px 20px;
+  text-align:center;
+  cursor:pointer;
+  transition:all .2s;
+  background:rgba(215,153,33,.03);
+}
+.upload-zone:hover{
+  border-color:var(--gold);
+  background:rgba(215,153,33,.06);
+}
+.upload-icon{ font-size:2.2rem; margin-bottom:10px; }
+.upload-text{
+  font-size:.88rem;
+  font-weight:600;
+  color:var(--gold-light);
+  margin-bottom:4px;
+}
+.upload-sub{
+  font-size:.7rem;
+  color:var(--text-dim);
+}
+#imagePreview{
+  display:none;
+  width:100%;
+  max-height:200px;
+  object-fit:cover;
+  border-radius:var(--radius-sm);
+  margin-top:12px;
+}
+
+/* SELECT */
+.select-box{
+
+ width:100%;
+ padding:11px 14px;
+ margin-top:14px;
+
+ background:rgba(34,197,94,.1);
+
+ color:#4ade80;
+
+ border:1px solid rgba(34,197,94,.35);
+
+ border-radius:var(--radius-sm);
+
+ display:flex;
+ justify-content:space-between;
+
+ font-size:.88rem;
+ font-weight:600;
+
+ cursor:pointer;
+
+ backdrop-filter:blur(12px);
+}
+
+
+.category-popup{
+
+ display:none;
+
+ position:fixed;
+
+ left:16px;
+ right:16px;
+
+ top:50%;
+
+ transform:translateY(-50%);
+
+ background:rgba(2,6,23,.95);
+
+ border:1px solid rgba(74,222,128,.35);
+
+ border-radius:16px;
+
+ backdrop-filter:blur(25px);
+
+ z-index:9999;
+
+ overflow:hidden;
+}
+
+
+.category-popup div{
+
+ padding:16px;
+
+ color:white;
+
+ border-bottom:1px solid rgba(255,255,255,.08);
 
 }
 
 
+.category-popup div:hover{
 
-@keyframes blink{
+ background:rgba(34,197,94,.15);
 
-50%{
-
-opacity:0;
-
-}
+ color:#4ade80;
 
 }
 
+/* UPLOAD BUTTON */
+.btn-upload{
+  width:100%;
+  margin-top:14px;
+  padding:13px;
+  background:linear-gradient(135deg, var(--gold) 0%, #b8793d 100%);
+  color:#0f172a;
+  border:none;
+  border-radius:var(--radius-sm);
+  font-weight:700;
+  font-size:.9rem;
+  letter-spacing:.04em;
+  cursor:pointer;
+  transition:all .2s;
+  font-family:'Inter',sans-serif;
+  box-shadow:0 4px 20px rgba(215,153,33,.25);
+}
+.btn-upload:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 28px rgba(215,153,33,.4);
+}
+.btn-upload:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+  transform:none;
+}
+
+/* ===== GALLERY GRID ===== */
+.gallery-section{ margin-top:24px; }
+.cat-section-title{
+  font-size:.8rem;
+  font-weight:700;
+  color:var(--gold-light);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  margin:20px 0 10px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.cat-section-title::after{
+  content:'';
+  flex:1;
+  height:1px;
+  background:var(--glass-border);
+}
+
+.photo-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.photo-item{
+  position:relative;
+  border-radius:var(--radius-sm);
+  overflow:hidden;
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  aspect-ratio:1/1;
+  group:true;
+}
+.photo-item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform .3s ease;
+}
+.photo-item:hover img{ transform:scale(1.05); }
+
+/* Delete overlay on hover */
+.photo-item .del-overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.5);
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding-bottom:10px;
+  opacity:0;
+  transition:opacity .2s;
+}
+.photo-item:hover .del-overlay{ opacity:1; }
+.photo-item .del-btn{
+  background:rgba(239,68,68,.9);
+  color:white;
+  border:none;
+  padding:6px 16px;
+  border-radius:999px;
+  font-size:.72rem;
+  font-weight:700;
+  cursor:pointer;
+  letter-spacing:.04em;
+}
+.photo-item .del-btn:hover{ background:#ef4444; }
+
+/* Empty state */
+.empty-state{
+  text-align:center;
+  padding:40px 20px;
+  color:var(--text-dim);
+  font-size:.88rem;
+}
+.empty-state div{ font-size:2rem; margin-bottom:10px; }
+
+/* ===== TOAST ===== */
+#toast{
+  position:fixed;
+  bottom:28px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  min-width:260px;
+  max-width:90vw;
+  padding:13px 22px;
+  border-radius:12px;
+  display:none;
+  z-index:9999;
+  font-size:.88rem;
+  font-weight:600;
+  text-align:center;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  transition:transform .3s ease, opacity .3s ease;
+}
+#toast.show{
+  display:block;
+  animation:toastIn .3s ease forwards;
+}
+@keyframes toastIn{
+  from{ opacity:0; transform:translateX(-50%) translateY(20px); }
+  to{ opacity:1; transform:translateX(-50%) translateY(0); }
+}
+#toast.success{ background:var(--success-bg); border:1px solid var(--success-border); color:var(--success-text); }
+#toast.error{ background:var(--error-bg); border:1px solid var(--error-border); color:var(--error-text); }
+#toast.info{ background:var(--info-bg); border:1px solid var(--info-border); color:var(--info-text); }
+
+/* ===== CONFIRM MODAL ===== */
+#confirmBox{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  align-items:center;
+  justify-content:center;
+  z-index:9998;
+}
+.confirm-card{
+  background:#0f172a;
+  border:1px solid var(--glass-border);
+  padding:28px;
+  border-radius:var(--radius);
+  text-align:center;
+  width:300px;
+  box-shadow:0 24px 60px rgba(0,0,0,.6);
+}
+.confirm-card .warn-icon{ font-size:2.2rem; margin-bottom:12px; }
+.confirm-card h3{ font-size:1rem; font-weight:700; color:var(--text); margin-bottom:8px; }
+.confirm-card p{ font-size:.82rem; color:var(--text-muted); margin-bottom:22px; }
+.confirm-btns{ display:flex; gap:10px; justify-content:center; }
+.confirm-btns button{
+  flex:1;
+  padding:11px;
+  border-radius:var(--radius-sm);
+  border:none;
+  font-weight:700;
+  font-size:.85rem;
+  cursor:pointer;
+  font-family:'Inter',sans-serif;
+}
+#confirmDelete{ background:#ef4444; color:white; }
+#confirmDelete:hover{ background:#dc2626; }
+#cancelDelete{ background:var(--glass); border:1px solid var(--glass-border); color:var(--text-muted); }
+#cancelDelete:hover{ background:var(--glass-hover); color:var(--text); }
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:600px){
+  .stats-row{ grid-template-columns:1fr 1fr; }
+  .cat-grid{ grid-template-columns:repeat(2,1fr); }
+  .photo-grid{ grid-template-columns:repeat(2,1fr); }
+  .photo-item .del-overlay{ opacity:1; }
+  .top-bar{ flex-wrap:wrap; gap:10px; }
+}
 
 </style>
-
 </head>
 
+<body style="display:none">
 
-<body>
+<div class="wrapper">
 
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <img src="logo-nav.png" alt="Logo">
+      <div>
+        <div class="top-bar-title">Kurarcha Ekdant</div>
+        <div class="top-bar-subtitle">Mumbai - 400097</div>
+        <div id="adminEmail">Verifying...</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <span class="admin-badge">⚙️ Admin</span>
+      <button class="btn-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
 
-<div class="dashboard">
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="glass-card stat-card">
+      <div class="stat-num" id="totalCount">—</div>
+      <div class="stat-label">Total Photos</div>
+    </div>
+    <div class="glass-card stat-card">
+      <div class="stat-num" id="totalCats">6</div>
+      <div class="stat-label">Categories</div>
+    </div>
+    <div class="glass-card category-card">
+      <h3>Photo Count by Category</h3>
+      <div class="cat-grid" id="categoryStats">
+        <div class="cat-item"><span class="cat-name">Loading...</span></div>
+      </div>
+    </div>
+  </div>
 
-<h1>ADMIN_PANEL</h1>
+  <!-- UPLOAD -->
+  <div class="section-title">Upload New Photo</div>
+  <div class="glass-card">
+    <div class="upload-zone" id="uploadBox" onclick="document.getElementById('fileInput').click()">
+      <input type="file" id="fileInput" accept="image/*" style="display:none;">
+      <div id="uploadPlaceholder">
+        <div class="upload-icon">📷</div>
+        <div class="upload-text">Tap to select photo</div>
+        <div class="upload-sub">JPG, PNG — uploads directly to Cloudinary</div>
+      </div>
+      <img id="imagePreview" src="" alt="Preview">
+    </div>
+    <div class="select-box" onclick="openCategoryPopup()">
+  <span id="categoryText">📅 Sthapana Day</span>
+  <span>⌄</span>
+</div>
 
+<div class="category-popup" id="categoryPopup">
 
-<p id="adminEmail">
-Checking admin...
-</p>
+  <div onclick="chooseCategory('Sthapana','📅 Sthapana Day')">📅 Sthapana Day</div>
 
+  <div onclick="chooseCategory('Aarti','🪔 Aarti')">🪔 Aarti</div>
 
-<div class="card">
+  <div onclick="chooseCategory('Programs','🎭 Cultural Program')">🎭 Cultural Program</div>
 
-<h3>> SYSTEM CONTROL</h3>
+  <div onclick="chooseCategory('Decoration','🎨 Decoration')">🎨 Decoration</div>
 
-<p>
-Content management will be added here.
-</p>
+  <div onclick="chooseCategory('Visarjan','🌊 Visarjan')">🌊 Visarjan</div>
+
+  <div onclick="chooseCategory('Memories','📸 Memories')">📸 Memories</div>
 
 </div>
 
+<input type="hidden" id="category" value="Sthapana">
+    <button class="btn-upload" onclick="uploadPhoto()">⬆ Upload Photo</button>
+  </div>
 
-<button onclick="logout()">
-Logout
-</button>
-
+  <!-- GALLERY -->
+  <div class="gallery-section">
+    <div class="section-title" style="margin-top:28px;">Uploaded Photos</div>
+    <div id="galleryList">
+      <div class="empty-state"><div>🖼</div>Loading gallery...</div>
+    </div>
+  </div>
 
 </div>
 
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Confirm Delete Modal -->
+<div id="confirmBox">
+  <div class="confirm-card">
+    <div class="warn-icon">🗑️</div>
+    <h3>Delete this photo?</h3>
+    <p>This will permanently remove the photo from the gallery. This action cannot be undone.</p>
+    <div class="confirm-btns">
+      <button id="confirmDelete">Delete</button>
+      <button id="cancelDelete">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import { 
-getAuth,
-onAuthStateChanged,
-signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, addDoc, serverTimestamp, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCbieOt2IpLohjduy1Qs0NqVgYIrT28M9M",
@@ -243,51 +663,220 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-window.logout = function(){
+// ---- TOAST ----
+function showToast(msg, type="info"){
+  const toast = document.getElementById("toast");
+  toast.textContent = msg;
+  toast.className = type + " show";
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => {
+    toast.className = "";
+    toast.style.display = "none";
+  }, 3500);
+}
 
-signOut(auth)
-.then(()=>{
-
-window.location.replace("index.html");
-
+// ---- AUTH ----
+onAuthStateChanged(auth, (user) => {
+  if(!user){
+    window.location.replace("index.html");
+  } else {
+    document.body.style.display = "block";
+    document.getElementById("adminEmail").textContent = user.email;
+    loadGallery();
+    loadCategoryStats();
+  }
 });
 
+// ---- LOGOUT ----
+window.logout = function(){
+  signOut(auth).then(() => { window.location.replace("index.html"); });
 };
 
-
-
-onAuthStateChanged(auth,(user)=>{
-
-if(!user){
-
-window.location.replace("index.html");
-
-}
-else{
-
-document.body.style.display = "flex";
-
-document.getElementById("adminEmail").innerText =
-"Logged in as: " + user.email;
-
-}
-
+// ---- FILE PREVIEW ----
+document.getElementById("fileInput").addEventListener("change", function(){
+  const file = this.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    document.getElementById("imagePreview").src = e.target.result;
+    document.getElementById("imagePreview").style.display = "block";
+    document.getElementById("uploadPlaceholder").style.display = "none";
+  };
+  reader.readAsDataURL(file);
 });
+
+// ---- UPLOAD ----
+window.uploadPhoto = async function(){
+  const fileInput = document.getElementById("fileInput");
+  const file = fileInput.files[0];
+  const category = document.getElementById("category").value;
+  if(!file){ showToast("⚠️ Please select a photo first", "error"); return; }
+
+  const btn = document.querySelector(".btn-upload");
+  btn.textContent = "Uploading...";
+  btn.disabled = true;
+
+  try{
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "kurarcha_ekdant_gallery");
+    formData.append("folder", "kurarcha/" + category);
+
+    const res = await fetch("https://api.cloudinary.com/v1_1/df4oexqht/image/upload", {
+      method:"POST", body:formData
+    });
+    const result = await res.json();
+    if(!result.secure_url) throw new Error("Cloudinary upload failed");
+
+    await addDoc(collection(db,"gallery"),{
+      imageUrl:result.secure_url,
+      category:category,
+      fileName:file.name,
+      createdAt:serverTimestamp()
+    });
+
+    showToast("✅ Photo uploaded successfully!", "success");
+    fileInput.value = "";
+    document.getElementById("imagePreview").style.display = "none";
+    document.getElementById("uploadPlaceholder").style.display = "block";
+    btn.textContent = "⬆ Upload Photo";
+    btn.disabled = false;
+    loadGallery();
+    loadCategoryStats();
+
+  } catch(err){
+    showToast("❌ " + err.message, "error");
+    btn.textContent = "⬆ Upload Photo";
+    btn.disabled = false;
+  }
+};
+
+// ---- LOAD GALLERY ----
+window.loadGallery = async function(){
+  const gallery = document.getElementById("galleryList");
+  gallery.innerHTML = '<div class="empty-state"><div>⏳</div>Loading photos...</div>';
+
+  const snapshot = await getDocs(collection(db,"gallery"));
+  let grouped = {};
+  snapshot.forEach(item => {
+    const data = item.data();
+    if(!grouped[data.category]) grouped[data.category] = [];
+    grouped[data.category].push({ id:item.id, imageUrl:data.imageUrl });
+  });
+
+  if(Object.keys(grouped).length === 0){
+    gallery.innerHTML = '<div class="empty-state"><div>🖼</div>No photos uploaded yet</div>';
+    return;
+  }
+
+  gallery.innerHTML = "";
+  Object.keys(grouped).forEach(cat => {
+    gallery.innerHTML += `
+      <div class="cat-section-title">📸 ${cat}</div>
+      <div class="photo-grid">
+        ${grouped[cat].map(photo => `
+          <div class="photo-item">
+            <img src="${photo.imageUrl}" alt="${cat}">
+            <div class="del-overlay">
+              <button class="del-btn" onclick="deletePhoto('${photo.id}')">🗑 Delete</button>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  });
+};
+
+// ---- LOAD STATS ----
+window.loadCategoryStats = async function(){
+  const snapshot = await getDocs(collection(db,"gallery"));
+
+  // Normalise any old lowercase/variant values to current standard
+  const normalise = (cat) => {
+    if(!cat) return "Memories";
+    const c = cat.trim();
+    const map = {
+      "sthapana":"Sthapana","Sthapana":"Sthapana",
+      "aarti":"Aarti","Aarti":"Aarti",
+      "program":"Programs","Programs":"Programs",
+      "decoration":"Decoration","Decoration":"Decoration",
+      "visarjan":"Visarjan","Visarjan":"Visarjan",
+      "memory":"Memories","memories":"Memories","Memories":"Memories"
+    };
+    return map[c] || c;
+  };
+
+  const cats = ["Sthapana","Aarti","Programs","Decoration","Visarjan","Memories"];
+  let count = {};
+  cats.forEach(c => count[c] = 0);
+
+  snapshot.forEach(item => {
+    const cat = normalise(item.data().category);
+    if(count[cat] !== undefined) count[cat]++;
+    else count[cat] = 1; // unknown category still counted in total
+  });
+
+  const total = snapshot.size; // use actual Firestore doc count
+  document.getElementById("totalCount").textContent = total;
+  document.getElementById("categoryStats").innerHTML = cats.map(c => `
+    <div class="cat-item">
+      <span class="cat-name">${c}</span>
+      <span class="cat-count">${count[c]}</span>
+    </div>
+  `).join("");
+};
+
+// ---- DELETE ----
+let deleteId = null;
+
+window.deletePhoto = function(id){
+  deleteId = id;
+  document.getElementById("confirmBox").style.display = "flex";
+};
+
+document.getElementById("cancelDelete").onclick = function(){
+  deleteId = null;
+  document.getElementById("confirmBox").style.display = "none";
+};
+
+document.getElementById("confirmDelete").onclick = async function(){
+  if(!deleteId) return;
+  try{
+    await deleteDoc(doc(db,"gallery",deleteId));
+    showToast("🗑 Photo deleted", "success");
+    document.getElementById("confirmBox").style.display = "none";
+    deleteId = null;
+    loadGallery();
+    loadCategoryStats();
+  } catch(e){
+    showToast("❌ Delete failed: " + e.message, "error");
+  }
+};
 
 </script>
 
 <script>
+history.pushState(null, null, location.href);
+window.addEventListener('popstate', () => history.pushState(null, null, location.href));
 
-window.addEventListener("beforeunload", function(){
+window.openCategoryPopup=function(){
+ document.getElementById("categoryPopup").style.display="block";
+}
 
-window.scrollTo(0,0);
 
-});
+window.chooseCategory=function(value,text){
 
+ document.getElementById("category").value=value;
+
+ document.getElementById("categoryText").textContent=text;
+
+ document.getElementById("categoryPopup").style.display="none";
+
+}
 </script>
+
 </body>
 </html>
-
