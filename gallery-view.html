@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Gallery - Kurarcha Ekdant</title>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Mukta:wght@400;600;700&display=swap" rel="stylesheet">
+
+
+<style>
+
+
+:root{
+
+--maroon:#330d0f;
+--gold:#d79921;
+--cream:#fbecd2;
+--paper:#f3e2bd;
+
+}
+
+
+*{
+box-sizing:border-box;
+}
+
+
+body{
+
+margin:0;
+background:var(--paper);
+font-family:'Mukta',sans-serif;
+color:#2a0f0c;
+
+}
+
+
+/* HEADER */
+
+header{
+
+background:var(--maroon);
+padding:15px 25px;
+display:flex;
+align-items:center;
+gap:15px;
+color:white;
+
+}
+
+
+.logo{
+
+width:60px;
+height:60px;
+object-fit:contain;
+
+}
+
+
+.brand{
+
+font-family:'Yatra One';
+font-size:1.3rem;
+
+}
+
+
+.brand small{
+
+display:block;
+font-family:'Mukta';
+font-size:.7rem;
+color:#eec463;
+
+}
+
+
+
+/* CONTENT */
+
+
+.container{
+
+max-width:1100px;
+margin:auto;
+padding:40px 20px 120px;
+
+}
+
+
+h1{
+
+text-align:center;
+font-family:'Yatra One';
+color:var(--maroon);
+font-size:2.3rem;
+
+}
+
+
+.subtitle{
+
+text-align:center;
+margin-bottom:35px;
+
+}
+
+
+
+/* GALLERY */
+
+
+.gallery{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:20px;
+
+}
+
+
+
+.card{
+
+background:var(--cream);
+padding:15px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.15);
+text-align:center;
+
+}
+
+
+
+.card img{
+
+width:100%;
+height:260px;
+object-fit:cover;
+border-radius:12px;
+
+}
+
+
+
+button,
+.btn{
+
+display:inline-block;
+margin:10px 5px;
+padding:10px 22px;
+border-radius:25px;
+background:var(--gold);
+color:white;
+text-decoration:none;
+font-weight:700;
+border:none;
+cursor:pointer;
+
+}
+
+
+
+.no-image{
+
+background:white;
+padding:40px;
+border-radius:15px;
+text-align:center;
+font-size:1.2rem;
+color:#7b3b20;
+
+}
+
+
+
+/* FOOTER */
+
+
+footer{
+
+background:var(--maroon);
+color:#fbecd2;
+text-align:center;
+padding:25px;
+
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+z-index:999;
+
+box-shadow:0 -3px 12px rgba(0,0,0,.25);
+
+}
+
+
+footer span{
+
+font-family:'Yatra One';
+color:#eec463;
+font-size:1.2rem;
+
+}
+
+
+
+/* LIGHTBOX */
+#lightbox{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.92);
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  padding:20px;
+}
+#lightboxImg{
+  max-width:95vw;
+  max-height:85vh;
+  border-radius:10px;
+  object-fit:contain;
+  box-shadow:0 8px 40px rgba(0,0,0,.6);
+}
+#lightbox .close-btn{
+  position:fixed;
+  top:16px;
+  right:20px;
+  background:none;
+  border:2px solid #eec463;
+  color:#eec463;
+  font-size:1.2rem;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+}
+#lightbox .lb-download{
+  margin-top:16px;
+  background:var(--gold);
+  color:white;
+  border:none;
+  padding:10px 28px;
+  border-radius:25px;
+  font-weight:700;
+  cursor:pointer;
+  font-size:.95rem;
+}
+</style>
+
+</head>
+
+
+
+<body>
+
+
+
+<header>
+
+
+<img src="images/logo-nav.png" class="logo">
+
+
+<div class="brand">
+
+Kurarcha Ekdant
+
+<small>
+Mumbai - 400097
+</small>
+
+</div>
+
+
+</header>
+
+
+
+
+
+<div class="container">
+
+
+<h1 id="title">
+
+Gallery
+
+</h1>
+
+
+<p class="subtitle">
+
+Moments of devotion, culture and celebration
+
+</p>
+
+
+
+<div class="gallery" id="gallery">
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<footer>
+
+<span>
+गणपती बाप्पा मोरया
+</span>
+
+<br>
+
+© <span id="year"></span> Kurarcha Ekdant · All Rights Reserved
+
+
+</footer>
+
+
+
+
+
+<script type="module">
+
+
+import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import {
+
+getFirestore,
+collection,
+getDocs,
+query,
+where
+
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+
+
+const firebaseConfig = {
+
+
+apiKey: "AIzaSyCbieOt2IpLohjduy1Qs0NqVgYIrT28M9M",
+
+authDomain:"kurarcha-ekdant.firebaseapp.com",
+
+projectId:"kurarcha-ekdant",
+
+storageBucket:"kurarcha-ekdant.firebasestorage.app",
+
+messagingSenderId:"485489045109",
+
+appId:"1:485489045109:web:6a59b2b7843ed49d18d23c"
+
+
+};
+
+
+
+const app=initializeApp(firebaseConfig);
+
+const db=getFirestore(app);
+
+
+
+document.getElementById("year").innerHTML=new Date().getFullYear();
+
+
+
+const params=new URLSearchParams(window.location.search);
+
+
+const category=params.get("category");
+
+
+
+document.getElementById("title").innerHTML=category;
+
+
+
+const q=query(
+
+collection(db,"gallery"),
+
+where("category","==",category)
+
+);
+
+
+
+const snapshot=await getDocs(q);
+
+
+
+let html="";
+
+
+
+snapshot.forEach((doc)=>{
+
+
+const data=doc.data();
+
+
+html+=`
+<div class="card">
+  <img src="${data.imageUrl}" 
+       style="cursor:zoom-in;" 
+       onclick="openLightbox('${data.imageUrl}')" 
+       onerror="this.src='images/placeholder.jpg'">
+  <div style="display:flex;gap:8px;justify-content:center;margin-top:10px;">
+    <button class="btn" onclick="openLightbox('${data.imageUrl}')">🔍 View</button>
+    <button class="btn" onclick="downloadImage('${data.imageUrl}')">⬇ Download</button>
+  </div>
+</div>
+`;
+
+
+});
+
+
+
+
+if(html===""){
+
+
+html=`
+
+<div class="no-image">
+
+🙏 No Images Available
+
+<br>
+
+Images will be uploaded soon.
+
+</div>
+
+`;
+
+}
+
+
+
+document.getElementById("gallery").innerHTML=html;
+
+// Download image — using Cloudinary fl_attachment for direct download
+window.downloadImage = function(url){
+  try {
+    // For Cloudinary URLs — insert fl_attachment transformation
+    // This tells Cloudinary to serve the file as a download
+    let downloadUrl = url;
+
+    if(url.includes("cloudinary.com")){
+      // Insert fl_attachment into the URL transformation chain
+      // e.g. /image/upload/v123/... → /image/upload/fl_attachment/v123/...
+      downloadUrl = url.replace("/upload/", "/upload/fl_attachment/");
+    }
+
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = "Kurarcha-Ekdant-" + Date.now() + ".jpg";
+    link.target = "_blank";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch(e) {
+    // Final fallback
+    window.open(url, "_blank");
+  }
+};
+
+// Lightbox — full size image view
+window.openLightbox = function(url){
+  document.getElementById("lightbox").style.display = "flex";
+  document.getElementById("lightboxImg").src = url;
+};
+
+window.closeLightbox = function(){
+  document.getElementById("lightbox").style.display = "none";
+  document.getElementById("lightboxImg").src = "";
+};
+
+</script>
+
+
+
+
+<!-- Lightbox overlay -->
+<div id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="close-btn" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="Full size photo">
+  <button class="lb-download" onclick="downloadImage(document.getElementById('lightboxImg').src)">⬇ Download</button>
+</div>
+</body>
+
+</html>
