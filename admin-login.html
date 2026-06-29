@@ -552,9 +552,9 @@ Forgot password?
 
   <!-- Success state -->
   <div class="success-overlay" id="successOverlay">
-    <div class="success-icon">✅</div>
+    <div class="success-icon">🔓</div>
     <p>Login Successful!</p>
-    <small>Redirecting to dashboard...</small>
+    <small>Redirecting to Admin Dashboard...</small>
   </div>
 
   <div class="card-footer">
@@ -690,7 +690,6 @@ window.closeMessage = function(){
     this.textContent = isText ? '👁' : '🙈';
   });
 
-  // Enter key submits
   document.addEventListener('keydown', e => {
     if (e.key === 'Enter') handleLogin();
   });
@@ -779,5 +778,11 @@ window.closeMessage = function(){
   </div>
 </div>
 
+<script>
+history.pushState(null, null, location.href);
+window.addEventListener('popstate', function(){
+  history.pushState(null, null, location.href);
+});
+</script>
 </body>
 </html>
