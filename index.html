@@ -285,6 +285,18 @@
 #navLinks li{
   list-style:none;
 }
+
+.gallery-photo img{
+width:100%;
+height:100%;
+object-fit:cover;
+border-radius:14px;
+}
+
+.gallery-photo{
+aspect-ratio:1/1;
+overflow:hidden;
+}
 </style>
 </head>
 <body>
@@ -439,14 +451,36 @@
         <h2>Gallery</h2>
         <p>Photos from past Ganeshotsav celebrations — Sthapana, daily aarti, cultural nights and Visarjan. Swap these placeholders with your own photos.</p>
       </div>
-      <div class="gallery-grid reveal">
-        <div class="gallery-item">Sthapana<br>day photo</div>
-        <div class="gallery-item">Evening<br>aarti</div>
-        <div class="gallery-item">Cultural<br>program</div>
-        <div class="gallery-item">Decoration<br>&amp; pandal</div>
-        <div class="gallery-item">Visarjan<br>procession</div>
-        <div class="gallery-item">Volunteer<br>team</div>
-      </div>
+      
+<div class="gallery-grid reveal">
+
+<div class="gallery-item" onclick="window.open('gallery-view.html?category=Sthapana','_blank')">
+Sthapana<br>day photo
+</div>
+
+<div class="gallery-item" onclick="window.open('gallery-view.html?category=Aarti','_blank')">
+Aarti<br>Photo
+</div>
+
+<div class="gallery-item" onclick="window.open('gallery-view.html?category=Programs','_blank')">
+Programs<br>Photo
+</div>
+
+<div class="gallery-item" onclick="window.open('gallery-view.html?category=Decoration','_blank')">
+Decoration<br> Photo
+</div>
+
+<div class="gallery-item" onclick="window.open('gallery-view.html?category=Visarjan','_blank')">
+Visarjan<br> Photo
+</div>
+
+<div class="gallery-item" onclick="window.open('gallery-view.html?category=Memories','_blank')">
+Memories<br>Photo
+</div>
+</div>
+<div id="galleryContainer" class="gallery-grid">
+
+</div>
     </div>
   </section>
 
@@ -574,8 +608,53 @@
   <div>© <span id="year"></span> Kurarcha Ekdant  ·  All Rights Reserved</div>
 </footer>
 
-<script>
-  // mobile nav toggle
+<script type="module">
+
+import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import { 
+getFirestore,
+collection,
+getDocs
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCbieOt2IpLohjduy1Qs0NqVgYIrT28M9M",
+  authDomain: "kurarcha-ekdant.firebaseapp.com",
+  projectId: "kurarcha-ekdant",
+  storageBucket: "kurarcha-ekdant.firebasestorage.app",
+  messagingSenderId: "485489045109",
+  appId: "1:485489045109:web:6a59b2b7843ed49d18d23c"
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+window.db = getFirestore(app);
+window.collection = collection;
+window.getDocs = getDocs;
+
+
+</script>
+
+<script type="module">
+
+import { 
+getFirestore,
+collection,
+getDocs
+} 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+// use existing firebase app
+const db = window.db;
+
+
+// mobile nav toggle
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');
   const navSpans = navToggle.querySelectorAll('span');
@@ -650,6 +729,56 @@ navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
   }
   tick();
   setInterval(tick, 1000);
+  
+window.openCategory = async function(category){
+
+try{
+
+const snapshot = await window.getDocs(
+  window.collection(window.db,"gallery")
+);
+
+
+let html = "";
+
+
+snapshot.forEach((item)=>{
+
+const data = item.data();
+
+
+if(data.category === category){
+
+html += `
+<div class="gallery-photo">
+<img src="${data.imageUrl}">
+</div>
+`;
+
+}
+
+});
+
+
+document.getElementById("galleryContainer").innerHTML = html;
+
+
+if(html === ""){
+alert("No images found for "+category);
+}
+
+
+}
+
+catch(error){
+
+console.log(error);
+alert(error.message);
+
+}
+
+}
+  
 </script>
 
 </body>
