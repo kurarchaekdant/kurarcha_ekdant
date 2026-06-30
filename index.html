@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -217,12 +217,31 @@
   /* ---------- DONATION ---------- */
   .donate-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
   .tier{
-    background:rgba(251,236,210,.06); border:1px solid rgba(238,196,99,.28);
-    border-radius:var(--radius); padding:24px 18px; text-align:center;
-  }
-  .tier .modak{width:34px; height:34px; margin:0 auto 12px;}
-  .tier .amt{font-family:var(--font-display); font-size:1.3rem; color:var(--gold-light); display:block;}
-  .tier .tname{font-weight:700; font-size:.86rem; margin-top:4px;}
+    background:rgba(251,236,210,.06);
+    border:1px solid rgba(238,196,99,.28);
+    border-radius:14px;
+    padding:30px 18px;
+    text-align:center;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.tier:hover{
+    transform:translateY(-5px);
+}
+  .tier .amt{
+font-family:var(--font-display);
+font-size:1.3rem;
+color:var(--gold-light);
+display:block;
+font-weight:700;
+}
+  .tier .tname{
+    font-weight:400;
+    font-size:.86rem;
+    margin-top:4px;
+    color:#fbecd2;
+}
   @media (max-width:880px){.donate-grid{grid-template-columns:repeat(2,1fr);}}
 
   .donate-details{
@@ -494,27 +513,28 @@ Memories<br>Photo
       </div>
 
       <div class="donate-grid reveal">
-        <div class="tier">
-          <svg class="modak" viewBox="0 0 48 48" style="color:#eec463"><use href="#icon-modak"/></svg>
-          <span class="amt">₹501</span>
-          <div class="tname">Bhakt Sahayog</div>
-        </div>
-        <div class="tier">
-          <svg class="modak" viewBox="0 0 48 48" style="color:#eec463"><use href="#icon-modak"/></svg>
-          <span class="amt">₹1,101</span>
-          <div class="tname">Mahaprasad Sahayog</div>
-        </div>
-        <div class="tier">
-          <svg class="modak" viewBox="0 0 48 48" style="color:#eec463"><use href="#icon-modak"/></svg>
-          <span class="amt">₹2,100</span>
-          <div class="tname">Pradhan Donor</div>
-        </div>
-        <div class="tier">
-          <svg class="modak" viewBox="0 0 48 48" style="color:#eec463"><use href="#icon-modak"/></svg>
-          <span class="amt">₹5,100+</span>
-          <div class="tname">Mukhya Pratishthan</div>
-        </div>
-      </div>
+
+<div class="tier" onclick="goPayment(501)">
+<span class="amt">₹501</span>
+<div class="tname">Bhakt Sahayog</div>
+</div>
+
+<div class="tier" onclick="goPayment(1101)">
+<span class="amt">₹1,101</span>
+<div class="tname">Mahaprasad Sahayog</div>
+</div>
+
+<div class="tier" onclick="goPayment(2100)">
+<span class="amt">₹2,100</span>
+<div class="tname">Pradhan Donor</div>
+</div>
+
+<div class="tier" onclick="goPayment(5100)">
+<span class="amt">₹5,100</span>
+<div class="tname">Mukhya Pratishthan</div>
+</div>
+
+</div>
 
       <div class="donate-details reveal">
         <div>
@@ -778,6 +798,12 @@ alert(error.message);
 }
 
 }
+
+// Redirect to payment page with selected amount
+// Attached to window explicitly since this is inside a module script
+window.goPayment = function(amount){
+  window.location.href = "payment.html?amount=" + amount;
+};
   
 </script>
 
