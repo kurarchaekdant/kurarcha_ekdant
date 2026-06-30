@@ -239,7 +239,75 @@ margin-bottom:5px;
   color:var(--gold);
   min-height:18px;
 }
+.payment-popup{
 
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+
+background:rgba(0,0,0,.65);
+
+align-items:center;
+justify-content:center;
+
+z-index:999;
+
+}
+
+
+.popup-box{
+
+width:85%;
+max-width:350px;
+
+background:var(--maroon);
+
+color:var(--cream);
+
+padding:25px;
+
+border-radius:16px;
+
+text-align:center;
+
+border:1px solid rgba(238,196,99,.4);
+
+}
+
+
+.popup-box h3{
+
+font-family:var(--font-display);
+
+color:var(--gold);
+
+}
+
+
+.popup-btns{
+
+display:flex;
+
+gap:10px;
+
+margin-top:20px;
+
+}
+
+
+.popup-btns button{
+
+margin:0;
+
+}
+#afterPayment{
+margin-top:15px;
+padding-top:15px;
+border-top:1px solid rgba(238,196,99,.25);
+}b
 </style>
 </head>
 
@@ -295,11 +363,58 @@ I don’t have Pauti Number
 
 </div>
 
-<input id="pauti" placeholder="Select an option above first" disabled
+<input id="pauti" placeholder="Select an option above" disabled
 oninput="this.value=this.value.toUpperCase()">
 
 <button onclick="pay()" id="payBtn">Proceed To Pay</button>
+<div id="paymentPopup" class="payment-popup">
 
+<div class="popup-box">
+
+<h3>Payment Status</h3>
+
+<p>Did you complete the payment?</p>
+
+<div class="popup-btns">
+
+<button onclick="paymentDone()">
+Yes, I Paid
+</button>
+
+<button onclick="paymentNotDone()">
+Not Yet
+</button>
+
+</div>
+
+</div>
+
+</div>
+<div id="afterPayment" style="display:none;">
+
+<label>Transaction ID</label>
+
+<input 
+id="transactionId"
+type="text"
+placeholder="Enter Transaction ID">
+
+
+<label style="margin-top:12px;display:block;">
+Payment Screenshot
+</label>
+
+<input 
+id="paymentProof"
+type="file"
+accept="image/*">
+
+
+<button onclick="submitDonation()">
+Submit Donation
+</button>
+
+</div>
 <!-- UPI app selection — shown after form validation passes -->
 <div id="upiApps" class="upi-apps">
   <button type="button" class="upi-pay-btn" id="upiPayBtn" onclick="openUpiApp()">
@@ -451,9 +566,9 @@ function openUpiApp(){
     // and there is no clean fallback path if no app is found
     link = "upi://pay?" + params;
   }
-
+sessionStorage.setItem("upiOpened","yes");
   window.location.href = link;
-
+  
   setTimeout(function(){
     if(btn) btn.classList.remove("is-loading");
   }, 1200);
@@ -472,6 +587,33 @@ function openUpiApp(){
   }
 })();
 
+function paymentDone(){
+
+document.getElementById("paymentPopup").style.display="none";
+
+document.getElementById("afterPayment").style.display="block";
+
+document.getElementById("upiApps").style.display="none";
+
+document.getElementById("payBtn").style.display="none";
+
+}
+
+function paymentNotDone(){
+
+document.getElementById("paymentPopup").style.display="none";
+
+}
+
+window.addEventListener("focus", function(){
+
+if(sessionStorage.getItem("upiOpened") === "yes"){
+
+document.getElementById("paymentPopup").style.display="flex";
+
+}
+
+});
 </script>
 
 
