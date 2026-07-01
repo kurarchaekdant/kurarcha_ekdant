@@ -1,621 +1,1055 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Donation Payment | Kurarcha Ekdant</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Mukta:wght@400;600;700&display=swap" rel="stylesheet">
-
-<style>
-
-:root{
---maroon:#330d0f;
---gold:#eec463;
---cream:#fbecd2;
---paper:#f3e2bd;
---font-display:'Yatra One',serif;
---font-body:'Mukta',sans-serif;
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>Donation Payment | Kurarcha Ekdant</title>  <link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Mukta:wght@400;600;700&display=swap" rel="stylesheet"> 
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script><style>  
+  
+:root{  
+--maroon:#330d0f;  
+--gold:#eec463;  
+--cream:#fbecd2;  
+--paper:#f3e2bd;  
+--font-display:'Yatra One',serif;  
+--font-body:'Mukta',sans-serif;  
+}  
+  
+*{box-sizing:border-box;}  
+  
+body{  
+margin:0;  
+background:var(--paper);  
+font-family:var(--font-body);  
+display:flex;  
+flex-direction:column;  
+min-height:100vh;  
+}  
+  
+/* HEADER */  
+header{  
+background:var(--maroon);  
+border-bottom:1px solid rgba(238,196,99,.25);  
+}  
+  
+.nav-inner{  
+display:flex;  
+align-items:center;  
+padding:14px 24px;  
+}  
+  
+.brand{  
+display:flex;  
+align-items:center;  
+gap:10px;  
+text-decoration:none;  
+color:var(--cream);  
+}  
+  
+.brand img{  
+width:55px;  
+height:55px;  
+}  
+  
+.brand-text{  
+font-family:var(--font-display);  
+font-size:1.1rem;  
+line-height:1.1;  
+}  
+  
+.brand-text small{  
+display:block;  
+font-size:.7rem;  
+color:var(--gold);  
+}  
+  
+/* MAIN */  
+main{  
+flex:1;  
+display:flex;  
+justify-content:center;  
+align-items:center;  
+padding:25px;  
+}  
+  
+.card{  
+width:100%;  
+max-width:430px;  
+background:var(--maroon);  
+padding:26px;  
+border-radius:16px;  
+border:1px solid rgba(238,196,99,.3);  
+color:var(--cream);  
+box-shadow:0 10px 25px rgba(0,0,0,0.25);  
+}  
+  
+h2{  
+text-align:center;  
+font-family:var(--font-display);  
+margin:0;  
+}  
+  
+.amount{  
+text-align:center;  
+font-size:2rem;  
+font-weight:700;  
+color:var(--gold);  
+margin:18px 0;  
+}  
+  
+/* INPUTS */  
+input{  
+width:100%;  
+padding:12px;  
+margin-top:10px;  
+border:none;  
+border-radius:10px;  
+font-size:1rem;  
+outline:none;  
+}  
+  
+/* RADIO */  
+.options{  
+margin-top:12px;  
+display:flex;  
+flex-direction:column;  
+gap:6px;  
+}  
+  
+.option{  
+display:flex;  
+align-items:center;  
+gap:8px;  
+cursor:pointer;  
+padding:4px 6px;  
+}  
+  
+.option input{  
+width:16px;  
+height:16px;  
+margin:0;  
+}  
+  
+/* PAUTI FIELD (FINAL FIX) */  
+#pauti{  
+width:100%;  
+padding:12px;  
+margin-top:10px;  
+border:none;  
+border-radius:10px;  
+font-size:1rem;  
+text-align:center;  
+background:rgba(255,255,255,0.08);  
+color:#eec463;  
+font-weight:700;  
+text-transform:uppercase;   /* FORCE CAPS DISPLAY */  
+}  
+  
+/* BUTTON */  
+button{  
+width:100%;  
+padding:13px;  
+margin-top:16px;  
+border:none;  
+border-radius:10px;  
+background:var(--gold);  
+color:var(--maroon);  
+font-weight:700;  
+cursor:pointer;  
+}  
+  
+button:hover{  
+transform:translateY(-2px);  
+}  
+  
+/* FOOTER */  
+footer{  
+background:var(--maroon);  
+color:rgba(251,236,210,.7);  
+text-align:center;  
+padding:22px;  
+font-size:.85rem;  
+border-top:1px solid rgba(238,196,99,.2);  
+}  
+  
+.foot-mark{  
+font-family:var(--font-display);  
+color:var(--gold);  
+display:block;  
+margin-bottom:5px;  
+}  
+  
+/* UPI APP SELECTION */  
+.upi-apps{  
+  display:none;  
+  margin-top:20px;  
+  padding-top:18px;  
+  border-top:1px solid rgba(238,196,99,.2);  
+}  
+.upi-pay-btn{  
+  width:100%;  
+  margin:0;  
+  padding:15px;  
+  background:linear-gradient(135deg, var(--gold), #c9952f);  
+  color:#2a0d0d;  
+  border:none;  
+  border-radius:12px;  
+  font-weight:800;  
+  font-size:1rem;  
+  letter-spacing:.02em;  
+  cursor:pointer;  
+  display:flex;  
+  align-items:center;  
+  justify-content:center;  
+  gap:8px;  
+  transition:transform .15s ease, box-shadow .15s ease;  
+  font-family:var(--font-body);  
+}  
+.upi-pay-btn:hover{  
+  box-shadow:0 8px 24px rgba(238,196,99,.35);  
+  transform:translateY(-1px);  
+}  
+.upi-pay-btn:active{  
+  transform:scale(.98);  
+}  
+.upi-pay-btn.is-loading{  
+  opacity:.65;  
+  pointer-events:none;  
+}  
+.upi-pay-icon{  
+  font-size:1.15rem;  
+}  
+.upi-apps-hint{  
+  text-align:center;  
+  margin-top:14px;  
+  font-size:.72rem;  
+  color:rgba(251,236,210,.5);  
+}  
+.upi-apps-status{  
+  text-align:center;  
+  
+  margin-top:10px;  
+  font-size:.78rem;  
+  font-weight:600;  
+  color:var(--gold);  
+  min-height:18px;  
+}  
+.payment-popup{  
+  
+display:none;  
+position:fixed;  
+top:0;  
+left:0;  
+width:100%;  
+height:100%;  
+  
+background:rgba(0,0,0,.65);  
+  
+align-items:center;  
+justify-content:center;  
+  
+z-index:999;  
+  
+}  
+  
+  
+.popup-box{  
+  
+width:85%;  
+max-width:350px;  
+  
+background:var(--maroon);  
+  
+color:var(--cream);  
+  
+padding:25px;  
+  
+border-radius:16px;  
+  
+text-align:center;  
+  
+border:1px solid rgba(238,196,99,.4);  
+  
+}  
+  
+  
+.popup-box h3{  
+  
+font-family:var(--font-display);  
+  
+color:var(--gold);  
+  
+}  
+  
+  
+.popup-btns{  
+  
+display:flex;  
+  
+gap:10px;  
+  
+margin-top:20px;  
+  
+}  
+  
+  
+.popup-btns button{  
+  
+margin:0;  
+  
+}  
+#afterPayment{  
+margin-top:15px;  
+padding-top:15px;  
+border-top:1px solid rgba(238,196,99,.25);  
+}b  
+  
+.form-error{  
+  display:none;  
+  margin-top:12px;  
+  padding:13px 16px;  
+  background:#7f1d1d;  
+  border:2px solid #ef4444;  
+  border-radius:10px;  
+  color:#ffffff;  
+  font-size:.88rem;  
+  font-weight:700;  
+  text-align:center;  
+  animation:shake .35s ease;  
+}  
+.form-error.show{ display:block; }  
+@keyframes shake{  
+  0%,100%{ transform:translateX(0); }  
+  20%{ transform:translateX(-6px); }  
+  40%{ transform:translateX(6px); }  
+  60%{ transform:translateX(-4px); }  
+  80%{ transform:translateX(4px); }  
+}  
+#formError{  
+  transition: all 0.3s ease;  
+}  
+.form-success{
+  display:none;
+  margin-top:12px;
+  padding:13px 16px;
+  background:#166534;
+  border:2px solid #22c55e;
+  border-radius:10px;
+  color:white;
+  font-size:.9rem;
+  font-weight:700;
+  text-align:center;
 }
-
-*{box-sizing:border-box;}
-
-body{
-margin:0;
-background:var(--paper);
-font-family:var(--font-body);
-display:flex;
-flex-direction:column;
-min-height:100vh;
-}
-
-/* HEADER */
-header{
+.final-success{
+display:none;
 background:var(--maroon);
-border-bottom:1px solid rgba(238,196,99,.25);
-}
-
-.nav-inner{
-display:flex;
-align-items:center;
-padding:14px 24px;
-}
-
-.brand{
-display:flex;
-align-items:center;
-gap:10px;
-text-decoration:none;
+border:2px solid var(--gold);
 color:var(--cream);
-}
-
-.brand img{
-width:55px;
-height:55px;
-}
-
-.brand-text{
-font-family:var(--font-display);
-font-size:1.1rem;
-line-height:1.1;
-}
-
-.brand-text small{
-display:block;
-font-size:.7rem;
-color:var(--gold);
-}
-
-/* MAIN */
-main{
-flex:1;
-display:flex;
-justify-content:center;
-align-items:center;
 padding:25px;
-}
-
-.card{
-width:100%;
-max-width:430px;
-background:var(--maroon);
-padding:26px;
 border-radius:16px;
-border:1px solid rgba(238,196,99,.3);
-color:var(--cream);
-box-shadow:0 10px 25px rgba(0,0,0,0.25);
+text-align:center;
+font-weight:700;
+font-size:1.1rem;
+margin-top:20px;
 }
 
-h2{
-text-align:center;
+.final-success h3{
 font-family:var(--font-display);
-margin:0;
-}
-
-.amount{
-text-align:center;
-font-size:2rem;
-font-weight:700;
 color:var(--gold);
-margin:18px 0;
+margin:0 0 15px;
 }
-
-/* INPUTS */
-input{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:10px;
-font-size:1rem;
-outline:none;
-}
-
-/* RADIO */
-.options{
-margin-top:12px;
-display:flex;
-flex-direction:column;
-gap:6px;
-}
-
-.option{
-display:flex;
-align-items:center;
-gap:8px;
-cursor:pointer;
-padding:4px 6px;
-}
-
-.option input{
-width:16px;
-height:16px;
-margin:0;
-}
-
-/* PAUTI FIELD (FINAL FIX) */
-#pauti{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:10px;
-font-size:1rem;
-text-align:center;
-background:rgba(255,255,255,0.08);
-color:#eec463;
-font-weight:700;
-text-transform:uppercase;   /* FORCE CAPS DISPLAY */
-}
-
-/* BUTTON */
-button{
-width:100%;
-padding:13px;
-margin-top:16px;
-border:none;
-border-radius:10px;
+.final-success button{
+margin-top:15px;
 background:var(--gold);
 color:var(--maroon);
-font-weight:700;
-cursor:pointer;
+width:120px;
 }
-
-button:hover{
-transform:translateY(-2px);
-}
-
-/* FOOTER */
-footer{
-background:var(--maroon);
-color:rgba(251,236,210,.7);
-text-align:center;
-padding:22px;
-font-size:.85rem;
-border-top:1px solid rgba(238,196,99,.2);
-}
-
-.foot-mark{
-font-family:var(--font-display);
-color:var(--gold);
-display:block;
-margin-bottom:5px;
-}
-
-/* UPI APP SELECTION */
-.upi-apps{
-  display:none;
-  margin-top:20px;
-  padding-top:18px;
-  border-top:1px solid rgba(238,196,99,.2);
-}
-.upi-pay-btn{
-  width:100%;
-  margin:0;
-  padding:15px;
-  background:linear-gradient(135deg, var(--gold), #c9952f);
-  color:#2a0d0d;
-  border:none;
-  border-radius:12px;
-  font-weight:800;
-  font-size:1rem;
-  letter-spacing:.02em;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  transition:transform .15s ease, box-shadow .15s ease;
-  font-family:var(--font-body);
-}
-.upi-pay-btn:hover{
-  box-shadow:0 8px 24px rgba(238,196,99,.35);
-  transform:translateY(-1px);
-}
-.upi-pay-btn:active{
-  transform:scale(.98);
-}
-.upi-pay-btn.is-loading{
-  opacity:.65;
-  pointer-events:none;
-}
-.upi-pay-icon{
-  font-size:1.15rem;
-}
-.upi-apps-hint{
-  text-align:center;
-  margin-top:14px;
-  font-size:.72rem;
-  color:rgba(251,236,210,.5);
-}
-.upi-apps-status{
-  text-align:center;
-
-  margin-top:10px;
-  font-size:.78rem;
-  font-weight:600;
-  color:var(--gold);
-  min-height:18px;
-}
-.payment-popup{
-
+#downloadMsg{
 display:none;
 position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-
-background:rgba(0,0,0,.65);
-
-align-items:center;
-justify-content:center;
-
-z-index:999;
-
-}
-
-
-.popup-box{
-
-width:85%;
-max-width:350px;
-
-background:var(--maroon);
-
-color:var(--cream);
-
-padding:25px;
-
-border-radius:16px;
-
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+background:#166534;
+color:white;
+padding:12px 25px;
+border-radius:10px;
+font-weight:700;
+z-index:9999;
+white-space:nowrap;
+min-width:260px;
 text-align:center;
-
-border:1px solid rgba(238,196,99,.4);
-
 }
 
-
-.popup-box h3{
-
-font-family:var(--font-display);
-
-color:var(--gold);
-
-}
-
-
-.popup-btns{
-
-display:flex;
-
-gap:10px;
-
-margin-top:20px;
-
-}
-
-
-.popup-btns button{
-
-margin:0;
-
-}
-#afterPayment{
-margin-top:15px;
-padding-top:15px;
-border-top:1px solid rgba(238,196,99,.25);
-}b
-</style>
-</head>
-
-<body>
-
-<header>
-<div class="nav-inner">
-
-<a class="brand" href="index.html">
-<img src="logo-nav.png">
-
-<div class="brand-text">
-Kurarcha Ekdant
-<small>Mumbai - 400097</small>
-</div>
-
-</a>
-
-</div>
-</header>
-
-<main>
-
-<div class="card">
-
-<h2>Donation Payment</h2>
-
-<div class="amount" id="amount">₹0</div>
-
-<input id="name"
-type="text"
-placeholder="Enter Name"
+</style>  </head>  <body>  <header>  
+<div class="nav-inner">  <a class="brand" href="index.html">  
+<img src="logo-nav.png">  <div class="brand-text">  
+Kurarcha Ekdant  
+<small>Mumbai - 400097</small>  
+</div>  </a>  </div>  
+</header>  <main>  <div class="card">  <h2>Donation Payment</h2>  <div class="amount" id="amount">₹0</div>  <input id="name"  
+type="text"  
+placeholder="Enter Name"  
 oninput="this.value=this.value.replace(/[^a-zA-Z\s]/g,'')">
 
-<input id="mobile"
-type="tel"
-inputmode="numeric"
-maxlength="10"
-placeholder="Enter Mobile Number"
+<input id="mobile"  
+type="tel"  
+inputmode="numeric"  
+maxlength="10"  
+placeholder="Enter Mobile Number"  
 oninput="this.value=this.value.replace(/[^0-9]/g,'')">
 
-<div class="options">
-
-<label class="option">
-<input type="radio" name="pautiMode" onclick="setMode('have')">
-I have Pauti Number
-</label>
-
-<label class="option">
-<input type="radio" name="pautiMode" onclick="setMode('dont')">
-I don’t have Pauti Number
-</label>
-
-</div>
-
-<input id="pauti" placeholder="Select an option above" disabled
+<div class="options">  <label class="option">  
+<input type="radio" name="pautiMode" onclick="setMode('have')">  
+I have Pauti Number  
+</label>  <label class="option">  
+<input type="radio" name="pautiMode" onclick="setMode('dont')">  
+I don’t have Pauti Number  
+</label>  </div>  <input id="pauti" placeholder="Select an option above" disabled  
 oninput="this.value=this.value.toUpperCase()">
 
-<button onclick="pay()" id="payBtn">Proceed To Pay</button>
-<div id="paymentPopup" class="payment-popup">
+<button id="payBtn">Proceed To Pay</button>
 
-<div class="popup-box">
+<div id="formError" class="form-error"></div>  
+<div id="formSuccess" class="form-success"></div>
+<div id="paymentPopup" class="payment-popup">  <div class="popup-box">  <h3>Payment Status</h3>  <p>Did you complete the payment?</p>  <div class="popup-btns">  <button onclick="paymentDone()">  
+Yes, I Paid  
+</button>  <button onclick="paymentNotDone()">  
+Not Yet  
+</button>  </div>  </div>  </div>  
+<div id="afterPayment" style="display:none;">  <label>Transaction ID</label>
 
-<h3>Payment Status</h3>
+<input   
+id="transactionId"  
+type="text"  
+placeholder="Enter UPI Transaction ID">
 
-<p>Did you complete the payment?</p>
-
-<div class="popup-btns">
-
-<button onclick="paymentDone()">
-Yes, I Paid
-</button>
-
-<button onclick="paymentNotDone()">
-Not Yet
-</button>
-
-</div>
-
-</div>
-
-</div>
-<div id="afterPayment" style="display:none;">
-
-<label>Transaction ID</label>
-
-<input 
-id="transactionId"
-type="text"
-placeholder="Enter Transaction ID">
-
-
-<label style="margin-top:12px;display:block;">
-Payment Screenshot
-</label>
-
-<input 
-id="paymentProof"
-type="file"
+<label style="margin-top:12px;display:block;">  
+Payment Screenshot  
+</label>  <input   
+id="paymentProof"  
+type="file"  
 accept="image/*">
 
+<button onclick="submitDonation()">  
+Submit Donation  
+</button>  </div>  
+<div id="finalSuccess" class="final-success">
 
-<button onclick="submitDonation()">
-Submit Donation
+<h3>Thank You For Supporting Us</h3>
+
+<p id="successPauti"></p>
+
+<button id="homeBtn">
+OK
 </button>
 
 </div>
-<!-- UPI app selection — shown after form validation passes -->
-<div id="upiApps" class="upi-apps">
-  <button type="button" class="upi-pay-btn" id="upiPayBtn" onclick="openUpiApp()">
-    <span class="upi-pay-icon">💳</span>
-    Pay via UPI Apps
-  </button>
-  <div class="upi-apps-hint">You'll be asked to choose from UPI apps installed on your phone</div>
-  <div class="upi-apps-status" id="upiStatus"></div>
-</div>
-</div>
-
-</div>
-
-</main>
-
-<footer>
-<span class="foot-mark">गणपती बाप्पा मोरया</span>
-© <span id="year"></span> Kurarcha Ekdant
-</footer>
-
-<script>
-
-document.getElementById("year").textContent =
-new Date().getFullYear();
-
-/* AMOUNT */
-const params = new URLSearchParams(window.location.search);
-let amount = params.get("amount") || 0;
-document.getElementById("amount").innerText = "₹" + amount;
-
-/* PAUTI SYSTEM */
-let generated = null;
-
-/* PAY */
-let pautiMode = null; // tracks which radio is selected
-
-function setMode(type){
-  pautiMode = type;
-
-  let input = document.getElementById("pauti");
-
-  if(type === "have"){
-    input.disabled = false;
-    input.value = "";
-    input.placeholder = "Enter Your Pauti Number";
-    input.style.color = "#eec463";
-    input.style.fontWeight = "700";
-    input.focus();
-  }
-
-  if(type === "dont"){
-    input.disabled = true;
-
-    if(!generated){
-      let count = localStorage.getItem("pautiCount") || 0;
-      count++;
-      localStorage.setItem("pautiCount", count);
-      generated = "ON" + String(count).padStart(2,"0");
-    }
-
-    input.value = generated;
-    input.style.color = "#eec463";
-    input.style.fontWeight = "700";
-  }
-}
-
-function pay(){
-
-  let name = document.getElementById("name").value.trim();
-  let mobile = document.getElementById("mobile").value.trim();
-  let pauti = document.getElementById("pauti").value.trim();
-
-  if(name.length < 3){
-    alert("Enter valid name");
-    return;
-  }
-
-  if(!/^[6-9]\d{9}$/.test(mobile)){
-    alert("Enter valid mobile number");
-    return;
-  }
-
-  // Pauti is now compulsory
-  if(!pautiMode){
-    alert("Please select whether you have a Pauti number or not");
-    return;
-  }
-
-  if(pautiMode === "have" && pauti.length < 2){
-    alert("Please enter your Pauti number");
-    document.getElementById("pauti").focus();
-    return;
-  }
-
-  if(pautiMode === "dont" && !pauti){
-    alert("Something went wrong generating your Pauti number. Please reselect the option.");
-    return;
-  }
-
-  // All valid — reveal UPI app selection instead of guessing one link
-  document.getElementById("payBtn").style.display = "none";
-  document.getElementById("upiApps").classList.add("is-visible");
-  document.getElementById("upiApps").style.display = "block";
-  document.getElementById("upiApps").scrollIntoView({behavior:"smooth", block:"center"});
-
-}
-
-function openUpiApp(){
-
-  let pauti = document.getElementById("pauti").value.trim();
-  let payeeName = "Kurarcha Ekdant Ganesh Mandal";
-  let note = "Donation - Pauti " + pauti;
-  let statusEl = document.getElementById("upiStatus");
-  let btn = document.getElementById("upiPayBtn");
-
-  let params = "pa=ns008072-1@okicici"
-             + "&pn=" + encodeURIComponent(payeeName)
-             + "&am=" + amount
-             + "&cu=INR"
-             + "&tn=" + encodeURIComponent(note);
-
-  let isAndroid = /Android/i.test(navigator.userAgent);
-  let isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-  if(!isAndroid && !isIOS){
-    statusEl.textContent = "UPI payment works only on mobile devices. Please open this page on your phone.";
-    return;
-  }
-
-  if(btn) btn.classList.add("is-loading");
-  statusEl.textContent = "Opening UPI...";
-
-  // Fallback URL — if NO UPI app is found at all, redirect here instead of
-  // showing Chrome's broken "Web page not available" system error page
-  let fallbackUrl = window.location.href.split("#")[0].split("?")[0]
-                   + "?amount=" + amount + "&noupi=1";
-
-  let link;
-  if(isAndroid){
-    // Android Chrome's official intent:// syntax — this is what actually triggers
-    // the native bottom-sheet "Open with..." app picker showing every installed
-    // UPI app, exactly like sharing a photo or link. If literally no UPI app is
-    // installed, Chrome follows browser_fallback_url instead of erroring out.
-    link = "intent://pay?" + params
-         + "#Intent;scheme=upi;action=android.intent.action.VIEW;"
-         + "S.browser_fallback_url=" + encodeURIComponent(fallbackUrl) + ";end";
-  } else {
-    // iOS has no intent:// equivalent — generic upi:// is the only option,
-    // and there is no clean fallback path if no app is found
-    link = "upi://pay?" + params;
-  }
-sessionStorage.setItem("upiOpened","yes");
-  window.location.href = link;
+<!-- UPI app selection — shown after form validation passes -->  
+<div id="upiApps" class="upi-apps">  
+  <button type="button" class="upi-pay-btn" id="upiPayBtn" onclick="openUpiApp()">  
+    <span class="upi-pay-icon">💳</span>  
+    Pay via UPI Apps  
+  </button>  
+  <div class="upi-apps-hint">You'll be asked to choose from UPI apps installed on your phone</div>  
+  <div class="upi-apps-status" id="upiStatus"></div>  
+</div>  
+</div>  </div>  </main>  <footer>  
+<span class="foot-mark">गणपती बाप्पा मोरया</span>  
+© <span id="year"></span> Kurarcha Ekdant  
+</footer>  <script type="module">  
   
-  setTimeout(function(){
-    if(btn) btn.classList.remove("is-loading");
-  }, 1200);
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";  
+import {   
+getFirestore,  
+doc,  
+runTransaction  
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";  
+  
+  
+const firebaseConfig = {  
+  
+apiKey: "AIzaSyCbieOt2IpLohjduy1Qs0NqVgYIrT28M9M",  
+authDomain: "kurarcha-ekdant.firebaseapp.com",  
+projectId: "kurarcha-ekdant",  
+storageBucket: "kurarcha-ekdant.firebasestorage.app",  
+messagingSenderId: "485489045109",  
+appId: "1:485489045109:web:6a59b2b7843ed49d18d23c"  
+  
+};  
+  
+  
+const app = initializeApp(firebaseConfig);  
+const db = getFirestore(app);  
+  
+  
+  
+document.getElementById("year").innerHTML =  
+new Date().getFullYear();  
+  
+  
+  
+const urlParams = new URLSearchParams(window.location.search);  
+  
+let amount = urlParams.get("amount") || 0;  
+  
+document.getElementById("amount").innerHTML =  
+"₹"+amount;  
+  
+  
+  
+let pautiMode = null;  
+let generated = null;  
+  
+let upiOpenedThisSession = false;  
+  
+  
+  
+window.setMode = function(type){
+
+pautiMode = type;
+
+let input = document.getElementById("pauti");
+
+
+if(type==="have"){
+
+input.disabled = false;
+
+input.value = "";
+
+input.placeholder = "Enter Your Pauti Number";
+
+input.style.opacity = "1";
+
+input.focus();
 
 }
 
-// Show a friendly message if redirected back here with no UPI app found
-(function checkNoUpiFallback(){
-  let qs = new URLSearchParams(window.location.search);
-  if(qs.get("noupi") === "1"){
-    let statusEl = document.getElementById("upiStatus");
-    if(statusEl){
-      statusEl.innerHTML = "No UPI app was found on this device.<br>Please install Google Pay, PhonePe, or Paytm, or share your Pauti number with the committee to pay manually.";
-      statusEl.style.color = "#f87171";
-    }
-  }
-})();
 
-function paymentDone(){
 
-document.getElementById("paymentPopup").style.display="none";
+if(type==="dont"){
 
-document.getElementById("afterPayment").style.display="block";
+input.disabled = true;
 
+input.value = "Auto Generation";
+
+input.style.opacity = "0.6";
+
+}
+
+}
+  
+  
+  
+  
+  
+async function generatePauti(input){  
+  
+  
+try{  
+  
+  
+const ref = doc(db,"meta","pautiCounter");  
+  
+  
+const number = await runTransaction(  
+db,  
+async(transaction)=>{  
+  
+  
+const snap = await transaction.get(ref);  
+  
+  
+let current =  
+snap.exists() ? snap.data().count : 0;  
+  
+  
+let next=current+1;  
+  
+  
+transaction.set(ref,{  
+count:next  
+});  
+  
+  
+return next;  
+  
+  
+});  
+  
+  
+  
+generated =  
+"ON"+String(number).padStart(2,"0");  
+  
+  
+input.value=generated;  
+  
+  
+  
+}  
+  
+catch(error){  
+  
+  
+generated =  
+"ON-"+Date.now().toString().slice(-5);  
+  
+  
+input.value=generated;  
+  
+  
+}  
+  
+  
+  
+}  
+  
+  
+window.showFormError = function(msg){  
+  
+let box = document.getElementById("formError");  
+  
+box.innerHTML = msg;  
+box.style.display = "block";  
+box.classList.add("show");  
+  
+// auto hide after 3 seconds  
+setTimeout(() => {  
+  box.classList.remove("show");  
+  box.style.display = "none";  
+}, 3000);  
+  
+}  
+  
+  
+window.pay=function(){  
+  
+  
+let name =  
+document.getElementById("name").value.trim();  
+  
+  
+let mobile =  
+document.getElementById("mobile").value.trim();  
+  
+  
+let pauti =  
+document.getElementById("pauti").value.trim();  
+  
+  
+  
+if(name.length<3){  
+  
+showFormError("⚠️ Enter valid name");  
+return;  
+  
+}  
+  
+  
+  
+if(!/^[6-9]\d{9}$/.test(mobile)){  
+  
+  
+showFormError("⚠️ Enter valid mobile number");  
+return;  
+  
+  
+}  
+  
+  
+  
+if(!pautiMode){  
+  
+  
+showFormError("⚠️ Select Pauti option");  
+return;  
+  
+  
+}  
+  
+  
+  
+if(pautiMode==="have" && pauti.length<2){  
+  
+showFormError("⚠️ Enter Pauti number");  
+return;  
+  
+}  
+  
+  
+  
+document.getElementById("payBtn").style.display="none";  
+  
+  
+document.getElementById("upiApps").style.display="block";  
+  
+}  
+  
+  
+  
+  
+  
+window.openUpiApp=function(){  
+  
+let pauti =  
+document.getElementById("pauti").value.trim();  
+  
+let upiData =  
+"upi://pay?pa=ns008072-1@okicici"+  
+"&pn="+encodeURIComponent("Kurarcha Ekdant Ganesh Mandal")+  
+"&am="+amount+  
+"&cu=INR"+  
+"&tn="+encodeURIComponent("Donation "+pauti);  
+  
+  
+upiOpenedThisSession=true;  
+  
+  
+// IMPORTANT  
+window.location.href = upiData;  
+  
+  
+}  
+
+  
+  
+window.paymentDone=function(){  
+  
+    document.getElementById("paymentPopup").style.display="none";  
+  
+    // show transaction + screenshot section  
+    document.getElementById("afterPayment").style.display="block";  
+  
+    // hide UPI button section completely  
+    document.getElementById("upiApps").style.display="none";  
+  
+    // keep proceed button hidden  
+    document.getElementById("payBtn").style.display="none";  
+  
+}  
+  
+  
+  
+window.paymentNotDone=function(){  
+  
+document.getElementById("paymentPopup").style.display="none";  
+  
+}  
+  
+  
+document.getElementById("payBtn")  
+.addEventListener("click",window.pay);  
+  
+  
+window.addEventListener("focus",()=>{  
+  
+if(upiOpenedThisSession){  
+  
+document.getElementById("paymentPopup")  
+.style.display="flex";  
+  
+upiOpenedThisSession = false;  
+  
+}  
+  
+});  
+  
+  
+window.submitDonation = async function(){
+
+
+// CHECK TRANSACTION ID
+
+let transactionId = document.getElementById("transactionId").value.trim();
+
+let screenshot = document.getElementById("paymentProof").files.length;
+
+
+if(transactionId === ""){
+
+showFormError("⚠️ Please enter Transaction ID");
+
+return;
+
+}
+
+
+if(screenshot === 0){
+
+showFormError("⚠️ Please upload payment screenshot");
+
+return;
+
+}
+
+
+
+// hide payment sections
+
+document.getElementById("afterPayment").style.display="none";
 document.getElementById("upiApps").style.display="none";
-
 document.getElementById("payBtn").style.display="none";
 
-}
+document.getElementById("name").style.display="none";
+document.getElementById("mobile").style.display="none";
+document.querySelector(".options").style.display="none";
+document.getElementById("pauti").style.display="none";
 
-function paymentNotDone(){
 
-document.getElementById("paymentPopup").style.display="none";
 
-}
+// Generate Pauti ONLY after valid submission
 
-window.addEventListener("focus", function(){
+let pautiNumber;
 
-if(sessionStorage.getItem("upiOpened") === "yes"){
 
-document.getElementById("paymentPopup").style.display="flex";
+try{
 
-}
+const ref = doc(db,"meta","pautiCounter");
+
+
+const number = await runTransaction(db, async(transaction)=>{
+
+
+const snap = await transaction.get(ref);
+
+
+let current = snap.exists() ? snap.data().count : 0;
+
+
+let next = current + 1;
+
+
+transaction.set(ref,{
+count:next
+});
+
+
+return next;
+
 
 });
-</script>
 
 
-</body>
+pautiNumber = "ON" + String(number).padStart(2,"0");
+
+
+}
+catch(error){
+
+pautiNumber = "ON-" + Date.now().toString().slice(-5);
+
+}
+
+
+
+
+document.getElementById("successPauti").innerHTML =
+"Your Pauti Number: <b>"+pautiNumber+"</b>";
+
+
+document.getElementById("finalSuccess").style.display="block";
+
+
+// CREATE RECEIPT IMAGE
+
+document.getElementById("receiptName").innerHTML =
+"Name: " + document.getElementById("name").value;
+
+
+document.getElementById("receiptMobile").innerHTML =
+"Mobile: " + document.getElementById("mobile").value;
+
+
+document.getElementById("receiptAmount").innerHTML =
+"Amount: ₹" + amount;
+
+
+document.getElementById("receiptTxn").innerHTML =
+"Transaction ID: " + transactionId;
+
+
+document.getElementById("receiptPauti").innerHTML =
+"Pauti Number: " + pautiNumber;
+
+
+document.getElementById("receiptDate").innerHTML =
+"Date: " + new Date().toLocaleString("en-IN", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: true
+});
+
+
+
+let receipt = document.getElementById("receipt");
+
+
+receipt.style.display="block";
+
+
+
+html2canvas(receipt).then(canvas=>{
+
+let link = document.createElement("a");
+
+link.download = "Kurarcha-Ekdant-Receipt.png";
+
+link.href = canvas.toDataURL();
+
+link.click();
+
+
+// DOWNLOAD MESSAGE SHOW
+
+let msg = document.getElementById("downloadMsg");
+
+msg.style.display = "block";
+
+setTimeout(()=>{
+    msg.style.display = "none";
+},3000);
+
+
+});
+
+}
+
+function showSuccess(msg){
+
+let box = document.getElementById("formSuccess");
+
+box.innerHTML = msg;
+box.style.display="block";
+}
+document.getElementById("homeBtn").addEventListener("click", function(){
+
+window.location.replace("index.html");
+
+});
+</script>  
+<div id="receipt" style="
+display:none !important;
+position:absolute;
+left:-9999px;
+top:0;
+background:#330d0f;
+color:#fbecd2;
+width:350px;
+padding:25px;
+border-radius:16px;
+text-align:center;
+border:2px solid #eec463;
+font-family:Arial;">
+
+
+<!-- Receipt Header -->
+
+<div style="
+font-family:'Yatra One',serif;
+color:#eec463;
+font-size:18px;
+font-weight:bold;
+text-align:center;
+margin-bottom:18px;">
+॥ श्री गणेशाय नमः ॥
+</div>
+
+
+<div style="
+text-align:center;
+margin-bottom:10px;">
+
+<img src="logo-nav.png"
+style="
+width:70px;
+height:70px;
+object-fit:contain;
+display:block;
+margin:0 auto 10px;">
+
+
+<div style="
+font-family:'Yatra One',serif;
+color:#fbecd2;
+font-size:20px;
+font-weight:bold;">
+शिवाजी नगर सार्वजनिक गणेशोत्सव मंडळ
+</div>
+
+
+<div style="
+font-family:'Yatra One',serif;
+color:#eec463;
+font-size:24px;
+font-weight:bold;
+margin-top:8px;">
+कुरारचा एकदंत
+</div>
+
+</div>
+
+
+<hr style="
+border:0;
+border-top:1px solid #eec463;
+margin:20px 0;">
+
+
+<h3 style="color:#eec463;">
+Donation Receipt
+</h3>
+
+<p id="receiptDate"></p>
+
+<hr>
+
+<h3>Donor Details</h3>
+
+<p id="receiptName"></p>
+
+<p id="receiptMobile"></p>
+
+<hr>
+
+<h3>Payment Details</h3>
+
+<p id="receiptAmount"></p>
+
+<p id="receiptTxn"></p>
+
+<p id="receiptPauti"></p>
+
+<hr>
+
+<h3 style="color:#eec463;">
+Thank You For Supporting Us
+</h3>
+
+<p>
+♥️ गणपती बाप्पा मोरया  ♥️
+</p>
+
+</div>
+<div id="downloadMsg" style="
+display:none;
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+background:#330d0f;
+color:#eec463;
+padding:12px 20px;
+border-radius:10px;
+border:1px solid #eec463;
+font-weight:700;
+z-index:9999;
+">
+Receipt downloaded successfully
+</div>
+</body>  
 </html>
