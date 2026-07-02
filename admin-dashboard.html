@@ -542,7 +542,110 @@ body::after{
   .top-bar{ flex-wrap:wrap; gap:10px; }
 }
 
+
+/* DONATIONS TAB */
+.donations-section{ margin-top:28px; }
+
+.tab-bar{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
+.tab-btn{
+  padding:9px 20px;
+  border-radius:999px;
+  border:1px solid var(--glass-border);
+  background:var(--glass);
+  color:var(--text-muted);
+  font-size:.8rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .2s;
+  font-family:'Inter',sans-serif;
+}
+.tab-btn.active{
+  background:var(--gold-dim);
+  border-color:rgba(215,153,33,.4);
+  color:var(--gold-light);
+}
+
+.donation-card{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);
+  padding:16px 18px;
+  margin-bottom:12px;
+}
+.donation-card .d-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.donation-card .d-name{
+  font-weight:700;
+  font-size:.95rem;
+  color:var(--text);
+}
+.donation-card .d-amount{
+  font-family:'Inter',sans-serif;
+  font-weight:800;
+  font-size:1.05rem;
+  color:var(--gold-light);
+}
+.donation-card .d-meta{
+  font-size:.75rem;
+  color:var(--text-muted);
+  margin-top:5px;
+  line-height:1.6;
+}
+.donation-card .d-meta span{
+  margin-right:12px;
+}
+.donation-card .d-status{
+  display:inline-block;
+  padding:3px 10px;
+  border-radius:999px;
+  font-size:.68rem;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  margin-top:8px;
+}
+.status-pending{ background:rgba(251,191,36,.15); color:#fbbf24; border:1px solid rgba(251,191,36,.3); }
+.status-approved{ background:rgba(34,197,94,.12); color:#4ade80; border:1px solid rgba(34,197,94,.25); }
+.status-rejected{ background:rgba(239,68,68,.12); color:#f87171; border:1px solid rgba(239,68,68,.25); }
+
+.donation-card .d-actions{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+.donation-card .d-actions button{
+  margin:0;
+  padding:8px 18px;
+  font-size:.78rem;
+  border-radius:8px;
+  width:auto;
+  font-weight:700;
+}
+.btn-approve{ background:#166534; color:#4ade80; border:1px solid #166534; }
+.btn-approve:hover{ background:#15803d; }
+.btn-reject{ background:#7f1d1d; color:#f87171; border:1px solid #7f1d1d; }
+.btn-reject:hover{ background:#991b1b; }
+.btn-screenshot{ background:var(--glass); color:var(--text-muted); border:1px solid var(--glass-border); }
+.btn-screenshot:hover{ color:var(--text); }
+
+.empty-donations{
+  text-align:center;
+  padding:40px 20px;
+  color:var(--text-dim);
+  font-size:.88rem;
+}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 
 <body style="display:none">
@@ -633,6 +736,25 @@ body::after{
 <!-- Toast -->
 <div id="toast"></div>
 
+<!-- DONATIONS SECTION -->
+<div class="donations-section">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+    <div class="section-title" style="margin-bottom:0;">Donations</div>
+    <button onclick="exportDonationsExcel()" style="margin:0; width:auto; padding:8px 16px; font-size:.78rem; background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.3); color:#4ade80; border-radius:8px; cursor:pointer; font-weight:700;">
+      ⬇ Export Excel
+    </button>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="filterDonations('all')">All</button>
+    <button class="tab-btn" onclick="filterDonations('Pending')">⏳ Pending</button>
+    <button class="tab-btn" onclick="filterDonations('Approved')">✅ Approved</button>
+    <button class="tab-btn" onclick="filterDonations('Rejected')">❌ Rejected</button>
+  </div>
+
+  <div id="donationList"><div class="empty-donations">Loading donations...</div></div>
+</div>
+
 <!-- Confirm Delete Modal -->
 <div id="confirmBox">
   <div class="confirm-card">
@@ -650,7 +772,7 @@ body::after{
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, serverTimestamp, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, serverTimestamp, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCbieOt2IpLohjduy1Qs0NqVgYIrT28M9M",
@@ -687,6 +809,7 @@ onAuthStateChanged(auth, (user) => {
     document.getElementById("adminEmail").textContent = user.email;
     loadGallery();
     loadCategoryStats();
+    loadDonations();
   }
 });
 
@@ -746,6 +869,7 @@ window.uploadPhoto = async function(){
     btn.disabled = false;
     loadGallery();
     loadCategoryStats();
+    loadDonations();
 
   } catch(err){
     showToast("❌ " + err.message, "error");
@@ -842,6 +966,131 @@ document.getElementById("cancelDelete").onclick = function(){
   document.getElementById("confirmBox").style.display = "none";
 };
 
+// ---- DONATIONS ----
+let allDonations = [];
+let currentFilter = "all";
+
+window.loadDonations = async function(){
+  const snapshot = await getDocs(collection(db, "donations"));
+  allDonations = [];
+  snapshot.forEach(item => {
+    allDonations.push({ id: item.id, ...item.data() });
+  });
+  // Sort newest first
+  allDonations.sort((a,b) => {
+    const ta = a.createdAt?.seconds || 0;
+    const tb = b.createdAt?.seconds || 0;
+    return tb - ta;
+  });
+  renderDonations();
+};
+
+window.filterDonations = function(filter){
+  currentFilter = filter;
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  event.target.classList.add("active");
+  renderDonations();
+};
+
+function renderDonations(){
+  const list = document.getElementById("donationList");
+  const filtered = currentFilter === "all"
+    ? allDonations
+    : allDonations.filter(d => d.status === currentFilter);
+
+  if(filtered.length === 0){
+    list.innerHTML = `<div class="empty-donations">No ${currentFilter === "all" ? "" : currentFilter.toLowerCase() + " "}donations yet</div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(d => `
+    <div class="donation-card">
+      <div class="d-row">
+        <div>
+          <div class="d-name">${d.name || "—"}</div>
+          <div class="d-meta">
+            <span>📱 ${d.mobile || "—"}</span>
+            <span>🎫 ${d.pauti || "—"}</span>
+            <span>🔖 ${d.transactionId || "—"}</span>
+          </div>
+          <span class="d-status status-${(d.status||"pending").toLowerCase()}">${d.status || "Pending"}</span>
+        </div>
+        <div class="d-amount">₹${d.amount || "—"}</div>
+      </div>
+      <div class="d-actions">
+        ${d.screenshotUrl ? `<button class="btn-screenshot" onclick="window.open('${d.screenshotUrl}','_blank')">📷 Screenshot</button>` : ""}
+        ${d.status !== "Approved" ? `<button class="btn-approve" onclick="updateDonation('${d.id}','Approved')">✅ Approve</button>` : ""}
+        ${d.status !== "Rejected" ? `<button class="btn-reject" onclick="updateDonation('${d.id}','Rejected')">❌ Reject</button>` : ""}
+      </div>
+    </div>
+  `).join("");
+}
+
+window.updateDonation = async function(id, status){
+  try{
+    await updateDoc(doc(db, "donations", id), { status: status });
+    showToast(status === "Approved" ? "✅ Donation approved" : "❌ Donation rejected",
+              status === "Approved" ? "success" : "error");
+    loadDonations();
+    loadCategoryStats();
+  } catch(e){
+    showToast("❌ Update failed: " + e.message, "error");
+  }
+};
+
+// ---- EXPORT DONATIONS TO EXCEL ----
+window.exportDonationsExcel = function(){
+  if(!allDonations || allDonations.length === 0){
+    showToast("⚠️ No donations to export", "info");
+    return;
+  }
+
+  // Build rows — one per donation
+  const rows = allDonations.map((d, i) => ({
+    "Sr No": i + 1,
+    "Name": d.name || "",
+    "Mobile": d.mobile || "",
+    "Pauti Number": d.pauti || "",
+    "Amount (₹)": d.amount || "",
+    "Transaction ID": d.transactionId || "",
+    "Status": d.status || "Pending",
+    "Screenshot URL": d.screenshotUrl || "",
+    "Date": d.createdAt?.seconds
+      ? new Date(d.createdAt.seconds * 1000).toLocaleString("en-IN", {
+          day:"2-digit", month:"2-digit", year:"numeric",
+          hour:"2-digit", minute:"2-digit", hour12:true
+        })
+      : ""
+  }));
+
+  // Create workbook
+  const ws = XLSX.utils.json_to_sheet(rows);
+
+  // Column widths
+  ws["!cols"] = [
+    {wch:6},  // Sr No
+    {wch:20}, // Name
+    {wch:14}, // Mobile
+    {wch:14}, // Pauti
+    {wch:12}, // Amount
+    {wch:24}, // Transaction ID
+    {wch:12}, // Status
+    {wch:50}, // Screenshot URL
+    {wch:22}, // Date
+  ];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Donations");
+
+  // Generate filename with today's date
+  const today = new Date().toLocaleDateString("en-IN", {
+    day:"2-digit", month:"2-digit", year:"numeric"
+  }).replace(/\//g,"-");
+
+  XLSX.writeFile(wb, "KurarchaEkdant-Donations-" + today + ".xlsx");
+  showToast("✅ Excel downloaded!", "success");
+};
+
 document.getElementById("confirmDelete").onclick = async function(){
   if(!deleteId) return;
   try{
@@ -851,6 +1100,7 @@ document.getElementById("confirmDelete").onclick = async function(){
     deleteId = null;
     loadGallery();
     loadCategoryStats();
+    loadDonations();
   } catch(e){
     showToast("❌ Delete failed: " + e.message, "error");
   }
