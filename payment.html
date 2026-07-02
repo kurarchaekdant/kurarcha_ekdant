@@ -418,10 +418,10 @@ Not Yet
 </button>  </div>  </div>  </div>  
 <div id="afterPayment" style="display:none;">  <label>Transaction ID</label>
 
-<input   
-id="transactionId"  
-type="text"  
-placeholder="Enter UPI Transaction ID">
+<input
+id="transactionId"
+type="text"
+placeholder="Enter UPI Transaction ID / UTR">
 
 <label style="margin-top:12px;display:block;">  
 Payment Screenshot  
@@ -462,7 +462,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import {   
 getFirestore,  
 doc,  
-runTransaction  
+runTransaction,
+addDoc,
+collection,
+serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";  
   
   
@@ -714,21 +717,29 @@ window.location.href = upiData;
 
   
   
-window.paymentDone=function(){  
-  
-    document.getElementById("paymentPopup").style.display="none";  
-  
-    // show transaction + screenshot section  
-    document.getElementById("afterPayment").style.display="block";  
-  
-    // hide UPI button section completely  
-    document.getElementById("upiApps").style.display="none";  
-  
-    // keep proceed button hidden  
-    document.getElementById("payBtn").style.display="none";  
-  
-}  
-  
+window.paymentDone = function(){
+
+    document.getElementById("paymentPopup").style.display = "none";
+
+    // Lock donor details
+    document.getElementById("name").readOnly = true;
+    document.getElementById("mobile").readOnly = true;
+    document.getElementById("pauti").readOnly = true;
+
+    // Disable changing Pauti option
+    document.querySelectorAll('input[name="pautiMode"]').forEach(radio => {
+        radio.disabled = true;
+    });
+
+    // Show transaction section
+    document.getElementById("afterPayment").style.display = "block";
+
+    // Hide UPI button
+    document.getElementById("upiApps").style.display = "none";
+
+    // Keep Proceed button hidden
+    document.getElementById("payBtn").style.display = "none";
+}
   
   
 window.paymentNotDone=function(){  
@@ -768,9 +779,17 @@ let screenshot = document.getElementById("paymentProof").files.length;
 
 if(transactionId === ""){
 
-showFormError("⚠️ Please enter Transaction ID");
+    showFormError("⚠️ Please enter UPI Transaction ID / UTR");
 
-return;
+    return;
+
+}
+
+if(!/^[A-Za-z0-9]{8,35}$/.test(transactionId)){
+
+    showFormError("⚠️ Enter a valid UPI Transaction ID / UTR");
+
+    return;
 
 }
 
@@ -802,47 +821,125 @@ document.getElementById("pauti").style.display="none";
 
 let pautiNumber;
 
+if (pautiMode === "have") {
 
-try{
+    // User already has a pauti
+    pautiNumber = document.getElementById("pauti").value.trim().toUpperCase();
 
-const ref = doc(db,"meta","pautiCounter");
+} else {
 
+    // Generate only for users without pauti
+    try {
 
-const number = await runTransaction(db, async(transaction)=>{
+        const ref = doc(db, "meta", "pautiCounter");
 
+        const number = await runTransaction(db, async(transaction) => {
 
-const snap = await transaction.get(ref);
+            const snap = await transaction.get(ref);
 
+            let current = snap.exists() ? snap.data().count : 0;
 
-let current = snap.exists() ? snap.data().count : 0;
+            let next = current + 1;
 
+            transaction.set(ref, {
+                count: next
+            });
 
-let next = current + 1;
+            return next;
 
+        });
 
-transaction.set(ref,{
-count:next
-});
+        pautiNumber = "ON" + String(number).padStart(2, "0");
 
+    } catch (error) {
 
-return next;
+        pautiNumber = "ON-" + Date.now().toString().slice(-5);
 
-
-});
-
-
-pautiNumber = "ON" + String(number).padStart(2,"0");
-
+    }
 
 }
-catch(error){
 
-pautiNumber = "ON-" + Date.now().toString().slice(-5);
 
+// COMPRESS SCREENSHOT IN BROWSER BEFORE UPLOADING
+// Reduces a 5MB photo to ~200-300KB before it ever leaves the device
+let screenshotUrl = "";
+try {
+  const file = document.getElementById("paymentProof").files[0];
+
+  // Compress using Canvas API
+  const compressedBlob = await new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      img.onload = () => {
+        // Max dimensions 1200x1200 — enough for admin to verify, small enough to load fast
+        const MAX = 1200;
+        let w = img.width;
+        let h = img.height;
+
+        if(w > MAX || h > MAX){
+          if(w > h){ h = Math.round(h * MAX / w); w = MAX; }
+          else { w = Math.round(w * MAX / h); h = MAX; }
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+
+        // Compress to JPEG at 70% quality — balances readability vs file size
+        canvas.toBlob(
+          (blob) => blob ? resolve(blob) : reject(new Error("Compression failed")),
+          "image/jpeg",
+          0.70
+        );
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+  console.log(
+    "Compressed:", Math.round(file.size/1024) + "KB →",
+    Math.round(compressedBlob.size/1024) + "KB"
+  );
+
+  // UPLOAD COMPRESSED IMAGE TO CLOUDINARY
+  const formData = new FormData();
+  formData.append("file", compressedBlob, "screenshot.jpg");
+  formData.append("upload_preset", "kurarcha_ekdant_gallery");
+  formData.append("folder", "donations");
+
+  const uploadRes = await fetch(
+    "https://api.cloudinary.com/v1_1/df4oexqht/image/upload",
+    { method: "POST", body: formData }
+  );
+  const uploadData = await uploadRes.json();
+  screenshotUrl = uploadData.secure_url || "";
+
+} catch(uploadErr) {
+  console.warn("Screenshot upload failed:", uploadErr);
 }
 
-
-
+// SAVE DONATION TO FIRESTORE
+try {
+  await addDoc(collection(db, "donations"), {
+    name: document.getElementById("name").value.trim(),
+    mobile: document.getElementById("mobile").value.trim(),
+    pauti: pautiNumber,
+    amount: amount,
+    transactionId: transactionId,
+    screenshotUrl: screenshotUrl,
+    status: "Pending",
+    createdAt: serverTimestamp()
+  });
+} catch(dbErr) {
+  console.warn("Firestore save failed:", dbErr);
+}
 
 document.getElementById("successPauti").innerHTML =
 "Your Pauti Number: <b>"+pautiNumber+"</b>";
@@ -888,34 +985,33 @@ document.getElementById("receiptDate").innerHTML =
 
 let receipt = document.getElementById("receipt");
 
+receipt.style.display = "block";
 
-receipt.style.display="block";
-
-
-
-html2canvas(receipt).then(canvas=>{
-
-let link = document.createElement("a");
-
-link.download = "Kurarcha-Ekdant-Receipt.png";
-
-link.href = canvas.toDataURL();
-
-link.click();
-
-
-// DOWNLOAD MESSAGE SHOW
-
+// Show generating message immediately
 let msg = document.getElementById("downloadMsg");
-
+msg.innerHTML = "Generating receipt...";
 msg.style.display = "block";
 
-setTimeout(()=>{
-    msg.style.display = "none";
-},3000);
+// Give browser time to render receipt
+setTimeout(() => {
 
+    html2canvas(receipt).then(canvas => {
 
-});
+        let link = document.createElement("a");
+        link.download = "Kurarcha-Ekdant-Receipt.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+
+        // Change message after download starts
+        msg.innerHTML = "Receipt downloaded successfully";
+
+        setTimeout(() => {
+            msg.style.display = "none";
+        }, 2500);
+
+    });
+
+}, 100);
 
 }
 
@@ -1052,4 +1148,13 @@ z-index:9999;
 Receipt downloaded successfully
 </div>
 </body>  
+</html>
+<script>
+function setMode(type){ window.setMode(type); }
+function openUpiApp(){ window.openUpiApp(); }
+function paymentDone(){ window.paymentDone(); }
+function paymentNotDone(){ window.paymentNotDone(); }
+function submitDonation(){ if(window.submitDonation) window.submitDonation(); }
+</script>
+</body>
 </html>
