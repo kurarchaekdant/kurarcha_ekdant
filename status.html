@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pauti Status | Kurarcha Ekdant</title>
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Mukta:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--maroon-deep:#330d0f;
+--maroon:#43151a;
+--maroon-light:#5c1f24;
+--gold:#d79921;
+--gold-light:#eec463;
+--paper:#f3e2bd;
+--paper-light:#faf1dc;
+--cream:#fbecd2;
+--font-display:'Yatra One', serif;
+--font-body:'Mukta', sans-serif;
+--ink:#2a0f0c;
+}
+body{
+margin:0;
+font-family:var(--font-body);
+background:#f3e2bd;
+color:#2a0f0c;
+line-height:1.55;
+-webkit-font-smoothing:antialiased;
+display:flex;
+flex-direction:column;
+min-height:100vh;
+}
+header,footer{background:#330d0f;color:var(--cream)}
+.nav-inner{
+display:flex;
+align-items:center;
+padding:14px 24px;
+max-width:1100px;
+margin:0 auto;
+}
+
+.brand{display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--cream)}
+.brand img{
+width:65px;
+height:65px;
+}
+.brand-text{font-family:'Yatra One',serif}.brand-text small{display:block;color:var(--gold)}
+main{flex:1;display:flex;justify-content:center;align-items:center;padding:25px}
+.card{
+background:#330d0f;
+color:#fbecd2;
+padding:28px;
+max-width:450px;
+width:100%;
+border-radius:14px;
+border:1px solid rgba(238,196,99,.28);
+box-shadow:0 8px 24px rgba(0,0,0,.18);
+box-sizing:border-box;
+}
+h2{text-align:center;font-family:'Yatra One',serif;color:var(--gold)}
+input,
+button{
+display:block;
+width:100%;
+max-width:100%;
+padding:14px;
+margin:12px auto 0;
+border:none;
+border-radius:10px;
+font-size:16px;
+box-sizing:border-box;
+}
+button{background:var(--gold-light);font-weight:bold}
+#result{
+display:none;
+margin-top:18px;
+padding:18px;
+background:rgba(251,236,210,.06);
+border:1px solid rgba(238,196,99,.28);
+border-radius:14px;
+color:#fbecd2;
+}
+.error-box{
+display:none;
+margin-top:15px;
+padding:12px;
+background:#330d0f;;
+border:2px solid #ef4444;
+border-radius:10px;
+color:#fff;
+font-weight:700;
+text-align:center;
+animation:fadeIn .25s;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(-5px);}
+to{opacity:1;transform:translateY(0);}
+}
+footer{text-align:center;padding:20px}.foot-mark{font-family:'Yatra One',serif;color:var(--gold);display:block}
+</style>
+</head>
+<body>
+<header><div class="nav-inner"><a class="brand" href="index.html"><img src="logo-nav.png">
+<div class="brand-text">Kurarcha Ekdant<small>Mumbai - 400 097</small>
+</div>
+</a>
+</div>
+</header>
+<main><div class="card">
+<h2>Pauti Status</h2>
+<input id="mobile" placeholder="Enter Mobile Number" maxlength="10">
+<input id="pauti" placeholder="Enter Pauti Number">
+<button id="checkBtn" onclick="checkStatus()">Check Status</button>
+
+<div id="messageBox" class="error-box" style="display:none;">
+    <div id="messageText"></div>
+</div>
+
+<div id="result">
+
+<h3 style="text-align:center;color:#eec463;font-family:'Yatra One',serif;">
+✅ Donation Verified
+</h3>
+
+<p><b>Name:</b> <span id="rName"></span></p>
+<p><b>Mobile:</b> <span id="rMobile"></span></p>
+<p><b>Pauti:</b> <span id="rPauti"></span></p>
+<p><b>Amount:</b> ₹<span id="rAmount"></span></p>
+<p><b>Transaction ID:</b> <span id="rTxn"></span></p>
+<p><b>Status:</b> <span id="rStatus"></span></p>
+
+<button onclick="window.location.replace('index.html')">OK</button>
+
+</div>
+</div></main>
+<footer><span class="foot-mark">गणपती बाप्पा मोरया</span>© <span id="year"></span> Kurarcha Ekdant</footer>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getFirestore,collection,query,where,getDocs} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const firebaseConfig={
+apiKey:"AIzaSyCbieOt2IpLohjduy1Qs0NqVgYIrT28M9M",
+authDomain:"kurarcha-ekdant.firebaseapp.com",
+projectId:"kurarcha-ekdant",
+storageBucket:"kurarcha-ekdant.firebasestorage.app",
+messagingSenderId:"485489045109",
+appId:"1:485489045109:web:6a59b2b7843ed49d18d23c"};
+const db=getFirestore(initializeApp(firebaseConfig));
+document.getElementById("year").textContent=new Date().getFullYear();
+function showMessage(message){
+
+    const box = document.getElementById("messageBox");
+    const text = document.getElementById("messageText");
+
+    text.innerHTML = message;
+    box.style.display = "block";
+
+    clearTimeout(box.timer);
+
+    box.timer = setTimeout(()=>{
+        box.style.display = "none";
+    },3000);
+
+}
+window.checkStatus=async()=>{
+ const m=document.getElementById("mobile").value.trim();
+ const p=document.getElementById("pauti").value.trim().toUpperCase();
+ if(!/^[6-9]\d{9}$/.test(m)){
+    showMessage("⚠️ Enter a valid Mobile Number");
+    return;
+}
+ if(!p){
+    showMessage("⚠️ Please enter your Pauti Number");
+    return;
+}
+ const q=query(collection(db,"donations"),where("mobile","==",m),where("pauti","==",p));
+ const s=await getDocs(q);
+ if(s.empty){
+
+    document.getElementById("result").style.display="none";
+
+    showMessage(
+    "❌ No donation record found.<br><br>Please check your Mobile Number and Pauti Number."
+);
+
+    return;
+}
+ const d = s.docs[0].data();
+
+result.style.display = "block";
+
+document.getElementById("mobile").style.display = "none";
+document.getElementById("pauti").style.display = "none";
+document.getElementById("checkBtn").style.display = "none";
+document.getElementById("messageBox").style.display = "none";
+
+rName.textContent = d.name;
+rMobile.textContent = d.mobile;
+rPauti.textContent = d.pauti;
+rAmount.textContent = d.amount;
+rTxn.textContent = d.transactionId;
+rStatus.textContent = d.status;
+}
+</script>
+</body>
+</html>
