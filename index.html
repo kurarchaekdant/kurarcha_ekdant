@@ -316,6 +316,33 @@ border-radius:14px;
 aspect-ratio:1/1;
 overflow:hidden;
 }
+
+.status-btn-wrap{
+  grid-column:1/-1;
+  text-align:center;
+  margin:18px 0;
+}
+
+.status-btn{
+  display:inline-block;
+  padding:14px 28px;
+  background:var(--gold-light);
+  color:#330d0f;
+  font-weight:800;
+  border-radius:999px;
+  text-decoration:none;
+  font-family:'Mukta', sans-serif;
+  letter-spacing:.3px;
+  transition:0.3s;
+  border:2px solid transparent;
+}
+
+.status-btn:hover{
+  transform:translateY(-3px);
+  border-color:#eec463;
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
+
 </style>
 </head>
 <body>
@@ -546,6 +573,12 @@ Memories<br>Photo
 <div class="tname">Mukhya Pratishthan</div>
 </div>
 
+</div></br>
+
+<div class="status-btn-wrap">
+  <a href="status.html" class="status-btn">
+    Check Pauti Status
+  </a>
 </div>
 
       <div class="donate-details reveal">
