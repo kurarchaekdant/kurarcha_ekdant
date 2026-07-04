@@ -644,6 +644,12 @@ body::after{
   color:var(--text-dim);
   font-size:.88rem;
 }
+
+.donations-section{
+  margin-top:32px;
+  padding-top:28px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -731,13 +737,13 @@ body::after{
     </div>
   </div>
 
-</div>
+
 
 <!-- Toast -->
 <div id="toast"></div>
 
 <!-- DONATIONS SECTION -->
-<div class="donations-section">
+<div class="gallery-section donations-section">
   <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
     <div class="section-title" style="margin-bottom:0;">Donations</div>
     <button onclick="exportDonationsExcel()" style="margin:0; width:auto; padding:8px 16px; font-size:.78rem; background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.3); color:#4ade80; border-radius:8px; cursor:pointer; font-weight:700;">
@@ -767,7 +773,7 @@ body::after{
     </div>
   </div>
 </div>
-
+</div>
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -1017,27 +1023,55 @@ function renderDonations(){
         </div>
         <div class="d-amount">₹${d.amount || "—"}</div>
       </div>
+      
+
       <div class="d-actions">
         ${d.screenshotUrl ? `<button class="btn-screenshot" onclick="window.open('${d.screenshotUrl}','_blank')">📷 Screenshot</button>` : ""}
-        ${d.status !== "Approved" ? `<button class="btn-approve" onclick="updateDonation('${d.id}','Approved')">✅ Approve</button>` : ""}
-        ${d.status !== "Rejected" ? `<button class="btn-reject" onclick="updateDonation('${d.id}','Rejected')">❌ Reject</button>` : ""}
+        <textarea id="comment-${d.id}"
+placeholder="Write reason / comment..."
+style="
+width:100%;
+margin-top:12px;
+padding:10px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,.1);
+background:rgba(255,255,255,.04);
+color:white;
+resize:vertical;
+min-height:70px;
+font-family:Inter,sans-serif;
+">${d.adminComment || ""}</textarea>
+        ${d.status !== "Approved" ? `<button class="btn-approve" onclick="updateDonation('${d.id}','Approved', document.getElementById('comment-${d.id}').value)">✅ Approve</button>` : ""}
+        ${d.status !== "Rejected" ? `<button class="btn-reject" onclick="updateDonation('${d.id}','Rejected', document.getElementById('comment-${d.id}').value)">❌ Reject</button>` : ""}
       </div>
     </div>
   `).join("");
 }
 
-window.updateDonation = async function(id, status){
+window.updateDonation = async function(id, status, comment){
   try{
-    await updateDoc(doc(db, "donations", id), { status: status });
-    showToast(status === "Approved" ? "✅ Donation approved" : "❌ Donation rejected",
-              status === "Approved" ? "success" : "error");
+
+    await updateDoc(doc(db, "donations", id), {
+      status: status,
+      adminComment: comment || "",
+      reviewedAt: serverTimestamp()
+    });
+
+    showToast(
+      status === "Approved"
+        ? "✅ Donation approved"
+        : "❌ Donation rejected",
+      status === "Approved" ? "success" : "error"
+    );
+
     loadDonations();
-    loadCategoryStats();
+
   } catch(e){
+
     showToast("❌ Update failed: " + e.message, "error");
+
   }
 };
-
 // ---- EXPORT DONATIONS TO EXCEL ----
 window.exportDonationsExcel = function(){
   if(!allDonations || allDonations.length === 0){
