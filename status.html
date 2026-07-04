@@ -120,7 +120,7 @@ footer{text-align:center;padding:20px}.foot-mark{font-family:'Yatra One',serif;c
 <div id="result">
 
 <h3 style="text-align:center;color:#eec463;font-family:'Yatra One',serif;">
-✅ Donation Verified
+Your Pauti Status
 </h3>
 
 <p><b>Name:</b> <span id="rName"></span></p>
@@ -129,6 +129,18 @@ footer{text-align:center;padding:20px}.foot-mark{font-family:'Yatra One',serif;c
 <p><b>Amount:</b> ₹<span id="rAmount"></span></p>
 <p><b>Transaction ID:</b> <span id="rTxn"></span></p>
 <p><b>Status:</b> <span id="rStatus"></span></p>
+<p id="commentRow" style="display:none;">
+  <b>Admin Comment:</b><br>
+  <span id="rComment"
+        style="
+        display:block;
+        margin-top:6px;
+        padding:10px;
+        border-left:4px solid #eec463;
+        background:rgba(238,196,99,.12);
+        border-radius:8px;">
+  </span>
+</p>
 
 <button onclick="window.location.replace('index.html')">OK</button>
 
@@ -200,7 +212,50 @@ rMobile.textContent = d.mobile;
 rPauti.textContent = d.pauti;
 rAmount.textContent = d.amount;
 rTxn.textContent = d.transactionId;
-rStatus.textContent = d.status;
+const status = d.status || "Pending";
+
+if (status === "Approved") {
+    rStatus.innerHTML = `
+    <span style="
+    background:#16a34a;
+    color:white;
+    padding:5px 12px;
+    border-radius:999px;
+    font-weight:700;
+    ">
+    Approved
+    </span>`;
+}
+else if (status === "Rejected") {
+    rStatus.innerHTML = `
+    <span style="
+    background:#dc2626;
+    color:white;
+    padding:5px 12px;
+    border-radius:999px;
+    font-weight:700;
+    ">
+    Rejected
+    </span>`;
+}
+else {
+    rStatus.innerHTML = `
+    <span style="
+    background:#ca8a04;
+    color:white;
+    padding:5px 12px;
+    border-radius:999px;
+    font-weight:700;
+    ">
+    ⏳ Pending
+    </span>`;
+}
+if (d.adminComment && d.adminComment.trim() !== "") {
+    document.getElementById("commentRow").style.display = "block";
+    document.getElementById("rComment").textContent = d.adminComment;
+} else {
+    document.getElementById("commentRow").style.display = "none";
+}
 }
 </script>
 </body>
