@@ -342,7 +342,70 @@ overflow:hidden;
   border-color:#eec463;
   box-shadow:0 10px 25px rgba(0,0,0,0.25);
 }
+#customBox{
+margin-top:18px;
+animation:fadeDown .25s ease;
+}
 
+#customAmount{
+width:100%;
+padding:12px 15px;
+border:2px solid #eec463;
+border-radius:10px;
+background:#4a1a1a;
+color:#fff;
+font-size:16px;
+outline:none;
+box-sizing:border-box;
+}
+
+#customAmount::placeholder{
+color:#d7c8c8;
+}
+
+#customAmount:focus{
+border-color:#ffd56b;
+box-shadow:0 0 10px rgba(238,196,99,.3);
+}
+
+#amountError{
+display:none;
+margin-top:8px;
+font-size:13px;
+font-weight:600;
+color:#ff6b6b;
+text-align:left;
+}
+
+#customBox button{
+width:100%;
+margin-top:14px;
+padding:12px;
+border:none;
+border-radius:10px;
+background:#d79921;
+color:#330d0f;
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+transition:.3s;
+}
+
+#customBox button:hover{
+background:#eec463;
+transform:translateY(-2px);
+}
+
+@keyframes fadeDown{
+from{
+opacity:0;
+transform:translateY(-10px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
 </style>
 </head>
 <body>
@@ -379,6 +442,7 @@ overflow:hidden;
 <ul id="navLinks" style="display:none;position:absolute;top:100%;left:0;right:0;background:#330d0f;flex-direction:column;list-style:none;margin:0;padding:8px 0;border-bottom:1px solid rgba(238,196,99,.3);z-index:999;">
       <li><a href="#about">About</a></li>
       <li><a href="#aarti">Aarti &amp; Schedule</a></li>
+      <li><a href="aartibook.html">Aarti Book</a></li>
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#donate">Donate</a></li>
       <li><a href="#committee">Committee</a></li>
@@ -543,6 +607,32 @@ Memories<br>Photo
 
       <div class="donate-grid reveal">
 
+<div class="tier" onclick="toggleCustomAmount()">
+
+    <span class="amt">₹...</span>
+    <div class="tname">Custom Amount</div>
+
+    <div id="customBox" style="display:none;margin-top:18px;" onclick="event.stopPropagation()">
+
+        <input
+        type="number"
+        id="customAmount"
+        placeholder="Enter Amount"
+        min="1"
+        inputmode="numeric">
+
+        <p id="amountError">
+            Please enter a valid amount.
+        </p>
+
+        <button onclick="payCustomAmount()">
+            Continue Payment
+        </button>
+
+    </div>
+
+</div>
+
 <div class="tier" onclick="goPayment(501)">
 <span class="amt">₹501</span>
 <div class="tname">Bhakt Sahayog</div>
@@ -573,6 +663,11 @@ Memories<br>Photo
 <div class="tname">Mukhya Pratishthan</div>
 </div>
 
+<div class="tier" onclick="goPayment(10000)">
+<span class="amt">₹10,000</span>
+<div class="tname">Maha Samarpan ⭐</div>
+</div>
+
 </div></br>
 
 <div class="status-btn-wrap">
@@ -580,7 +675,6 @@ Memories<br>Photo
     Check Pauti Status
   </a>
 </div>
-
       <div class="donate-details reveal">
         <div>
           <h4>UPI</h4>
@@ -731,6 +825,38 @@ function setHamburgerColor(open) {
   navSpans.forEach(s => s.style.background = color);
 }
 
+// Close menu when clicking outside
+document.addEventListener("click", function(e) {
+
+  if (
+    navOpen &&
+    !navLinks.contains(e.target) &&
+    !navToggle.contains(e.target)
+  ) {
+    navOpen = false;
+    navLinks.style.display = "none";
+    navToggle.setAttribute("aria-expanded", "false");
+    setHamburgerColor(false);
+  }
+
+});
+
+// Close menu on scroll
+window.addEventListener("scroll", function() {
+
+  // Hide custom amount popup
+  document.getElementById("customBox").style.display = "none";
+  document.getElementById("customAmount").value = "";
+  document.getElementById("amountError").style.display = "none";
+
+  if (navOpen) {
+    navOpen = false;
+    navLinks.style.display = "none";
+    navToggle.setAttribute("aria-expanded", "false");
+    setHamburgerColor(false);
+  }
+
+});
 navToggle.addEventListener('click', () => {
   navOpen = !navOpen;
   navLinks.style.display = navOpen ? 'flex' : 'none';
@@ -738,12 +864,18 @@ navToggle.addEventListener('click', () => {
   setHamburgerColor(navOpen);
 });
 navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-  navOpen = false;
-  navLinks.style.display = 'none';
-  navToggle.setAttribute('aria-expanded', false);
-  setHamburgerColor(false);
-}));
 
+  navOpen = false;
+  navLinks.style.display = "none";
+  navToggle.setAttribute("aria-expanded","false");
+  setHamburgerColor(false);
+
+  // Reset custom amount popup
+  document.getElementById("customBox").style.display = "none";
+  document.getElementById("customAmount").value = "";
+  document.getElementById("amountError").style.display = "none";
+
+}));
   // footer year
   document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -849,7 +981,52 @@ alert(error.message);
 window.goPayment = function(amount){
   window.location.href = "payment.html?amount=" + amount;
 };
-  
+
+
+window.toggleCustomAmount = function(){
+
+const box = document.getElementById("customBox");
+
+box.style.display =
+box.style.display === "block" ? "none" : "block";
+
+}
+
+window.payCustomAmount = function () {
+
+    const amount = document.getElementById("customAmount").value;
+    const error = document.getElementById("amountError");
+
+    if (!amount || amount <= 0) {
+        error.style.display = "block";
+        return;
+    }
+
+    error.style.display = "none";
+
+    // Reset the box
+    document.getElementById("customBox").style.display = "none";
+    document.getElementById("customAmount").value = "";
+
+    window.location.href = "payment.html?amount=" + amount;
+}
+
+document.addEventListener("click", function(e){
+
+    const box = document.getElementById("customBox");
+    const tier = box.closest(".tier");
+
+    if(box.style.display === "block" && !tier.contains(e.target)){
+
+        box.style.display = "none";
+
+        document.getElementById("customAmount").value = "";
+
+        document.getElementById("amountError").style.display = "none";
+
+    }
+
+});
 </script>
 
 </body>
