@@ -3,7 +3,7 @@
 <head>  
 <meta charset="UTF-8">  
 <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>Donation Payment | Kurarcha Ekdant</title>  <link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Mukta:wght@400;600;700&display=swap" rel="stylesheet"> 
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script><style>  
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script><style>  
   
 :root{  
 --maroon:#330d0f;  
@@ -411,11 +411,6 @@ oninput="this.value=this.value.toUpperCase()">
 
 <div id="formError" class="form-error"></div>  
 <div id="formSuccess" class="form-success"></div>
-<div id="paymentPopup" class="payment-popup">  <div class="popup-box">  <h3>Payment Status</h3>  <p>Did you complete the payment?</p>  <div class="popup-btns">  <button onclick="paymentDone()">  
-Yes, I Paid  
-</button>  <button onclick="paymentNotDone()">  
-Not Yet  
-</button>  </div>  </div>  </div>  
 <div id="afterPayment" style="display:none;">  <label>Transaction ID</label>
 
 <input
@@ -425,10 +420,17 @@ placeholder="Enter UPI Transaction ID / UTR">
 
 <label style="margin-top:12px;display:block;">  
 Payment Screenshot  
-</label>  <input   
-id="paymentProof"  
-type="file"  
-accept="image/*">
+</label>  
+
+<div style="display:flex;gap:8px;margin-top:10px;">
+  <button type="button" id="chooseFileBtn" style="width:50%;margin-top:0;">📁 Upload Screenshot</button>
+  <button type="button" id="takePhotoBtn" style="width:50%;margin-top:0;">📷 Take a Photo</button>
+</div>
+
+<input id="paymentProofGallery" type="file" accept="image/*" style="display:none;">
+<input id="paymentProofCamera" type="file" accept="image/*" capture="environment" style="display:none;">
+
+<div id="proofPreviewName" style="margin-top:8px;font-size:.8rem;color:rgba(251,236,210,.8);text-align:center;"></div>
 
 <button onclick="submitDonation()">  
 Submit Donation  
@@ -444,20 +446,19 @@ OK
 </button>
 
 </div>
-<!-- UPI app selection — shown after form validation passes -->  
+<!-- QR payment step — shown after form validation passes -->  
 <div id="upiApps" class="upi-apps">  
-  <button type="button" class="upi-pay-btn" id="upiPayBtn" onclick="openUpiApp()">  
-    <span class="upi-pay-icon">💳</span>  
-    Pay via UPI Apps  
-  </button>  
-  <div class="upi-apps-hint">You'll be asked to choose from UPI apps installed on your phone</div>  
-  <div class="upi-apps-status" id="upiStatus"></div>  
-  <div style="margin-top:14px;font-size:.78rem;text-align:center;color:rgba(251,236,210,.7);">
-    Didn't open automatically? Pay manually using:<br>
-    <b id="manualVpa" style="color:var(--gold);"></b> — Amount ₹<span id="manualAmt"></span>
-    <br>
-    <button type="button" id="copyVpaBtn" style="margin-top:8px;width:auto;padding:8px 14px;font-size:.75rem;">Copy UPI ID</button>
+  <div style="text-align:center;">
+    <div style="font-size:.85rem;color:rgba(251,236,210,.85);margin-bottom:12px;">
+      Scan this QR with any UPI app to pay
+    </div>
+    <div id="qrcode" style="display:inline-block;background:#fff;padding:10px;border-radius:10px;"></div>
+    <div style="margin-top:10px;font-size:.85rem;color:var(--gold);font-weight:700;">
+      Amount: ₹<span id="qrAmt"></span>
+    </div>
   </div>
+  <button type="button" id="goBackBtn" style="margin-top:18px;background:transparent;border:1px solid var(--gold);color:var(--gold);">Go Back</button>
+  <button type="button" id="iPaidBtn" style="margin-top:10px;">I've Completed Payment</button>
 </div>  
 </div>  </div>  </main>  <footer>  
 <span class="foot-mark">गणपती बाप्पा मोरया</span>  
@@ -528,8 +529,6 @@ if(!amount || isNaN(Number(amount)) || Number(amount) <= 0){
   
 let pautiMode = null;  
 let generated = null;  
-  
-let upiOpenedThisSession = false;  
   
   
   
@@ -652,6 +651,37 @@ setTimeout(() => {
 }  
   
   
+const UPI_VPA = "nikhilsingh1406@sbi";
+const MERCHANT_NAME = "Kurarcha Ekdant";
+
+function buildUpiData(){
+  let pauti = document.getElementById("pauti").value.trim();
+  return "upi://pay?pa="+UPI_VPA+
+    "&pn="+encodeURIComponent(MERCHANT_NAME)+
+    "&am="+amount+
+    "&cu=INR"+
+    "&tn="+encodeURIComponent("Donation "+pauti);
+}
+
+let qrRendered = false;
+
+function renderQrCode(){
+  const upiData = buildUpiData();
+  const qrBox = document.getElementById("qrcode");
+  qrBox.innerHTML = ""; // clear any previous QR (e.g. if pauti changed)
+  try {
+    new QRCode(qrBox, {
+      text: upiData,
+      width: 180,
+      height: 180
+    });
+    qrRendered = true;
+  } catch(qrErr){
+    console.warn("QR generation failed:", qrErr);
+    qrBox.innerHTML = "QR unavailable — use the button or copy the UPI ID above.";
+  }
+}
+
 window.pay=function(){  
   
 if(!amount || isNaN(Number(amount)) || Number(amount) <= 0){
@@ -716,56 +746,24 @@ document.getElementById("payBtn").style.display="none";
   
   
 document.getElementById("upiApps").style.display="block";  
-  
-}  
-  
-  
-  
-  
-  
-window.openUpiApp=function(){  
-  
-let pauti =  
-document.getElementById("pauti").value.trim();  
 
-const UPI_VPA = "paytm.s1oup5x@pty";
-const merchantName = "Kurarcha Ekdant Ganesh Mandal";
-
-let upiData =  
-"upi://pay?pa="+UPI_VPA+  
-"&pn="+encodeURIComponent(merchantName)+  
-"&am="+amount+  
-"&cu=INR"+  
-"&tn="+encodeURIComponent("Donation "+pauti);  
-
-// populate manual fallback so donors can always pay even if the app handoff fails
-document.getElementById("manualVpa").innerHTML = UPI_VPA;
-document.getElementById("manualAmt").innerHTML = amount;
-  
-upiOpenedThisSession=true;  
-  
-  
-// IMPORTANT  
-window.location.href = upiData;  
-  
+// populate QR now that the amount/pauti are finalized
+document.getElementById("qrAmt").innerHTML = amount;
+renderQrCode();
   
 }  
 
-document.getElementById("copyVpaBtn")?.addEventListener("click", function(){
-  const vpaText = document.getElementById("manualVpa").innerHTML;
-  navigator.clipboard?.writeText(vpaText).then(()=>{
-    const btn = document.getElementById("copyVpaBtn");
-    const original = btn.innerHTML;
-    btn.innerHTML = "Copied!";
-    setTimeout(()=>{ btn.innerHTML = original; }, 1500);
-  });
-});
 
-  
-  
+window.goBack = function(){
+  document.getElementById("upiApps").style.display = "none";
+  document.getElementById("payBtn").style.display = "block";
+}
+
+document.getElementById("goBackBtn")
+.addEventListener("click", window.goBack);
+
+
 window.paymentDone = function(){
-
-    document.getElementById("paymentPopup").style.display = "none";
 
     // Lock donor details
     document.getElementById("name").readOnly = true;
@@ -780,37 +778,54 @@ window.paymentDone = function(){
     // Show transaction section
     document.getElementById("afterPayment").style.display = "block";
 
-    // Hide UPI button
+    // Hide QR section
     document.getElementById("upiApps").style.display = "none";
 
     // Keep Proceed button hidden
     document.getElementById("payBtn").style.display = "none";
 }
-  
-  
-window.paymentNotDone=function(){  
-  
-document.getElementById("paymentPopup").style.display="none";  
-  
-}  
-  
-  
+
+
+document.getElementById("iPaidBtn")
+.addEventListener("click", window.paymentDone);
+
+
+// Screenshot selection — either from gallery or straight from camera
+// (useful when the donor paid from a different device and has no
+// screenshot on this one — they can just photograph the confirmation).
+let selectedProofFile = null;
+
+function handleProofSelection(fileList){
+  if(fileList && fileList.length > 0){
+    selectedProofFile = fileList[0];
+    document.getElementById("proofPreviewName").innerHTML =
+      "✅ Selected: " + selectedProofFile.name;
+  }
+}
+
+document.getElementById("chooseFileBtn")
+.addEventListener("click", function(){
+  document.getElementById("paymentProofGallery").click();
+});
+
+document.getElementById("takePhotoBtn")
+.addEventListener("click", function(){
+  document.getElementById("paymentProofCamera").click();
+});
+
+document.getElementById("paymentProofGallery")
+.addEventListener("change", function(e){
+  handleProofSelection(e.target.files);
+});
+
+document.getElementById("paymentProofCamera")
+.addEventListener("change", function(e){
+  handleProofSelection(e.target.files);
+});
+
+
 document.getElementById("payBtn")  
 .addEventListener("click",window.pay);  
-  
-  
-window.addEventListener("focus",()=>{  
-  
-if(upiOpenedThisSession){  
-  
-document.getElementById("paymentPopup")  
-.style.display="flex";  
-  
-upiOpenedThisSession = false;  
-  
-}  
-  
-});  
   
   
 window.submitDonation = async function(){
@@ -820,7 +835,7 @@ window.submitDonation = async function(){
 
 let transactionId = document.getElementById("transactionId").value.trim();
 
-let screenshot = document.getElementById("paymentProof").files.length;
+let screenshot = selectedProofFile ? 1 : 0;
 
 
 if(transactionId === ""){
@@ -910,7 +925,7 @@ if (pautiMode === "have") {
 // Reduces a 5MB photo to ~200-300KB before it ever leaves the device
 let screenshotUrl = "";
 try {
-  const file = document.getElementById("paymentProof").files[0];
+  const file = selectedProofFile;
 
   // Compress using Canvas API
   const compressedBlob = await new Promise((resolve, reject) => {
