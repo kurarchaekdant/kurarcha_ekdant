@@ -386,7 +386,7 @@ text-align:center;
 Kurarcha Ekdant  
 <small>Mumbai - 400097</small>  
 </div>  </a>  </div>  
-</header>  <main>  <div class="card">  <h2>Donation Payment</h2>  <div class="amount" id="amount">₹0</div>  <input id="name"  
+</header>  <main>  <div class="card">  <h2>Donation Payment</h2>  <div class="amount" id="amount">₹0</div>  <div id="linkError" class="form-error" style="margin-bottom:10px;"></div>  <input id="name"  
 type="text"  
 placeholder="Enter Name"  
 oninput="this.value=this.value.replace(/[^a-zA-Z\s]/g,'')">
@@ -452,6 +452,12 @@ OK
   </button>  
   <div class="upi-apps-hint">You'll be asked to choose from UPI apps installed on your phone</div>  
   <div class="upi-apps-status" id="upiStatus"></div>  
+  <div style="margin-top:14px;font-size:.78rem;text-align:center;color:rgba(251,236,210,.7);">
+    Didn't open automatically? Pay manually using:<br>
+    <b id="manualVpa" style="color:var(--gold);"></b> — Amount ₹<span id="manualAmt"></span>
+    <br>
+    <button type="button" id="copyVpaBtn" style="margin-top:8px;width:auto;padding:8px 14px;font-size:.75rem;">Copy UPI ID</button>
+  </div>
 </div>  
 </div>  </div>  </main>  <footer>  
 <span class="foot-mark">गणपती बाप्पा मोरया</span>  
@@ -497,6 +503,26 @@ let amount = urlParams.get("amount") || 0;
   
 document.getElementById("amount").innerHTML =  
 "₹"+amount;  
+
+// If the page is opened without a valid amount, lock the whole form —
+// there's nothing sensible for the donor to do until amount is set.
+if(!amount || isNaN(Number(amount)) || Number(amount) <= 0){
+
+  let box = document.getElementById("linkError");
+  box.innerHTML = "⚠️ This donation link is missing a valid amount. Please go back and open the link again, or contact the organiser.";
+  box.style.display = "block";
+
+  document.getElementById("name").disabled = true;
+  document.getElementById("mobile").disabled = true;
+  document.getElementById("pauti").disabled = true;
+  document.getElementById("payBtn").disabled = true;
+  document.getElementById("payBtn").style.opacity = "0.5";
+
+  document.querySelectorAll('input[name="pautiMode"]').forEach(radio => {
+    radio.disabled = true;
+  });
+
+}
   
   
   
@@ -628,7 +654,11 @@ setTimeout(() => {
   
 window.pay=function(){  
   
-  
+if(!amount || isNaN(Number(amount)) || Number(amount) <= 0){
+  showFormError("⚠️ Invalid donation amount. Please open this link again.");
+  return;
+}
+
 let name =  
 document.getElementById("name").value.trim();  
   
@@ -697,14 +727,20 @@ window.openUpiApp=function(){
   
 let pauti =  
 document.getElementById("pauti").value.trim();  
-  
+
+const UPI_VPA = "paytm.s1oup5x@pty";
+const merchantName = "Kurarcha Ekdant Ganesh Mandal";
+
 let upiData =  
-"upi://pay?pa=nikhilsingh1406@sbi"+  
-"&pn="+encodeURIComponent("Kurarcha Ekdant Ganesh Mandal")+  
+"upi://pay?pa="+UPI_VPA+  
+"&pn="+encodeURIComponent(merchantName)+  
 "&am="+amount+  
 "&cu=INR"+  
 "&tn="+encodeURIComponent("Donation "+pauti);  
-  
+
+// populate manual fallback so donors can always pay even if the app handoff fails
+document.getElementById("manualVpa").innerHTML = UPI_VPA;
+document.getElementById("manualAmt").innerHTML = amount;
   
 upiOpenedThisSession=true;  
   
@@ -714,6 +750,16 @@ window.location.href = upiData;
   
   
 }  
+
+document.getElementById("copyVpaBtn")?.addEventListener("click", function(){
+  const vpaText = document.getElementById("manualVpa").innerHTML;
+  navigator.clipboard?.writeText(vpaText).then(()=>{
+    const btn = document.getElementById("copyVpaBtn");
+    const original = btn.innerHTML;
+    btn.innerHTML = "Copied!";
+    setTimeout(()=>{ btn.innerHTML = original; }, 1500);
+  });
+});
 
   
   
@@ -987,31 +1033,30 @@ let receipt = document.getElementById("receipt");
 
 receipt.style.display = "block";
 
-// Show generating message immediately
-let msg = document.getElementById("downloadMsg");
+const msg = document.getElementById("downloadMsg");
 msg.innerHTML = "Generating receipt...";
 msg.style.display = "block";
 
-// Give browser time to render receipt
+// Wait a little longer so the receipt is fully rendered
+await new Promise(resolve => setTimeout(resolve, 400));
+
+const canvas = await html2canvas(receipt, {
+    scale: 2,
+    useCORS: true
+});
+
+const link = document.createElement("a");
+link.download = "Kurarcha-Ekdant-Receipt.png";
+link.href = canvas.toDataURL("image/png");
+link.click();
+
+receipt.style.display = "none";
+
+msg.innerHTML = "Receipt downloaded successfully";
+
 setTimeout(() => {
-
-    html2canvas(receipt).then(canvas => {
-
-        let link = document.createElement("a");
-        link.download = "Kurarcha-Ekdant-Receipt.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-
-        // Change message after download starts
-        msg.innerHTML = "Receipt downloaded successfully";
-
-        setTimeout(() => {
-            msg.style.display = "none";
-        }, 2500);
-
-    });
-
-}, 100);
+    msg.style.display = "none";
+}, 2500);
 
 }
 
@@ -1029,7 +1074,7 @@ window.location.replace("index.html");
 });
 </script>  
 <div id="receipt" style="
-display:none !important;
+display:none;
 position:absolute;
 left:-9999px;
 top:0;
@@ -1148,13 +1193,4 @@ z-index:9999;
 Receipt downloaded successfully
 </div>
 </body>  
-</html>
-<script>
-function setMode(type){ window.setMode(type); }
-function openUpiApp(){ window.openUpiApp(); }
-function paymentDone(){ window.paymentDone(); }
-function paymentNotDone(){ window.paymentNotDone(); }
-function submitDonation(){ if(window.submitDonation) window.submitDonation(); }
-</script>
-</body>
 </html>
