@@ -80,10 +80,16 @@
   }
   .nav-inner{
     display:flex; align-items:center; justify-content:space-between;
-    padding:14px 24px;
+    padding:12px 24px;
     max-width:var(--container); margin:0 auto;
   }
-  .brand{display:flex; align-items:center; gap:-5px; text-decoration:none; margin-left:-20px;}
+  .brand{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  text-decoration:none;
+  margin-left:0;
+}
   .brand-mark{width:65px; height:65px; flex-shrink:0;}
   .brand-text{font-family:var(--font-display); color:var(--cream); font-size:1.15rem; line-height:1.1;}
   .brand-text small{display:block; font-family:var(--font-body); font-weight:600; letter-spacing:.08em; text-transform:uppercase; font-size:.58rem; color:var(--gold-light); margin-top:2px;}
@@ -94,7 +100,7 @@
     position:relative;
     background:radial-gradient(ellipse at 30% -10%, var(--maroon-light) 0%, var(--maroon) 38%, var(--maroon-deep) 78%);
     color:var(--cream);
-    padding:84px 24px 60px;
+    padding:24px 24px 60px;
     overflow:hidden;
     text-align:center;
   }
@@ -291,7 +297,7 @@ font-weight:700;
   
 #navLinks li a{
   display:block;
-  padding:13px 24px;
+  padding:14px 24px;
   text-decoration:none;
   color:#fbecd2;
   font-weight:600;
@@ -310,6 +316,9 @@ width:100%;
 height:100%;
 object-fit:cover;
 border-radius:14px;
+}
+#navLinks li:last-child a{
+  border-bottom:none;
 }
 
 .gallery-photo{
@@ -439,7 +448,7 @@ transform:translateY(0);
   <span style="display:block;width:18px;height:2px;background:#eec463;border-radius:2px;"></span>
   <span style="display:block;width:18px;height:2px;background:#eec463;border-radius:2px;"></span>
 </button>
-<ul id="navLinks" style="display:none;position:absolute;top:100%;left:0;right:0;background:#330d0f;flex-direction:column;list-style:none;margin:0;padding:8px 0;border-bottom:1px solid rgba(238,196,99,.3);z-index:999;">
+<ul id="navLinks" style="display:none;position:absolute;top:100%;left:0;right:0;background:#330d0f;flex-direction:column;list-style:none;margin:0;padding:8px 0;border-top:1px solid rgba(238,196,99,.3);border-bottom:1px solid rgba(238,196,99,.3);box-shadow:0 8px 20px rgba(0,0,0,.25);z-index:999;">
       <li><a href="#about">About</a></li>
       <li><a href="#aarti">Aarti &amp; Schedule</a></li>
       <li><a href="aartibook.html">Aarti Book</a></li>
@@ -678,7 +687,7 @@ Memories<br>Photo
       <div class="donate-details reveal">
         <div>
           <h4>UPI</h4>
-          <p>nikhilsingh1406@sbi<em></em></p>
+          <p>nikhilsingh1406@sbi <em></em></p>
         </div>
         <div>
           <h4>Bank transfer</h4>
@@ -734,7 +743,7 @@ Memories<br>Photo
             <dt>Mandal location</dt>
             <dd>Shivaji Nagar, Kurar Village, Malad– East, Mumbai– 400 097</dd>
             <dt>Phone</dt>
-            <dd>+91 70458 86038</dd>
+            <dd>+91 XXXXX XXXXX <em style="opacity:.6">(add committee contact number)</em></dd>
             <dt>Email</dt>
             <dd>kurar.cha.ekdant2026@gmail.com <em style="opacity:.6"></em></dd>
             <dt>Follow</dt>
