@@ -9,10 +9,10 @@ const FILES_TO_CACHE = [
   "./gallery-view.html",
   "./admin-login.html",
 
-  "./images/logo-192.png",
-  "./images/logo-512.png",
-  "./images/logo-nav.png",
-  "./images/ganpati.png"
+  "./logo-192.png",
+  "./logo-512.png",
+  "./logo-nav.png",
+  "./ganpati.png"
 ];
 
 self.addEventListener("install", event => {
