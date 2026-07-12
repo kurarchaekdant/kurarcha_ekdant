@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#330d0f">
+
+<link rel="apple-touch-icon" href="logo-192.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kurarcha Ekdant · Mumbai 400097</title>
@@ -78,20 +83,34 @@
     background:var(--maroon-deep);
     border-bottom:1px solid rgba(238,196,99,.25);
   }
-  .nav-inner{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:12px 24px;
-    max-width:var(--container); margin:0 auto;
-  }
+  header.site-nav{
+    backdrop-filter:blur(12px);
+    box-shadow:0 8px 24px rgba(0,0,0,.25);
+    transition:.3s ease;
+}
+.nav-inner{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    max-width:1200px;
+    width:100%;
+    margin:0 auto;
+    padding:12px 20px;
+}
   .brand{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  text-decoration:none;
-  margin-left:0;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
 }
   .brand-mark{width:65px; height:65px; flex-shrink:0;}
-  .brand-text{font-family:var(--font-display); color:var(--cream); font-size:1.15rem; line-height:1.1;}
+  .brand-text{
+    font-family:var(--font-display);
+    color:var(--cream);
+    font-size:1.2rem;
+    line-height:1.15;
+    letter-spacing:.3px;
+}
   .brand-text small{display:block; font-family:var(--font-body); font-weight:600; letter-spacing:.08em; text-transform:uppercase; font-size:.58rem; color:var(--gold-light); margin-top:2px;}
 
 
@@ -310,7 +329,10 @@ font-weight:700;
 #navLinks li{
   list-style:none;
 }
-
+#navToggle:hover{
+    background:rgba(238,196,99,.08);
+    transform:scale(1.05);
+}
 .gallery-photo img{
 width:100%;
 height:100%;
@@ -415,6 +437,25 @@ opacity:1;
 transform:translateY(0);
 }
 }
+/* Remove blue tap highlight on mobile */
+*{
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Remove blue highlight on links/buttons */
+a,
+button,
+div,
+input,
+textarea{
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Keep a custom focus style for accessibility */
+a:focus,
+button:focus{
+    outline: none;
+}
 </style>
 </head>
 <body>
@@ -443,7 +484,7 @@ transform:translateY(0);
         <small>Mumbai - 400 097</small>
       </span>
     </a>
-    <button id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle menu" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:transparent;border:1.5px solid #eec463;border-radius:6px;width:38px;height:34px;cursor:pointer;padding:0;flex-shrink:0;">
+    <button id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle menu" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:transparent;border:1.5px solid #eec463;border-radius:6px;width:42px;height:38px;cursor:pointer;padding:0;flex-shrink:0;">
   <span style="display:block;width:18px;height:2px;background:#eec463;border-radius:2px;"></span>
   <span style="display:block;width:18px;height:2px;background:#eec463;border-radius:2px;"></span>
   <span style="display:block;width:18px;height:2px;background:#eec463;border-radius:2px;"></span>
@@ -743,7 +784,7 @@ Memories<br>Photo
             <dt>Mandal location</dt>
             <dd>Shivaji Nagar, Kurar Village, Malad– East, Mumbai– 400 097</dd>
             <dt>Phone</dt>
-            <dd>+91 XXXXX XXXXX <em style="opacity:.6">(add committee contact number)</em></dd>
+            <dd>+91 70458 56038 <em style="opacity:.6"></em></dd>
             <dt>Email</dt>
             <dd>kurar.cha.ekdant2026@gmail.com <em style="opacity:.6"></em></dd>
             <dt>Follow</dt>
@@ -1036,6 +1077,9 @@ document.addEventListener("click", function(e){
     }
 
 });
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+}
 </script>
 
 </body>
