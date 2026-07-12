@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#330d0f">
+<meta name="description" content="कुरारचा एकदंत गणेश मंडळाचे अधिकृत आरती पुस्तक — गणपती आरत्या मराठीत, मोठ्या अक्षरात वाचनासाठी सोयीस्कर.">
+<title>आरती पुस्तक · कुरारचा एकदंत गणेश मंडळ</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪔</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Tiro+Devanagari+Marathi:ital@0;1&family=Noto+Sans+Devanagari:wght@400;600;700&family=Mukta:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== TOKENS — matches Kurarcha Ekdant website palette ===== */
+:root{
+  /* Exact values from index.html */
+  --maroon-deep:#330d0f;
+  --maroon:#43151a;
+  --maroon-light:#5c1f24;
+  --vermillion:#c23a1f;
+  --vermillion-dim:#9c2e18;
+  --gold:#d79921;
+  --gold-light:#eec463;
+  --paper:#f3e2bd;
+  --cream:#fbecd2;
+  --ink-soft:#5a3b2d;
+
+  /* Mapped aliases for aarti book */
+  --bg:var(--maroon-deep);
+  --surface:var(--maroon);
+  --surface2:var(--maroon-light);
+  --gold-dim:rgba(215,153,33,.15);
+  --gold-glow:rgba(238,196,99,.07);
+  --cream-dim:rgba(251,236,210,.65);
+  --cream-muted:rgba(251,236,210,.4);
+  --saffron:var(--vermillion);
+  --border:rgba(238,196,99,.22);
+
+  --font-devanagari:'Tiro Devanagari Marathi', 'Noto Sans Devanagari', 'Yatra One', serif;
+  --font-ui:'Mukta', 'Noto Sans Devanagari', sans-serif;
+  --radius:14px;
+  --fs:1.22rem;
+  --lh:2.1;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+
+html,body{
+  height:100%;
+  background:radial-gradient(ellipse at 30% -10%, var(--maroon-light) 0%, var(--maroon) 38%, var(--maroon-deep) 78%);
+  color:var(--cream);
+  font-family:var(--font-devanagari);
+  overflow:hidden;
+}
+
+/* ===== FLAME ANIMATION (signature element) ===== */
+@keyframes flicker{
+  0%,100%{ transform:scaleY(1) skewX(0deg); opacity:1; }
+  25%{ transform:scaleY(1.06) skewX(-2deg); opacity:.92; }
+  50%{ transform:scaleY(.96) skewX(1.5deg); opacity:.88; }
+  75%{ transform:scaleY(1.04) skewX(-1deg); opacity:.95; }
+}
+@keyframes glowPulse{
+  0%,100%{ box-shadow:0 0 20px rgba(215,153,33,.12), 0 0 60px rgba(215,153,33,.05); }
+  50%{ box-shadow:0 0 28px rgba(238,196,99,.2), 0 0 70px rgba(215,153,33,.08); }
+}
+@keyframes shimmer{
+  0%{ background-position:200% center; }
+  100%{ background-position:-200% center; }
+}
+@keyframes fadeIn{
+  from{ opacity:0; transform:translateY(8px); }
+  to{ opacity:1; transform:none; }
+}
+
+/* ===== TOP BAR ===== */
+.top-bar{
+  position:fixed;
+  top:0; left:0; right:0;
+  height:56px;
+  background:linear-gradient(to bottom, rgba(51,13,15,.98), rgba(51,13,15,.88));
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 16px;
+  z-index:100;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+.top-bar-brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.top-bar-brand img{
+  width:30px; height:30px;
+  border-radius:50%;
+  border:1px solid var(--gold);
+}
+.top-bar-title{
+  font-family:var(--font-ui);
+  font-size:.82rem;
+  font-weight:700;
+  color:var(--gold-light);
+  letter-spacing:.04em;
+}
+.top-bar-sub{
+  font-size:.62rem;
+  color:var(--cream-muted);
+  font-family:var(--font-ui);
+  margin-top:1px;
+}
+
+.top-controls{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.ctrl-btn{
+  background:var(--gold-dim);
+  border:1px solid var(--border);
+  color:var(--gold-light);
+  border-radius:8px;
+  width:34px; height:34px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  font-size:.9rem;
+  transition:background .15s;
+  font-family:var(--font-ui);
+  font-weight:700;
+}
+.ctrl-btn:hover{ background:rgba(212,137,10,.28); }
+.ctrl-btn.active{ background:var(--gold); color:#1a0a00; }
+
+/* ===== MAIN SCROLL AREA ===== */
+.aarti-pages{
+  position:fixed;
+  top:56px; bottom:0;
+  left:0; right:0;
+  overflow-y:auto;
+  scroll-behavior:smooth;
+  overscroll-behavior:contain;
+}
+.aarti-pages::-webkit-scrollbar{ width:3px; }
+.aarti-pages::-webkit-scrollbar-track{ background:transparent; }
+.aarti-pages::-webkit-scrollbar-thumb{ background:var(--border); border-radius:999px; }
+
+/* Decorative diya header */
+.aarti-header{
+  text-align:center;
+  margin-bottom:28px;
+  padding-bottom:22px;
+  border-bottom:1px solid var(--border);
+  position:relative;
+}
+.diya{
+  font-size:2.4rem;
+  display:block;
+  animation:flicker 2.8s ease-in-out infinite;
+  filter:drop-shadow(0 0 12px rgba(238,196,99,.55)) drop-shadow(0 0 24px rgba(215,153,33,.3));
+  margin-bottom:10px;
+}
+.aarti-title{
+  font-family:var(--font-devanagari);
+  font-size:1.5rem;
+  color:var(--gold-light);
+  line-height:1.4;
+  margin-bottom:4px;
+  background:linear-gradient(135deg, #eec463, #d79921, #c23a1f, #d79921, #eec463);
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:shimmer 4s linear infinite;
+}
+.aarti-composer{
+  font-family:var(--font-ui);
+  font-size:.7rem;
+  color:var(--cream-muted);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-top:6px;
+}
+
+/* Verse blocks */
+.verse{
+  margin-bottom:28px;
+  animation:glowPulse 5s ease-in-out infinite;
+  border-radius:var(--radius);
+  padding:18px 20px;
+  background:rgba(238,196,99,.05);
+  border:1px solid rgba(238,196,99,.14);
+}
+.verse.chorus{
+  background:rgba(194,58,31,.08);
+  border-color:rgba(194,58,31,.25);
+}
+.verse-label{
+  font-family:var(--font-ui);
+  font-size:.62rem;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:10px;
+  opacity:.8;
+}
+.verse-label.chorus-label{ color:var(--saffron); }
+
+.verse p{
+  font-family:var(--font-devanagari);
+  font-size:var(--fs);
+  line-height:var(--lh);
+  color:var(--cream);
+  margin-bottom:2px;
+}
+.verse p.bold-line{
+  color:var(--gold-light);
+  font-weight:600;
+}
+
+/* ===== AUTO SCROLL ===== */
+.scroll-control{
+  position:fixed;
+  right:16px;
+  bottom:18px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  z-index:99;
+}
+.scroll-fab{
+  width:40px; height:40px;
+  border-radius:50%;
+  background:var(--maroon-light);
+  border:1px solid var(--border);
+  color:var(--gold-light);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  font-size:1rem;
+  box-shadow:0 4px 16px rgba(0,0,0,.4);
+  transition:background .15s;
+}
+.scroll-fab:hover,.scroll-fab.active{
+  background:var(--gold);
+  color:#1a0a00;
+}
+
+/* ===== FONT SIZE INDICATOR ===== */
+#fontSizeLabel{
+  font-family:var(--font-ui);
+  font-size:.68rem;
+  color:var(--cream-muted);
+  text-align:center;
+  padding:2px 0;
+}
+
+/* ===== SCREEN AWAKE TOAST ===== */
+#awakeToast{
+  position:fixed;
+  top:66px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(34,197,94,.15);
+  border:1px solid rgba(34,197,94,.3);
+  color:#4ade80;
+  padding:7px 16px;
+  border-radius:999px;
+  font-family:var(--font-ui);
+  font-size:.72rem;
+  font-weight:600;
+  z-index:200;
+  display:none;
+  white-space:nowrap;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .diya{ animation:none; }
+  .aarti-title{ animation:none; -webkit-text-fill-color:var(--gold-light); }
+  .verse{ animation:none; }
+}
+.page-container{
+  max-width:640px;
+  margin:0 auto;
+  padding:24px 20px 48px;
+}
+
+.aarti-home{
+display:block;
+}
+
+.reader-page{
+display:none;
+}
+
+.home-header{
+text-align:center;
+margin-bottom:24px;
+animation:fadeIn .4s ease;
+}
+
+.home-diya{
+font-size:52px;
+margin-bottom:6px;
+animation:flicker 2.8s ease-in-out infinite;
+filter:drop-shadow(0 0 14px rgba(238,196,99,.5)) drop-shadow(0 0 26px rgba(215,153,33,.28));
+}
+
+.home-header h1{
+font-family:var(--font-devanagari);
+color:var(--gold-light);
+font-size:2rem;
+margin-bottom:4px;
+letter-spacing:.01em;
+}
+
+.home-header .home-sub{
+font-family:var(--font-ui);
+color:var(--cream-dim);
+font-size:.9rem;
+margin-bottom:4px;
+}
+
+.home-header .home-count{
+font-family:var(--font-ui);
+color:var(--cream-muted);
+font-size:.7rem;
+letter-spacing:.06em;
+text-transform:uppercase;
+margin-bottom:18px;
+}
+
+.search-wrap{
+position:relative;
+}
+.search-wrap .search-icon{
+position:absolute;
+left:14px; top:50%;
+transform:translateY(-50%);
+font-size:.9rem;
+opacity:.6;
+pointer-events:none;
+}
+
+#searchBox{
+width:100%;
+padding:13px 14px 13px 38px;
+border:1px solid var(--border);
+border-radius:12px;
+background:var(--maroon-light);
+color:var(--cream);
+font-family:var(--font-ui);
+font-size:15px;
+outline:none;
+transition:border-color .15s, background .15s;
+}
+#searchBox::placeholder{ color:var(--cream-muted); }
+#searchBox:focus{ border-color:var(--gold); background:#4b191c; }
+
+.aarti-list{
+display:flex;
+flex-direction:column;
+gap:10px;
+margin-top:20px;
+}
+
+.aarti-item{
+display:flex;
+align-items:center;
+gap:12px;
+background:var(--maroon);
+padding:14px 16px;
+border-radius:12px;
+cursor:pointer;
+border:1px solid var(--border);
+transition:background .2s, transform .2s, border-color .2s;
+}
+
+.aarti-item:hover{
+background:var(--maroon-light);
+border-color:rgba(238,196,99,.4);
+transform:translateX(4px);
+}
+.aarti-item:active{ transform:translateX(2px) scale(.99); }
+
+.aarti-item-icon{
+flex:0 0 auto;
+font-size:1.15rem;
+width:36px; height:36px;
+border-radius:50%;
+background:var(--gold-dim);
+display:flex; align-items:center; justify-content:center;
+}
+.aarti-item-text{
+flex:1;
+font-family:var(--font-devanagari);
+font-size:1.05rem;
+line-height:1.4;
+color:var(--cream);
+}
+.aarti-item-badge{
+flex:0 0 auto;
+font-family:var(--font-ui);
+font-size:.6rem;
+font-weight:700;
+letter-spacing:.05em;
+color:var(--cream-muted);
+background:rgba(238,196,99,.08);
+border:1px solid var(--border);
+border-radius:999px;
+padding:3px 9px;
+white-space:nowrap;
+}
+
+.no-results{
+text-align:center;
+font-family:var(--font-ui);
+color:var(--cream-muted);
+font-size:.85rem;
+padding:32px 0;
+display:none;
+}
+
+.home-footer{
+text-align:center;
+margin-top:32px;
+padding-top:18px;
+border-top:1px solid var(--border);
+font-family:var(--font-ui);
+font-size:.68rem;
+color:var(--cream-muted);
+letter-spacing:.03em;
+}
+
+.back-btn{
+display:inline-flex;
+align-items:center;
+gap:6px;
+background:var(--gold-dim);
+border:1px solid var(--border);
+color:var(--gold-light);
+padding:9px 16px;
+border-radius:10px;
+font-family:var(--font-ui);
+font-size:.82rem;
+font-weight:700;
+margin-bottom:18px;
+cursor:pointer;
+transition:background .15s;
+}
+.back-btn:hover{ background:rgba(212,137,10,.28); }
+
+#aartiContent .verse p{ white-space:pre-line; }
+
+.coming-soon-card{
+text-align:center;
+padding:40px 20px;
+border:1px dashed var(--border);
+border-radius:var(--radius);
+background:rgba(238,196,99,.04);
+}
+.coming-soon-card .cs-icon{ font-size:2rem; margin-bottom:10px; display:block; }
+.coming-soon-card p{
+font-family:var(--font-ui);
+color:var(--cream-dim);
+font-size:.9rem;
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="top-bar-brand">
+    <img src="images/logo-512.png" alt="कुरारचा एकदंत गणेश मंडळ" onerror="this.style.display='none';">
+    <div>
+      <div class="top-bar-title">आरती पुस्तक</div>
+      <div class="top-bar-sub">कुरारचा एकदंत गणेश मंडळ</div>
+    </div>
+  </div>
+  <div class="top-controls">
+    <div class="ctrl-btn" id="fontMinus" title="Smaller text" aria-label="Decrease font size">A-</div>
+    <div style="font-family:var(--font-ui);font-size:.68rem;color:var(--cream-muted);min-width:28px;text-align:center;" id="fontSizeLabel">A</div>
+    <div class="ctrl-btn" id="fontPlus" title="Larger text" aria-label="Increase font size">A+</div>
+    <div class="ctrl-btn" id="awakeBtn" title="Keep screen on" aria-label="Keep screen awake">🕯</div>
+  </div>
+</div>
+
+<!-- SCREEN AWAKE TOAST -->
+<div id="awakeToast">🕯 पडदा जागृत ठेवला आहे</div>
+
+<!-- MAIN CONTENT -->
+<div class="aarti-pages" id="aartiPages">
+
+<!-- ================= HOME ================= -->
+
+<div class="aarti-home active" id="homePage">
+<div class="page-container">
+
+<div class="home-header">
+<div class="home-diya">🪔</div>
+<h1>आरती पुस्तक</h1>
+<p class="home-sub">कुरारचा एकदंत गणेश मंडळ</p>
+<p class="home-count" id="aartiCount"></p>
+
+<div class="search-wrap">
+  <span class="search-icon">🔍</span>
+  <input
+    type="text"
+    id="searchBox"
+    placeholder="आरती शोधा..."
+    autocomplete="off">
+</div>
+
+</div>
+
+<div class="aarti-list" id="aartiList"></div>
+<p class="no-results" id="noResults">या नावाची आरती सापडली नाही.</p>
+
+<div class="home-footer">
+🙏 कुरारचा एकदंत गणेश मंडळ, मालाड (पूर्व)
+</div>
+
+</div>
+</div>
+
+<!-- ================= AARTI PAGE ================= -->
+
+<div id="readerPage" class="reader-page">
+<div class="page-container">
+
+<button class="back-btn" onclick="goHome()">
+← सर्व आरत्या
+</button>
+
+<div class="aarti-header">
+  <span class="diya">🪔</span>
+  <h2 class="aarti-title" id="aartiTitle"></h2>
+</div>
+
+<div id="aartiContent"></div>
+
+</div>
+</div>
+
+</div>
+
+<!-- AUTO SCROLL FABs -->
+<div class="scroll-control" id="scrollControl" style="display:none;">
+  <div class="scroll-fab" id="scrollUpBtn" title="Scroll up" aria-label="Scroll up">▲</div>
+  <div class="scroll-fab active" id="autoScrollBtn" title="Auto scroll" aria-label="Toggle auto scroll">▶</div>
+  <div class="scroll-fab" id="scrollDownBtn" title="Scroll down" aria-label="Scroll down">▼</div>
+</div>
+
+<script>
+'use strict';
+
+const scrollArea = document.getElementById('aartiPages');
+
+/* ===== FONT SIZE CONTROL ===== */
+let fontSize = 1.22;
+const fontLabel = document.getElementById('fontSizeLabel');
+
+function updateFontSize(){
+  document.documentElement.style.setProperty('--fs', fontSize + 'rem');
+  // Adjust line height slightly for readability
+  const lh = fontSize > 1.4 ? 2.0 : fontSize < 1.0 ? 2.3 : 2.1;
+  document.documentElement.style.setProperty('--lh', lh);
+  fontLabel.textContent = Math.round(fontSize * 100) + '%';
+}
+
+document.getElementById('fontPlus').addEventListener('click', function(){
+  if(fontSize < 1.8){ fontSize = Math.round((fontSize + 0.1)*10)/10; updateFontSize(); }
+});
+document.getElementById('fontMinus').addEventListener('click', function(){
+  if(fontSize > 0.85){ fontSize = Math.round((fontSize - 0.1)*10)/10; updateFontSize(); }
+});
+
+/* ===== AUTO SCROLL ===== */
+let autoScrollTimer = null;
+let autoScrollSpeed = 35; // ms per px — lower = faster
+const autoScrollBtn = document.getElementById('autoScrollBtn');
+
+function startAutoScroll(){
+  if(autoScrollTimer) return;
+  autoScrollBtn.classList.add('active');
+  autoScrollTimer = setInterval(function(){
+    scrollArea.scrollTop += 1;
+    // Stop at bottom
+    if(scrollArea.scrollTop + scrollArea.clientHeight >= scrollArea.scrollHeight - 5){
+      stopAutoScroll();
+    }
+  }, autoScrollSpeed);
+}
+
+function stopAutoScroll(){
+  clearInterval(autoScrollTimer);
+  autoScrollTimer = null;
+  autoScrollBtn.classList.remove('active');
+}
+
+autoScrollBtn.addEventListener('click', function(){
+  if(autoScrollTimer){ stopAutoScroll(); } else { startAutoScroll(); }
+});
+
+document.getElementById('scrollUpBtn').addEventListener('click', function(){
+  stopAutoScroll();
+  scrollArea.scrollBy({ top: -200, behavior: 'smooth' });
+});
+document.getElementById('scrollDownBtn').addEventListener('click', function(){
+  stopAutoScroll();
+  scrollArea.scrollBy({ top: 200, behavior: 'smooth' });
+});
+
+// Stop auto scroll on manual touch scroll
+scrollArea.addEventListener('touchstart', function(){ stopAutoScroll(); }, { passive:true });
+
+/* ===== SCREEN WAKE LOCK ===== */
+let wakeLock = null;
+const awakeBtn = document.getElementById('awakeBtn');
+const awakeToast = document.getElementById('awakeToast');
+
+awakeBtn.addEventListener('click', async function(){
+  if(wakeLock){
+    await wakeLock.release();
+    wakeLock = null;
+    awakeBtn.classList.remove('active');
+    awakeToast.style.display = 'none';
+  } else {
+    try{
+      if('wakeLock' in navigator){
+        wakeLock = await navigator.wakeLock.request('screen');
+        awakeBtn.classList.add('active');
+        awakeToast.style.display = 'block';
+        setTimeout(() => awakeToast.style.display = 'none', 3000);
+        wakeLock.addEventListener('release', function(){
+          wakeLock = null;
+          awakeBtn.classList.remove('active');
+        });
+      } else {
+        awakeToast.textContent = '⚠️ या ब्राउझरमध्ये उपलब्ध नाही';
+        awakeToast.style.background = 'rgba(239,68,68,.15)';
+        awakeToast.style.borderColor = 'rgba(239,68,68,.3)';
+        awakeToast.style.color = '#f87171';
+        awakeToast.style.display = 'block';
+        setTimeout(() => awakeToast.style.display = 'none', 2500);
+      }
+    } catch(e){
+      console.warn('Wake lock failed:', e);
+    }
+  }
+});
+
+// Re-acquire wake lock if page becomes visible again
+document.addEventListener('visibilitychange', async function(){
+  if(wakeLock && document.visibilityState === 'visible'){
+    try{ wakeLock = await navigator.wakeLock.request('screen'); } catch(e){}
+  }
+});
+/* ===============================
+   AARTI BOOK DATA
+================================ */
+
+const AARTIS = {
+
+sukhakarta:{
+
+title:"🪔 सुखकर्ता दुःखहर्ता",
+
+lyrics:`
+
+सुखकर्ता दुःखहर्ता वार्ता विघ्नाची।
+नुरवी पुरवी प्रेम कृपा जयाची।
+सर्वांगी सुंदर उटी शेंदुराची।
+कंठी झळके माळ मुक्ताफळांची॥
+
+जय देव जय देव जय मंगलमूर्ती।
+दर्शनमात्रे मनकामना पुरती॥
+
+रत्नखचित फरा तुज गौरीकुमरा।
+चंदनाची उटी कुंकुमकेशरा।
+हिरेजडित मुकुट शोभतो बरा।
+रुणझुणती नूपुरे चरणी घागरिया॥
+
+जय देव जय देव जय मंगलमूर्ती।
+दर्शनमात्रे मनकामना पुरती॥
+
+लंबोदर पितांबर फणिवरबंधना।
+सरळ सोंड वक्रतुंड त्रिनयना।
+दास रामाचा वाट पाहे सदना।
+संकटी पावावे निर्वाणी रक्षावे सुरवरवंदना॥
+
+जय देव जय देव जय मंगलमूर्ती।
+दर्शनमात्रे मनकामना पुरती॥
+
+`
+
+},
+
+tusukhakarta:{
+title:"🎵 तू सुखकर्ता तू दुःखहर्ता",
+lyrics:`तू सुखकर्ता तू दुःखहर्ता,
+विघ्नविनाशक मोरया।
+संकटी रक्षी शरण तुला मी,
+गणपती बाप्पा मोरया॥
+
+तू सकलांचा भाग्यविधाता,
+तू विद्येचा स्वामीदाता।
+ज्ञानदीप उजळुनी आमुच्या,
+निववी नैराश्याला॥ १॥
+
+तू माता, तू पिता जगी या,
+ज्ञाता तू सर्वस्व जगी या।
+पामर मी, स्वर उणे भासती,
+तुझी आरती गाया॥ २॥
+
+मंगलमूर्ती तू गणनायक,
+वक्रतुंड तू सिद्धिविनायक।
+तुझिया द्वारे आज पातली,
+ये इच्छित मज द्याया॥ ३॥`
+},
+
+gajanana: {
+  title: "🎵 गजानना श्री गणराया",
+  lyrics: `गजानना श्री गणराया, आधी वंदू तुज मोरया।
+गजानना श्री गणराया, आधी वंदू तुज मोरया।
+मंगलमूर्ती श्री गणराया, आधी वंदू तुज मोरया॥
+
+गजानना श्री गणराया, आधी वंदू तुज मोरया।
+गजानना श्री गणराया॥
+
+सिंदूरचर्चित ढवळे अंग, सिंदूरचर्चित ढवळे अंग।
+चंदनऊटी खुलवी रंग, खुलवी रंग।
+बघता मानस होते दंग, होते दंग जीव।
+जडला चरणी तुझिया, आधी वंदू तुज मोरया॥
+
+गजानना श्री गणराया, आधी वंदू तुज मोरया।
+गजानना श्री गणराया, आधी वंदू तुज मोरया।
+गौरीतनया भालचंद्रा, गौरीतनया भालचंद्रा॥
+
+देवा कृपेच्या तू समुद्रा, तू समुद्रा।
+वरदविनायक करुणागारा, करुणागारा।
+अवघी विघ्ने नेसी विलया॥
+
+आधी वंदू तुज मोरया, गजानना श्री गणराया।
+आधी वंदू तुज मोरया, गजानना श्री गणराया।
+आधी वंदू तुज मोरया, गजानना श्री गणराया।
+आधी वंदू तुज मोरया, गजानना श्री गणराया।
+आधी वंदू तुज मोरया, गजानना श्री गणराया।
+आधी वंदू तुज मोरया, गजानना श्री गणराया।
+
+आधी वंदू तुज मोरया॥`
+},
+
+shendur: {
+  title: "🪔 शेंदूर लाल चढ़ायो",
+  lyrics: `शेंदूर लाल चढ़ायो अच्छा गजमुख को,
+दोंदिल लाल बिराजे सुत गौरिहर को।
+
+हाथ लिए गुडलद्दु सांई सुरवर को,
+महिमा कहे न जाय, लागत हूं पद को॥
+
+।। जय देव जय देव ।।
+
+जय जय श्री गणराज विद्या सुखदाता,
+धन्य तुम्हारो दर्शन, मेरा मन रमता॥
+
+।। जय देव जय देव ।।
+
+भावभगत से कोई शरणागत आवे,
+संतति संपत्ति सबहि भरपूर पावे।
+ऐसे तुम महाराज मोको अति भावे,
+गोसावीनन्दन निशिदिन गुण गावे॥
+
+।। जय देव जय देव ।।
+
+जय जय श्री गणराज विद्या सुखदाता,
+धन्य तुम्हारो दर्शन, मेरा मन रमता॥
+
+।। जय देव जय देव ।।`
+},
+
+lavthavati:{
+
+title:"🔱 लवथवती विक्राळा",
+
+lyrics:`
+
+लवथवती विक्राळा ब्रह्मांडी माळा।
+वीषे कंठ काळा त्रिनेत्री ज्वाळा।
+लावण्य सुंदर मस्तकी बाळा।
+तेथुनिया जळ निर्मळ वाहे झुळझुळा॥
+
+जय देव जय देव जय श्रीशंकरा।
+आरती ओवाळू तुज कर्पूरगौरा॥
+
+कर्पूरगौरा भोळा नयनी विशाल।
+अर्धांगी पार्वती सुमनांच्या माळ।
+विभूतीचे उधळण शितिकंठ निळा।
+ऐसा शंकर शोभे उमावेल्हाळा॥
+
+जय देव जय देव जय श्रीशंकरा।
+आरती ओवाळू तुज कर्पूरगौरा॥
+
+देवी दैत्यीं सागरमंथन पै केले।
+त्यामाजी अवचित हलाहल उठिले।
+तेव्हा असुरपणे प्राशन केले।
+नीलकंठ नाम प्रसिद्ध झाले॥
+
+जय देव जय देव जय श्रीशंकरा।
+आरती ओवाळू तुज कर्पूरगौरा॥
+
+व्याघ्रांबर फणिवरधर सुंदर मदनारी।
+पंचानन मनमोहन मुनिजन सुखकारी।
+शतकोटीचे बीज वाचे उच्चारी।
+रघुकुळतिलक रामदासा अंतरी॥
+
+जय देव जय देव जय श्रीशंकरा।
+आरती ओवाळू तुज कर्पूरगौरा॥
+
+`
+
+},
+
+durge:{
+
+title:"🪔 दुर्गे दुर्घट भारी",
+
+lyrics:`
+
+दुर्गे दुर्घट भारी तुजविण संसारी।
+अनाथनाथे अंबे करुणा विस्तारी।
+वारी वारी जन्ममरणाते वारी।
+हारी पडलो आता संकट निवारी॥
+
+जय देवी जय देवी महिषासुरमर्दिनी।
+सुरवर ईश्वरवरदे तारक संजीवनी॥
+
+त्रिभुवनभुवनी पाहता तुज ऐसी नाही।
+चारी श्रमले परंतु न बोलवे काही।
+साही विवाद करिता पडिले प्रवाही।
+ते तू भक्तांलागी पावसि लवलाही॥
+
+जय देवी जय देवी महिषासुरमर्दिनी।
+सुरवर ईश्वरवरदे तारक संजीवनी॥
+
+प्रसन्नवदने प्रसन्न होसी निजदासा।
+क्लेशापासुनी सोडवी तोडी भवपाशा।
+अंबे तुजवाचून कोण पुरवील आशा।
+नरहरी तल्लीन झाला पदपंकजलेशा॥
+
+जय देवी जय देवी महिषासुरमर्दिनी।
+सुरवर ईश्वरवरदे तारक संजीवनी॥
+
+`
+
+},
+
+dnyanraja:{
+
+title:"🪔 आरती ज्ञानराजा",
+
+lyrics:`
+
+आरती ज्ञानराजा।
+महाकैवल्य तेजा।
+सेविती साधुसंत।
+मनु वेधला माझा॥
+
+लोपले ज्ञान जगी।
+हित नेणती कोणी।
+अवतार पांडुरंग।
+नाम ठेविले ज्ञानी॥
+
+कनकाचे ताट करी।
+उभ्या गोपिका नारी।
+नारद तुंबर हो।
+सामगायन करी॥
+
+प्रकट गुह्य बोले।
+विश्व ब्रह्मचि केले।
+रामा जनार्दनी।
+पायी मस्तक ठेविले॥
+
+आरती ज्ञानराजा।
+महाकैवल्य तेजा।
+सेविती साधुसंत।
+मनु वेधला माझा॥
+
+`
+
+},
+
+gannatha:{
+title:"🪔 सुखकर्ता तुम्ही दुःखहर्ता",
+lyrics:`Coming Soon`
+},
+
+vartaniya:{
+title:"🪔 गणनाथा गणनाथा",
+lyrics:`Coming Soon`
+},
+
+alikade:{
+title:"🪔 अलीकडे ये मला",
+lyrics:`Coming Soon`
+},
+
+pradakshina:{
+title:"🪔 धन्य धन्य हो प्रदक्षिणा",
+lyrics:`Coming Soon`
+},
+
+jagdamba:{
+title:"🪔 जय जय है जगदंब माता",
+lyrics:`Coming Soon`
+},
+
+gopala:{
+title:"🪔 आरती करू तुजी गोपाळा",
+lyrics:`Coming Soon`
+},
+
+vitthal:{
+title:"🎵 येई हो विठ्ठले",
+lyrics:`Coming Soon`
+},
+
+pandharicha:{
+title:"🎵 पंढरीचा विठ्ठल",
+lyrics:`Coming Soon`
+},
+
+ghalin: {
+  title: "🙏 घालीन लोटांगण",
+  lyrics: `घालीन लोटांगण वंदिन चरण,
+डोळ्यांनी पाहीं रूप तुझे।
+प्रेम आलिंगिन आनंदे पूजीं,
+भावे ओवाळीन म्हणे नामा।।
+
+त्वमेव माता पिता त्वमेव,
+त्वमेव बन्धुश्च सखा त्वमेव।
+त्वमेव विद्या द्रविणं त्वमेव,
+त्वमेव सर्वम मम देव देव।।
+
+कयें वच मनसेन्द्रियैवा,
+बुद्धयात्मना व प्रकृतिस्वभावा।
+करोमि यद्यत सकलं परस्मै,
+नारायणायेति समर्पयामि।।
+
+अच्युत केशवम रामनरायणं,
+कृष्णदामोदरं वासुदेवं हरी।
+श्रीधरम माधवं गोपिकावल्लभं,
+जानकीनायकं रामचंद्रम भजे।।
+
+हरे राम हरे राम,
+राम राम हरे हरे।
+हरे कृष्णा हरे कृष्णा,
+कृष्णा कृष्णा हरे हरे।।`
+},
+
+sadasarvada:{
+title:"🪔 सदा सर्वदा योग तुझा घडावा",
+lyrics:`Coming Soon`
+}
+
+};
+
+
+/* ===============================
+BUILD HOME LIST (data-driven, no duplicate markup)
+================================ */
+
+const aartiListEl = document.getElementById("aartiList");
+const aartiIds = Object.keys(AARTIS);
+
+document.getElementById("aartiCount").textContent = aartiIds.length + " आरत्या";
+
+aartiIds.forEach(function(id){
+  const entry = AARTIS[id];
+  const spaceIdx = entry.title.indexOf(' ');
+  const icon = spaceIdx > -1 ? entry.title.slice(0, spaceIdx) : '🪔';
+  const label = spaceIdx > -1 ? entry.title.slice(spaceIdx + 1) : entry.title;
+  const isComingSoon = entry.lyrics.trim() === "Coming Soon";
+
+  const item = document.createElement('div');
+  item.className = 'aarti-item';
+  item.setAttribute('role', 'button');
+  item.setAttribute('tabindex', '0');
+  item.addEventListener('click', function(){ openAarti(id); });
+  item.addEventListener('keydown', function(e){ if(e.key === 'Enter') openAarti(id); });
+
+  const iconEl = document.createElement('div');
+  iconEl.className = 'aarti-item-icon';
+  iconEl.textContent = icon;
+
+  const textEl = document.createElement('div');
+  textEl.className = 'aarti-item-text';
+  textEl.textContent = label;
+
+  item.appendChild(iconEl);
+  item.appendChild(textEl);
+
+  if(isComingSoon){
+    const badge = document.createElement('div');
+    badge.className = 'aarti-item-badge';
+    badge.textContent = 'लवकरच';
+    item.appendChild(badge);
+  }
+
+  aartiListEl.appendChild(item);
+});
+
+/* ===============================
+OPEN AARTI
+================================ */
+
+function openAarti(id){
+  const entry = AARTIS[id];
+  if(!entry) return;
+
+  document.getElementById("homePage").style.display = "none";
+  document.getElementById("readerPage").style.display = "block";
+  document.getElementById("scrollControl").style.display = "flex";
+
+  document.getElementById("aartiTitle").textContent = entry.title;
+
+  const content = document.getElementById("aartiContent");
+  content.innerHTML = "";
+
+  const lyrics = entry.lyrics.trim();
+
+  if(lyrics === "Coming Soon"){
+    const card = document.createElement('div');
+    card.className = 'coming-soon-card';
+    card.innerHTML = '<span class="cs-icon">🪔</span>';
+    const msg = document.createElement('p');
+    msg.textContent = "ही आरती लवकरच जोडली जाईल.";
+    card.appendChild(msg);
+    content.appendChild(card);
+  } else {
+    // Split into verse blocks by blank lines; repeated blocks (dhruvapad / chorus)
+    // are styled distinctly, without altering the lyric text itself.
+    const blocks = lyrics.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
+    const occurrences = {};
+    blocks.forEach(b => { occurrences[b] = (occurrences[b] || 0) + 1; });
+
+    let verseCounter = 0;
+    blocks.forEach(block => {
+      const isChorus = occurrences[block] > 1;
+      const verseEl = document.createElement('div');
+      verseEl.className = 'verse' + (isChorus ? ' chorus' : '');
+
+      const labelEl = document.createElement('div');
+      labelEl.className = 'verse-label' + (isChorus ? ' chorus-label' : '');
+      if(isChorus){
+        labelEl.textContent = 'धृवपद';
+      } else {
+        verseCounter++;
+        labelEl.textContent = 'कडवे ' + verseCounter;
+      }
+      verseEl.appendChild(labelEl);
+
+      block.split('\n').forEach(line => {
+        line = line.trim();
+        if(!line) return;
+        const p = document.createElement('p');
+        p.textContent = line;
+        verseEl.appendChild(p);
+      });
+
+      content.appendChild(verseEl);
+    });
+  }
+
+  scrollArea.scrollTop = 0;
+}
+
+
+/* ===============================
+BACK
+================================ */
+
+function goHome(){
+  stopAutoScroll();
+  document.getElementById("readerPage").style.display = "none";
+  document.getElementById("homePage").style.display = "block";
+  document.getElementById("scrollControl").style.display = "none";
+  scrollArea.scrollTop = 0;
+}
+
+
+/* ===============================
+SEARCH
+================================ */
+
+const noResultsEl = document.getElementById("noResults");
+
+document.getElementById("searchBox").addEventListener("input", function(){
+  const value = this.value.trim().toLowerCase();
+  const items = document.querySelectorAll(".aarti-item");
+  let visibleCount = 0;
+
+  items.forEach(function(item){
+    const matches = item.textContent.toLowerCase().includes(value);
+    item.style.display = matches ? "flex" : "none";
+    if(matches) visibleCount++;
+  });
+
+  noResultsEl.style.display = visibleCount === 0 ? "block" : "none";
+});
+</script>
+
+</body>
+</html>
