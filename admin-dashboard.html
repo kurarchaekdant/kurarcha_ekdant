@@ -650,6 +650,85 @@ body::after{
   padding-top:28px;
   border-top:1px solid rgba(255,255,255,.08);
 }
+
+/* ===== MAIN TAB NAVIGATION ===== */
+.main-tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  margin-bottom:24px;
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);
+  padding:6px;
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+}
+.main-tab-btn{
+  padding:12px 10px;
+  border-radius:var(--radius-sm);
+  border:none;
+  background:transparent;
+  color:var(--text-muted);
+  font-size:.82rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .2s;
+  font-family:'Inter',sans-serif;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+.main-tab-btn.active{
+  background:linear-gradient(135deg, var(--gold) 0%, #b8793d 100%);
+  color:#0f172a;
+  box-shadow:0 4px 16px rgba(215,153,33,.3);
+}
+.tab-panel{ display:none; }
+.tab-panel.active{ display:block; animation:panelIn .3s ease; }
+@keyframes panelIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+
+/* ===== NOTIFICATIONS TAB ===== */
+.notify-form label{
+  display:block;
+  font-size:.78rem;
+  font-weight:700;
+  color:var(--text-muted);
+  letter-spacing:.04em;
+  margin:16px 0 8px;
+}
+.notify-form label:first-child{ margin-top:0; }
+.notify-form input[type="text"],
+.notify-form input[type="password"],
+.notify-form textarea{
+  width:100%;
+  padding:12px 14px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius-sm);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  font-size:.9rem;
+  outline:none;
+}
+.notify-form input:focus,
+.notify-form textarea:focus{ border-color:rgba(215,153,33,.5); }
+.notify-form textarea{ min-height:100px; resize:vertical; }
+.notify-hint{
+  font-size:.72rem;
+  color:var(--text-dim);
+  margin-top:6px;
+  line-height:1.5;
+}
+.notify-log{
+  margin-top:20px;
+  padding-top:16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  font-size:.8rem;
+  color:var(--text-muted);
+  min-height:20px;
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -684,6 +763,10 @@ body::after{
       <div class="stat-num" id="totalCats">6</div>
       <div class="stat-label">Categories</div>
     </div>
+    <div class="glass-card stat-card">
+  <div class="stat-num" id="visitorCount">0</div>
+  <div class="stat-label">Website Visitors</div>
+</div>
     <div class="glass-card category-card">
       <h3>Photo Count by Category</h3>
       <div class="cat-grid" id="categoryStats">
@@ -691,6 +774,16 @@ body::after{
       </div>
     </div>
   </div>
+
+  <!-- MAIN TABS -->
+  <div class="main-tabs">
+    <button class="main-tab-btn active" onclick="switchTab('gallery', this)">🖼 Gallery</button>
+    <button class="main-tab-btn" onclick="switchTab('donations', this)">💰 Donations</button>
+    <button class="main-tab-btn" onclick="switchTab('notifications', this)">🔔 Notifications</button>
+  </div>
+
+  <!-- GALLERY TAB -->
+  <div id="tab-gallery" class="tab-panel active">
 
   <!-- UPLOAD -->
   <div class="section-title">Upload New Photo</div>
@@ -737,13 +830,14 @@ body::after{
     </div>
   </div>
 
-
+  </div><!-- /tab-gallery -->
 
 <!-- Toast -->
 <div id="toast"></div>
 
-<!-- DONATIONS SECTION -->
-<div class="gallery-section donations-section">
+<!-- DONATIONS TAB -->
+<div id="tab-donations" class="tab-panel">
+<div class="gallery-section donations-section" style="margin-top:0; padding-top:0; border-top:none;">
   <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
     <div class="section-title" style="margin-bottom:0;">Donations</div>
     <button onclick="exportDonationsExcel()" style="margin:0; width:auto; padding:8px 16px; font-size:.78rem; background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.3); color:#4ade80; border-radius:8px; cursor:pointer; font-weight:700;">
@@ -760,6 +854,31 @@ body::after{
 
   <div id="donationList"><div class="empty-donations">Loading donations...</div></div>
 </div>
+</div><!-- /tab-donations -->
+
+<!-- NOTIFICATIONS TAB -->
+<div id="tab-notifications" class="tab-panel">
+  <div class="section-title">Send Push Notification</div>
+  <div class="glass-card notify-form">
+    <label for="notifyTitle">Title</label>
+    <input type="text" id="notifyTitle" placeholder="e.g. Ganesh Chaturthi Sthapana Tomorrow!">
+
+    <label for="notifyMessage">Message</label>
+    <textarea id="notifyMessage" placeholder="Write the notification message here..."></textarea>
+
+    <label for="notifySecret">Admin Secret</label>
+    <input type="password" id="notifySecret" placeholder="Your Cloudflare Worker admin secret">
+    <div class="notify-hint">Saved on this device only, so you won't need to re-enter it every time.</div>
+
+    <button class="btn-upload" style="margin-top:20px;" onclick="sendNotification(this)">🔔 Send to All Subscribers</button>
+    <div class="notify-log" id="notifyLog"></div>
+  </div>
+
+  <div class="section-title" style="margin-top:28px;">Last 10 Notifications</div>
+  <div id="notifyHistoryList">
+    <div class="empty-donations">Loading...</div>
+  </div>
+</div><!-- /tab-notifications -->
 
 <!-- Confirm Delete Modal -->
 <div id="confirmBox">
@@ -778,7 +897,7 @@ body::after{
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, serverTimestamp, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, serverTimestamp, getDocs, deleteDoc, doc, updateDoc, getDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCbieOt2IpLohjduy1Qs0NqVgYIrT28M9M",
@@ -805,6 +924,7 @@ function showToast(msg, type="info"){
     toast.style.display = "none";
   }, 3500);
 }
+window.showToast = showToast;
 
 // ---- AUTH ----
 onAuthStateChanged(auth, (user) => {
@@ -814,8 +934,10 @@ onAuthStateChanged(auth, (user) => {
     document.body.style.display = "block";
     document.getElementById("adminEmail").textContent = user.email;
     loadGallery();
-    loadCategoryStats();
-    loadDonations();
+loadCategoryStats();
+loadVisitorCount();
+loadDonations();
+loadNotificationHistory();
   }
 });
 
@@ -958,7 +1080,16 @@ window.loadCategoryStats = async function(){
     </div>
   `).join("");
 };
+async function loadVisitorCount() {
 
+  const snap = await getDoc(doc(db, "stats", "visitors"));
+
+  if (snap.exists()) {
+    document.getElementById("visitorCount").textContent =
+      snap.data().total || 0;
+  }
+
+}
 // ---- DELETE ----
 let deleteId = null;
 
@@ -989,6 +1120,64 @@ window.loadDonations = async function(){
     return tb - ta;
   });
   renderDonations();
+};
+
+// ---- NOTIFICATION HISTORY ----
+window.logNotification = async function(title, message){
+  try{
+    await addDoc(collection(db, "notifications"), {
+      title: title,
+      message: message,
+      sentBy: auth.currentUser?.email || "unknown",
+      createdAt: serverTimestamp()
+    });
+  } catch(e){
+    console.warn("Failed to log notification:", e);
+  }
+};
+
+window.loadNotificationHistory = async function(){
+  const list = document.getElementById("notifyHistoryList");
+  if(!list) return;
+  list.innerHTML = '<div class="empty-donations">Loading...</div>';
+
+  try{
+    const q = query(collection(db, "notifications"), orderBy("createdAt", "desc"), limit(10));
+    const snapshot = await getDocs(q);
+
+    if(snapshot.empty){
+      list.innerHTML = '<div class="empty-donations">No notifications sent yet</div>';
+      return;
+    }
+
+    list.innerHTML = "";
+    snapshot.forEach(item => {
+      const d = item.data();
+      const when = d.createdAt?.seconds
+        ? new Date(d.createdAt.seconds * 1000).toLocaleString("en-IN", {
+            day:"2-digit", month:"short", year:"numeric",
+            hour:"2-digit", minute:"2-digit", hour12:true
+          })
+        : "—";
+      list.innerHTML += `
+        <div class="donation-card">
+          <div class="d-row">
+            <div>
+              <div class="d-name">${d.title || "(no title)"}</div>
+              <div class="d-meta" style="margin-top:6px;">${d.message || ""}</div>
+              <div class="d-meta" style="margin-top:8px;">
+                <span>👤 ${d.sentBy || "unknown"}</span>
+                <span>🕒 ${when}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  } catch(e){
+    list.innerHTML = '<div class="empty-donations">Failed to load history</div>';
+    console.warn("loadNotificationHistory failed:", e);
+  }
 };
 
 window.filterDonations = function(filter){
@@ -1160,6 +1349,82 @@ window.chooseCategory=function(value,text){
  document.getElementById("categoryPopup").style.display="none";
 
 }
+
+// ---- MAIN TAB SWITCHING ----
+window.switchTab = function(name, btn){
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".main-tab-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById("tab-" + name).classList.add("active");
+  btn.classList.add("active");
+};
+
+// ---- SEND NOTIFICATION (via Cloudflare Worker -> OneSignal) ----
+const NOTIFY_WORKER_URL = "https://kurarcha-notify.kurar-cha-ekdant2026.workers.dev";
+
+// Pre-fill saved admin secret if present
+window.addEventListener("DOMContentLoaded", function(){
+  const saved = localStorage.getItem("kurarcha_admin_secret");
+  if(saved) document.getElementById("notifySecret").value = saved;
+});
+
+window.sendNotification = async function(btn){
+  const title = document.getElementById("notifyTitle").value.trim();
+  const message = document.getElementById("notifyMessage").value.trim();
+  const secret = document.getElementById("notifySecret").value.trim();
+  const log = document.getElementById("notifyLog");
+
+  if(!title || !message){
+    log.textContent = "⚠️ Please fill in both title and message.";
+    log.style.color = "#fbbf24";
+    return;
+  }
+  if(!secret){
+    log.textContent = "⚠️ Admin secret is required.";
+    log.style.color = "#fbbf24";
+    return;
+  }
+
+  localStorage.setItem("kurarcha_admin_secret", secret);
+
+  btn.disabled = true;
+  btn.textContent = "Sending...";
+  log.textContent = "";
+
+  try{
+    const res = await fetch(NOTIFY_WORKER_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Admin-Secret": secret
+      },
+      body: JSON.stringify({ title, message })
+    });
+
+    if(res.status === 401){
+      throw new Error("Wrong admin secret — check what you set in Cloudflare.");
+    }
+    if(!res.ok){
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.errors?.[0] || "Send failed (" + res.status + ")");
+    }
+
+    log.textContent = "✅ Notification sent to all subscribers!";
+    log.style.color = "#4ade80";
+    await window.logNotification(title, message);
+    window.loadNotificationHistory();
+    document.getElementById("notifyTitle").value = "";
+    document.getElementById("notifyMessage").value = "";
+    showToast("🔔 Notification sent!", "success");
+
+  } catch(err){
+    log.textContent = "❌ " + err.message;
+    log.style.color = "#f87171";
+    showToast("❌ " + err.message, "error");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "🔔 Send to All Subscribers";
+  }
+};
 </script>
 
 </body>
