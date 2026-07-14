@@ -28,3 +28,8 @@ self.addEventListener("fetch", event => {
       .then(response => response || fetch(event.request))
   );
 });
+
+// ---- OneSignal push notifications ----
+// Merged into this same file (instead of a separate OneSignalSDKWorker.js)
+// so there's only one service worker controlling the site, no scope conflicts.
+importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
