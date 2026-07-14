@@ -303,11 +303,15 @@ font-weight:700;
   @media (max-width:880px){.contact-grid{grid-template-columns:1fr;}}
 
   footer{
+    position:fixed; left:0; right:0; bottom:0; z-index:50;
     background:var(--maroon-deep); color:rgba(251,236,210,.6);
-    text-align:center; padding:30px 24px; font-size:.84rem;
+    text-align:center; padding:10px 24px; font-size:.78rem;
     border-top:1px solid rgba(238,196,99,.2);
   }
-  footer .foot-mark{font-family:var(--font-display); color:var(--gold-light); font-size:1rem; display:block; margin-bottom:6px;}
+  footer .foot-mark{font-family:var(--font-display); color:var(--gold-light); font-size:.92rem; display:block; margin-bottom:2px;}
+
+  /* keep page content from being hidden behind the fixed footer */
+  main{padding-bottom:64px;}
 
   /* reveal on scroll */
   .reveal{opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease;}
@@ -476,6 +480,18 @@ button:focus{
 
 </style>
 </style>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "dd09d219-26e0-4849-93a3-7e15b3d61919",
+      serviceWorkerParam: { scope: "/" },
+      serviceWorkerPath: "/service-worker.js",
+      notifyButton: { enable: true }
+    });
+  });
+</script>
 </head>
 <body>
 
@@ -841,10 +857,12 @@ Memories<br>Photo
 import { initializeApp } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-import { 
+import {
 getFirestore,
 collection,
-getDocs
+getDocs,
+doc,
+runTransaction
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -864,7 +882,26 @@ const app = initializeApp(firebaseConfig);
 window.db = getFirestore(app);
 window.collection = collection;
 window.getDocs = getDocs;
+// Website visitor counter
+const visitorRef = doc(window.db, "stats", "visitors");
 
+try {
+  await runTransaction(window.db, async (transaction) => {
+    const snap = await transaction.get(visitorRef);
+
+    if (!snap.exists()) {
+      transaction.set(visitorRef, {
+        total: 1
+      });
+    } else {
+      transaction.update(visitorRef, {
+        total: snap.data().total + 1
+      });
+    }
+  });
+} catch (e) {
+  console.log("Visitor counter:", e);
+}
 
 </script>
 
