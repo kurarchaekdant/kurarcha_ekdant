@@ -486,8 +486,8 @@ button:focus{
   OneSignalDeferred.push(async function(OneSignal) {
     await OneSignal.init({
       appId: "dd09d219-26e0-4849-93a3-7e15b3d61919",
-      serviceWorkerParam: { scope: "/" },
-      serviceWorkerPath: "/service-worker.js",
+      serviceWorkerParam: { scope: "/kurarcha_ekdant/" },
+      serviceWorkerPath: "/kurarcha_ekdant/service-worker.js",
       notifyButton: { enable: true }
     });
   });
@@ -1133,9 +1133,7 @@ document.addEventListener("click", function(e){
     }
 
 });
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
-}
+
 </script>
 
 </body>
