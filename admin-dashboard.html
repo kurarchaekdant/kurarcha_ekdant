@@ -1408,7 +1408,9 @@ window.sendNotification = async function(btn){
       throw new Error(errData.errors?.[0] || "Send failed (" + res.status + ")");
     }
 
-    log.textContent = "✅ Notification sent to all subscribers!";
+    const resultData = await res.json();
+    console.log("OneSignal response:", resultData);
+    log.textContent = "✅ Sent! Recipients: " + (resultData.recipients ?? "?") + " | ID: " + (resultData.id ?? "none") + (resultData.errors ? " | Errors: " + JSON.stringify(resultData.errors) : "");
     log.style.color = "#4ade80";
     await window.logNotification(title, message);
     window.loadNotificationHistory();
