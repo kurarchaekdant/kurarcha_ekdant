@@ -1409,8 +1409,10 @@ window.sendNotification = async function(btn){
     }
 
     const resultData = await res.json();
-    console.log("OneSignal response:", resultData);
-    log.textContent = "✅ Sent! Recipients: " + (resultData.recipients ?? "?") + " | ID: " + (resultData.id ?? "none") + (resultData.errors ? " | Errors: " + JSON.stringify(resultData.errors) : "");
+    if (!resultData.id) {
+      throw new Error(resultData.errors?.[0] || "No recipients found.");
+    }
+    log.textContent = "✅ Notification sent successfully!";
     log.style.color = "#4ade80";
     await window.logNotification(title, message);
     window.loadNotificationHistory();
