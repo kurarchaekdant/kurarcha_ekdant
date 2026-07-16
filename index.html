@@ -136,7 +136,7 @@
     width:320px; max-width:calc(100vw - 40px); max-height:420px; overflow-y:auto;
     background:var(--paper-light); border-radius:var(--radius);
     box-shadow:0 16px 40px rgba(0,0,0,.35);
-    border:1px solid rgba(238,196,99,.3); z-index:200;
+    border:1px solid rgba(238,196,99,.3); z-index:1000;
   }
   .bell-panel-head{
     padding:14px 16px; font-family:var(--font-display); color:var(--ink);
@@ -325,8 +325,15 @@ font-weight:700;
     background:linear-gradient(160deg, var(--gold-light), var(--gold));
     display:flex; align-items:center; justify-content:center;
     border:3px solid var(--vermillion);
+    box-shadow:0 0 12px rgba(215,153,33,.4);
+    overflow:hidden;
   }
-  .member .avatar svg{width:46%;}
+  .member .avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
   .member .mname{font-weight:700; font-size:.96rem;}
   .member .role{font-size:.78rem; color:var(--vermillion-dim); font-weight:600; letter-spacing:.04em; text-transform:uppercase; margin-top:2px;}
   @media (max-width:700px){.committee-grid{grid-template-columns:repeat(2,1fr);}}
@@ -835,24 +842,23 @@ Memories<br>Photo
       </div>
       <div class="committee-grid reveal">
         <div class="member">
-          <div class="avatar"><svg viewBox="0 0 100 100" style="color:#43151a"><use href="#icon-ganesha"/></svg></div>
-          <div class="mname">Pratik Solkar</div>
+          <div class="avatar">
+            <img src="suyog.jpg" alt="Suyog Sawant"></div>
+          <div class="mname">Suyog Sawant</div>
           <div class="role">President - (अध्यक्ष)</div>
         </div>
         <div class="member">
-          <div class="avatar"><svg viewBox="0 0 100 100" style="color:#43151a"><use href="#icon-ganesha"/></svg></div>
-          <div class="mname">Harshad Raul</div>
-          <div class="role">Secretary - (सचिव)</div>
-        </div>
+  <div class="avatar">
+    <img src="mayur.jpg" alt="Mayur Potale">
+  </div>
+  <div class="mname">Mayur Potale</div>
+  <div class="role">Secretary - (सचिव)</div>
+</div>
         <div class="member">
-          <div class="avatar"><svg viewBox="0 0 100 100" style="color:#43151a"><use href="#icon-ganesha"/></svg></div>
-          <div class="mname">Prathmesh Kadge</div>
-          <div class="role">Treasurer - (खजिनदार)</div>
-        </div>
-        <div class="member">
-          <div class="avatar"><svg viewBox="0 0 100 100" style="color:#43151a"><use href="#icon-ganesha"/></svg></div>
+          <div class="avatar">
+            <img src="nikhil.jpg" alt="Nikhil Singh"></div>
           <div class="mname">Nikhil Singh</div>
-          <div class="role">Deputy Treasurer - (उपखजिनदार)</div>
+          <div class="role">Treasurer - (खजिनदार)</div>
         </div>
       </div>
     </div>
@@ -1089,11 +1095,15 @@ const db = window.db;
     const opening = bellPanel.style.display !== "block";
     bellPanel.style.display = opening ? "block" : "none";
     bellBtn.setAttribute("aria-expanded", String(opening));
-    if(opening && notifications.length){
-      const newestTs = Math.max(...notifications.map(n => n.ts));
-      localStorage.setItem(LAST_SEEN_KEY, String(newestTs));
-      renderList();
-      updateBadge();
+    if(opening){
+      // close the hamburger menu if it's open, so the two panels never overlap
+      if(window.closeNavMenu) window.closeNavMenu();
+      if(notifications.length){
+        const newestTs = Math.max(...notifications.map(n => n.ts));
+        localStorage.setItem(LAST_SEEN_KEY, String(newestTs));
+        renderList();
+        updateBadge();
+      }
     }
   });
 
@@ -1117,6 +1127,15 @@ function setHamburgerColor(open) {
   navToggle.style.borderColor = color;
   navSpans.forEach(s => s.style.background = color);
 }
+
+function closeNavMenu(){
+  if(!navOpen) return;
+  navOpen = false;
+  navLinks.style.display = "none";
+  navToggle.setAttribute("aria-expanded", "false");
+  setHamburgerColor(false);
+}
+window.closeNavMenu = closeNavMenu;
 
 // Close menu when clicking outside
 document.addEventListener("click", function(e) {
@@ -1155,6 +1174,14 @@ navToggle.addEventListener('click', () => {
   navLinks.style.display = navOpen ? 'flex' : 'none';
   navToggle.setAttribute('aria-expanded', navOpen);
   setHamburgerColor(navOpen);
+  if(navOpen){
+    const bellPanelEl = document.getElementById("bellPanel");
+    const bellBtnEl = document.getElementById("notifyBell");
+    if(bellPanelEl && bellPanelEl.style.display === "block"){
+      bellPanelEl.style.display = "none";
+      if(bellBtnEl) bellBtnEl.setAttribute("aria-expanded", "false");
+    }
+  }
 });
 navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
 
