@@ -113,6 +113,45 @@
 }
   .brand-text small{display:block; font-family:var(--font-body); font-weight:600; letter-spacing:.08em; text-transform:uppercase; font-size:.58rem; color:var(--gold-light); margin-top:2px;}
 
+  /* ---------- NOTIFICATION BELL ---------- */
+  .nav-right{display:flex; align-items:center; gap:10px; position:relative; flex-shrink:0;}
+  .bell-btn{
+    display:none; align-items:center; justify-content:center;
+    position:relative; width:38px; height:38px; border-radius:50%;
+    background:transparent; border:1.5px solid rgba(238,196,99,.5);
+    color:var(--gold-light); font-size:1.05rem; cursor:pointer; flex-shrink:0;
+    transition:background .15s, border-color .15s;
+  }
+  .bell-btn:hover{border-color:var(--gold-light); background:rgba(238,196,99,.1);}
+  .bell-badge{
+    position:absolute; top:-4px; right:-4px;
+    background:var(--vermillion); color:#fff;
+    font-family:var(--font-body); font-size:.65rem; font-weight:700;
+    min-width:17px; height:17px; border-radius:999px; padding:0 4px;
+    display:none; align-items:center; justify-content:center; line-height:1;
+    border:2px solid var(--maroon-deep);
+  }
+  .bell-panel{
+    display:none; position:absolute; top:48px; right:0;
+    width:320px; max-width:calc(100vw - 40px); max-height:420px; overflow-y:auto;
+    background:var(--paper-light); border-radius:var(--radius);
+    box-shadow:0 16px 40px rgba(0,0,0,.35);
+    border:1px solid rgba(238,196,99,.3); z-index:200;
+  }
+  .bell-panel-head{
+    padding:14px 16px; font-family:var(--font-display); color:var(--ink);
+    font-size:1.05rem; border-bottom:1px solid rgba(194,58,31,.15);
+    position:sticky; top:0; background:var(--paper-light);
+  }
+  .bell-list{padding:8px;}
+  .bell-item{padding:10px; border-radius:10px; margin-bottom:2px;}
+  .bell-item.unread{background:rgba(238,196,99,.16);}
+  .bell-item .bi-title{font-weight:700; color:var(--ink); font-size:.9rem; margin:0 0 3px;}
+  .bell-item .bi-msg{color:var(--ink-soft); font-size:.85rem; margin:0; line-height:1.42;}
+  .bell-item .bi-time{color:var(--vermillion-dim); font-size:.66rem; margin-top:5px; text-transform:uppercase; letter-spacing:.04em; font-weight:600;}
+  .bell-empty{color:var(--ink-soft); font-size:.86rem; padding:16px; text-align:center;}
+  @media (max-width:480px){.bell-panel{right:-8px; width:290px;}}
+
 
   /* ---------- HERO ---------- */
   .hero{
@@ -519,11 +558,24 @@ button:focus{
         <small>Mumbai - 400 097</small>
       </span>
     </a>
-    <button id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle menu" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:transparent;border:1.5px solid #eec463;border-radius:6px;width:42px;height:38px;cursor:pointer;padding:0;flex-shrink:0;">
+    <div class="nav-right">
+      <button id="notifyBell" class="bell-btn" aria-label="Notifications" aria-haspopup="true" aria-expanded="false">
+        🔔
+        <span id="bellBadge" class="bell-badge">0</span>
+      </button>
+      <div id="bellPanel" class="bell-panel" role="menu" aria-label="Notifications list">
+        <div class="bell-panel-head">Notifications</div>
+        <div id="bellList" class="bell-list">
+          <p class="bell-empty">Loading…</p>
+        </div>
+      </div>
+
+      <button id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle menu" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:transparent;border:1.5px solid #eec463;border-radius:6px;width:42px;height:38px;cursor:pointer;padding:0;flex-shrink:0;">
   <span style="display:block;width:18px;height:2px;background:#eec463;border-radius:2px;"></span>
   <span style="display:block;width:18px;height:2px;background:#eec463;border-radius:2px;"></span>
   <span style="display:block;width:18px;height:2px;background:#eec463;border-radius:2px;"></span>
 </button>
+    </div>
 <ul id="navLinks" style="display:none;position:absolute;top:100%;left:0;right:0;background:#330d0f;flex-direction:column;list-style:none;margin:0;padding:8px 0;border-top:1px solid rgba(238,196,99,.3);border-bottom:1px solid rgba(238,196,99,.3);box-shadow:0 8px 20px rgba(0,0,0,.25);z-index:999;">
       <li><a href="#about">About</a></li>
       <li><a href="#aarti">Aarti &amp; Schedule</a></li>
@@ -910,13 +962,119 @@ try {
 import { 
 getFirestore,
 collection,
-getDocs
+getDocs,
+query,
+orderBy,
+limit
 } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 // use existing firebase app
 const db = window.db;
+
+// ---- Notification bell (visible to subscribed users only) ----
+(function initNotifyBell(){
+  const bellBtn = document.getElementById("notifyBell");
+  const bellBadge = document.getElementById("bellBadge");
+  const bellPanel = document.getElementById("bellPanel");
+  const bellList = document.getElementById("bellList");
+  if(!bellBtn) return;
+
+  const LAST_SEEN_KEY = "kurarcha_notify_lastSeen";
+  let notifications = [];
+  let loaded = false;
+
+  function renderList(){
+    if(notifications.length === 0){
+      bellList.innerHTML = '<p class="bell-empty">No announcements yet.</p>';
+      return;
+    }
+    const lastSeen = Number(localStorage.getItem(LAST_SEEN_KEY) || 0);
+    bellList.innerHTML = "";
+    notifications.forEach(n => {
+      const item = document.createElement("div");
+      item.className = "bell-item" + (n.ts > lastSeen ? " unread" : "");
+      item.innerHTML = '<p class="bi-title"></p><p class="bi-msg"></p><div class="bi-time"></div>';
+      item.querySelector(".bi-title").textContent = n.title;
+      item.querySelector(".bi-msg").textContent = n.message;
+      item.querySelector(".bi-time").textContent = n.when;
+      bellList.appendChild(item);
+    });
+  }
+
+  function updateBadge(){
+    const lastSeen = Number(localStorage.getItem(LAST_SEEN_KEY) || 0);
+    const unread = notifications.filter(n => n.ts > lastSeen).length;
+    if(unread > 0){
+      bellBadge.textContent = unread > 9 ? "9+" : String(unread);
+      bellBadge.style.display = "flex";
+    } else {
+      bellBadge.style.display = "none";
+    }
+  }
+
+  async function loadNotifications(){
+    try{
+      const q = query(collection(db, "notifications"), orderBy("createdAt", "desc"), limit(10));
+      const snap = await getDocs(q);
+      notifications = snap.docs.map(d => {
+        const n = d.data();
+        const dt = n.createdAt?.toDate ? n.createdAt.toDate() : null;
+        return {
+          title: n.title || "Announcement",
+          message: n.message || "",
+          ts: dt ? dt.getTime() : 0,
+          when: dt ? dt.toLocaleString("en-IN",{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"}) : ""
+        };
+      });
+      loaded = true;
+      renderList();
+      updateBadge();
+    } catch(e){
+      console.warn("Failed to load notifications:", e);
+      bellList.innerHTML = '<p class="bell-empty">Could not load right now.</p>';
+    }
+  }
+
+  function setSubscribedUI(isSubscribed){
+    bellBtn.style.display = isSubscribed ? "flex" : "none";
+    if(!isSubscribed){
+      bellPanel.style.display = "none";
+    } else if(!loaded){
+      loadNotifications();
+    }
+  }
+
+  // Ask OneSignal whether this visitor is currently opted in to push
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  window.OneSignalDeferred.push(function(OneSignal){
+    setSubscribedUI(!!(OneSignal.User && OneSignal.User.PushSubscription && OneSignal.User.PushSubscription.optedIn));
+    OneSignal.User.PushSubscription.addEventListener("change", function(event){
+      setSubscribedUI(!!(event.current && event.current.optedIn));
+    });
+  });
+
+  bellBtn.addEventListener("click", function(e){
+    e.stopPropagation();
+    const opening = bellPanel.style.display !== "block";
+    bellPanel.style.display = opening ? "block" : "none";
+    bellBtn.setAttribute("aria-expanded", String(opening));
+    if(opening && notifications.length){
+      const newestTs = Math.max(...notifications.map(n => n.ts));
+      localStorage.setItem(LAST_SEEN_KEY, String(newestTs));
+      renderList();
+      updateBadge();
+    }
+  });
+
+  document.addEventListener("click", function(e){
+    if(bellPanel.style.display === "block" && !bellPanel.contains(e.target) && !bellBtn.contains(e.target)){
+      bellPanel.style.display = "none";
+      bellBtn.setAttribute("aria-expanded","false");
+    }
+  });
+})();
 
 
 // mobile nav toggle
