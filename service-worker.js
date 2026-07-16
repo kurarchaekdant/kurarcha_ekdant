@@ -1,4 +1,4 @@
-const CACHE_NAME = "ekdant-v1";
+const CACHE_NAME = "ekdant-v1";   // bump this version string
 
 const FILES_TO_CACHE = [
   "./",
@@ -8,7 +8,6 @@ const FILES_TO_CACHE = [
   "./status.html",
   "./gallery-view.html",
   "./admin-login.html",
-
   "./logo-192.png",
   "./logo-512.png",
   "./logo-nav.png",
@@ -16,9 +15,18 @@ const FILES_TO_CACHE = [
 ];
 
 self.addEventListener("install", event => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(FILES_TO_CACHE))
+  );
+});
+
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    ).then(() => self.clients.claim())
   );
 });
 
@@ -30,6 +38,4 @@ self.addEventListener("fetch", event => {
 });
 
 // ---- OneSignal push notifications ----
-// Merged into this same file (instead of a separate OneSignalSDKWorker.js)
-// so there's only one service worker controlling the site, no scope conflicts.
 importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
