@@ -1031,10 +1031,37 @@ const db = window.db;
       loaded = true;
       renderList();
       updateBadge();
+      maybeAutoOpen();
     } catch(e){
       console.warn("Failed to load notifications:", e);
       bellList.innerHTML = '<p class="bell-empty">Could not load right now.</p>';
     }
+  }
+
+  // If the visitor arrived here by tapping a push notification (Worker
+  // appends ?notify=1 to the click URL), open the bell panel automatically
+  // so they land straight on what changed, instead of a bare homepage.
+  const urlParams = new URLSearchParams(window.location.search);
+  const cameFromNotification = urlParams.get("notify") === "1";
+  let autoOpened = false;
+
+  function maybeAutoOpen(){
+    if(!cameFromNotification || autoOpened) return;
+    if(bellBtn.style.display !== "flex") return; // not subscribed / not ready yet
+    autoOpened = true;
+    bellPanel.style.display = "block";
+    bellBtn.setAttribute("aria-expanded", "true");
+    if(notifications.length){
+      const newestTs = Math.max(...notifications.map(n => n.ts));
+      localStorage.setItem(LAST_SEEN_KEY, String(newestTs));
+      renderList();
+      updateBadge();
+    }
+    bellBtn.scrollIntoView({ behavior: "smooth", block: "center" });
+    // clean the URL so a manual refresh doesn't keep reopening it
+    urlParams.delete("notify");
+    const cleanUrl = window.location.pathname + (urlParams.toString() ? "?" + urlParams.toString() : "") + window.location.hash;
+    window.history.replaceState({}, "", cleanUrl);
   }
 
   function setSubscribedUI(isSubscribed){
@@ -1043,6 +1070,8 @@ const db = window.db;
       bellPanel.style.display = "none";
     } else if(!loaded){
       loadNotifications();
+    } else {
+      maybeAutoOpen();
     }
   }
 
