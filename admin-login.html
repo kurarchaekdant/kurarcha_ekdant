@@ -22,7 +22,8 @@
     --success:#4caf7d;
   }
 
-  * { box-sizing:border-box; margin:0; padding:0; }
+  * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  button, a, [onclick]{ -webkit-touch-callout:none; }
 
   body {
     font-family:'Mukta', sans-serif;
@@ -568,7 +569,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { 
   getAuth,
   sendPasswordResetEmail,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
@@ -596,7 +598,18 @@ const adminEmails = [
 
 window.loginFirebase = function(email,password){
 
-  return signInWithEmailAndPassword(auth,email,password);
+  return signInWithEmailAndPassword(auth,email,password).then((cred) => {
+    // Password was correct, but only allowlisted emails may actually use
+    // this dashboard. Reject and sign out anyone else immediately — this
+    // is a UX convenience only; the real enforcement is in Firestore
+    // Security Rules, since anything client-side can be bypassed via devtools.
+    const authedEmail = (cred.user.email || "").toLowerCase();
+    const allowed = adminEmails.map(e => e.toLowerCase()).includes(authedEmail);
+    if(!allowed){
+      return signOut(auth).then(() => Promise.reject({ code: "auth/not-authorized" }));
+    }
+    return cred;
+  });
 
 };
 
@@ -691,7 +704,13 @@ window.closeMessage = function(){
   });
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Enter') handleLogin();
+    if (e.key !== 'Enter') return;
+    const resetPopup = document.getElementById('resetPopup');
+    if (resetPopup && resetPopup.style.display === 'flex') {
+      sendReset();
+    } else {
+      handleLogin();
+    }
   });
 
   function handleLogin() {
@@ -715,37 +734,44 @@ window.closeMessage = function(){
     btnText.style.display = 'none';
     spinner.style.display = 'block';
 
-    // Simulate auth check (replace with real API call)
-    setTimeout(() => {
-      btn.classList.remove('loading');
-      btnText.style.display = 'block';
-      spinner.style.display = 'none';
+    loginFirebase(user, pass)
+      .then(() => {
+        btn.classList.remove('loading');
+        btnText.style.display = 'block';
+        spinner.style.display = 'none';
 
-      loginFirebase(user, pass)
-.then(() => {
+        // Success
+        document.getElementById('loginForm').style.display = 'none';
 
-  // Success
-  document.getElementById('loginForm').style.display = 'none';
+        const overlay = document.getElementById('successOverlay');
+        overlay.style.display = 'flex';
 
-  const overlay = document.getElementById('successOverlay');
-  overlay.style.display = 'flex';
+        setTimeout(() => {
+          window.location.href = "admin-dashboard.html";
+        }, 2000);
+      })
+      .catch((error) => {
+        btn.classList.remove('loading');
+        btnText.style.display = 'block';
+        spinner.style.display = 'none';
 
-  setTimeout(() => {
-    window.location.href = "admin-dashboard.html";
-  }, 2000);
+        // Fail — show a message that matches what actually went wrong
+        if (error.code === 'auth/not-authorized') {
+          errorMsg.textContent = '⛔ This account is not authorized for admin access.';
+        } else if (error.code === 'auth/too-many-requests') {
+          errorMsg.textContent = '⚠️ Too many attempts. Please wait a few minutes and try again.';
+        } else if (error.code === 'auth/user-disabled') {
+          errorMsg.textContent = '⚠️ This account has been disabled.';
+        } else if (error.code === 'auth/network-request-failed') {
+          errorMsg.textContent = '⚠️ Network error — check your connection and try again.';
+        } else {
+          errorMsg.textContent = '⚠️ Incorrect email or password.';
+        }
+        errorMsg.classList.add('show');
 
-})
-.catch(() => {
-
-  // Fail
-  errorMsg.textContent = '⚠️ Incorrect email or password.';
-  errorMsg.classList.add('show');
-
-  document.getElementById('password').value = '';
-  document.getElementById('password').focus();
-
-});
-    }, 1200);
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+      });
   }
   
   
