@@ -16,14 +16,14 @@ button, a, [onclick]{ -webkit-touch-callout:none; }
 
 /* ===== ROOT VARIABLES — matches Kurarcha Ekdant site palette ===== */
 :root{
-  --gold:#d79921;
-  --gold-light:#eec463;
-  --gold-dim:rgba(215,153,33,.15);
-  --maroon-deep:#330d0f;
-  --maroon:#43151a;
-  --vermillion:#c23a1f;
+  --gold:#22c55e;
+  --gold-light:#4ade80;
+  --gold-dim:rgba(34,197,94,.15);
+  --maroon-deep:#0f172a;
+  --maroon:#1e293b;
+  --vermillion:#2563eb;
   --glass:rgba(255,255,255,.05);
-  --glass-border:rgba(238,196,99,.16);
+  --glass-border:rgba(74,222,128,.16);
   --glass-hover:rgba(255,255,255,.08);
   --text:#fbecd2;
   --text-muted:#d8b79c;
@@ -59,9 +59,9 @@ body::before{
   position:fixed;
   inset:0;
   background:
-    radial-gradient(ellipse at 20% 20%, rgba(194,58,31,.3) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(215,153,33,.18) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(42,15,12,1) 0%, transparent 100%);
+    radial-gradient(ellipse at 20% 20%, rgba(37,99,235,.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(34,197,94,.18) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(15,23,42,1) 0%, transparent 100%);
   z-index:0;
   pointer-events:none;
 }
@@ -72,7 +72,7 @@ body::after{
   position:fixed;
   width:400px; height:400px;
   border-radius:50%;
-  background:radial-gradient(circle, rgba(215,153,33,.08) 0%, transparent 70%);
+  background:radial-gradient(circle, rgba(34,197,94,.08) 0%, transparent 70%);
   top:-100px; right:-100px;
   z-index:0;
   pointer-events:none;
@@ -129,7 +129,7 @@ body::after{
 }
 .admin-badge{
   background:var(--gold-dim);
-  border:1px solid rgba(215,153,33,.3);
+  border:1px solid rgba(34,197,94,.3);
   color:var(--gold-light);
   font-size:.68rem;
   font-weight:700;
@@ -259,17 +259,17 @@ body::after{
 
 /* ===== UPLOAD CARD ===== */
 .upload-zone{
-  border:2px dashed rgba(215,153,33,.3);
+  border:2px dashed rgba(34,197,94,.3);
   border-radius:var(--radius);
   padding:28px 20px;
   text-align:center;
   cursor:pointer;
   transition:all .2s;
-  background:rgba(215,153,33,.03);
+  background:rgba(34,197,94,.03);
 }
 .upload-zone:hover{
   border-color:var(--gold);
-  background:rgba(215,153,33,.06);
+  background:rgba(34,197,94,.06);
 }
 .upload-icon{ font-size:2.2rem; margin-bottom:10px; }
 .upload-text{
@@ -369,7 +369,7 @@ body::after{
   width:100%;
   margin-top:14px;
   padding:13px;
-  background:linear-gradient(135deg, var(--gold) 0%, #b8793d 100%);
+  background:linear-gradient(135deg, var(--gold) 0%, #15803d 100%);
   color:#0f172a;
   border:none;
   border-radius:var(--radius-sm);
@@ -379,11 +379,11 @@ body::after{
   cursor:pointer;
   transition:all .2s;
   font-family:var(--font-body);
-  box-shadow:0 4px 20px rgba(215,153,33,.25);
+  box-shadow:0 4px 20px rgba(34,197,94,.25);
 }
 .btn-upload:hover{
   transform:translateY(-1px);
-  box-shadow:0 6px 28px rgba(215,153,33,.4);
+  box-shadow:0 6px 28px rgba(34,197,94,.4);
 }
 .btn-upload:disabled{
   opacity:.6;
@@ -571,7 +571,7 @@ body::after{
 }
 .tab-btn.active{
   background:var(--gold-dim);
-  border-color:rgba(215,153,33,.4);
+  border-color:rgba(34,197,94,.4);
   color:var(--gold-light);
 }
 
@@ -687,9 +687,9 @@ body::after{
   gap:6px;
 }
 .main-tab-btn.active{
-  background:linear-gradient(135deg, var(--gold) 0%, #b8793d 100%);
+  background:linear-gradient(135deg, var(--gold) 0%, #15803d 100%);
   color:#0f172a;
-  box-shadow:0 4px 16px rgba(215,153,33,.3);
+  box-shadow:0 4px 16px rgba(34,197,94,.3);
 }
 .tab-panel{ display:none; }
 .tab-panel.active{ display:block; animation:panelIn .3s ease; }
@@ -719,7 +719,7 @@ body::after{
   outline:none;
 }
 .notify-form input:focus,
-.notify-form textarea:focus{ border-color:rgba(215,153,33,.5); }
+.notify-form textarea:focus{ border-color:rgba(34,197,94,.5); }
 .notify-form textarea{ min-height:100px; resize:vertical; }
 .notify-hint{
   font-size:.72rem;
@@ -743,7 +743,7 @@ body::after{
   padding:18px 24px 26px;
   color:rgba(251,236,210,.55);
   font-size:.78rem;
-  border-top:1px solid rgba(238,196,99,.15);
+  border-top:1px solid rgba(74,222,128,.15);
   margin-top:12px;
 }
 .admin-footer .foot-mark{
@@ -944,14 +944,6 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // ---- ESCAPE HELPER ----
-// Donation form fields (name, mobile, pauti, transaction ID) come from the
-// public-facing site, not just the admin. Without escaping, a malicious
-// donation submission could inject markup with an onerror/onload handler
-// that runs inside this admin dashboard the moment the Donations tab is
-// viewed — including reading localStorage (e.g. the OneSignal admin
-// secret) or acting on Firestore with the logged-in admin's session. Every
-// piece of user-supplied or Firestore-sourced text gets passed through
-// this before being placed into innerHTML.
 function escapeHtml(value){
   return String(value ?? "").replace(/[&<>"']/g, (c) => ({
     "&": "&amp;",
@@ -981,10 +973,6 @@ function showToast(msg, type="info"){
 window.showToast = showToast;
 
 // ---- AUTH ----
-// Same allowlist as admin-login.html. This is a UX convenience so a non-admin
-// account doesn't just sit on a broken-looking dashboard — the actual data
-// access control has to live in Firestore Security Rules, since anything
-// checked only here can be bypassed via devtools.
 const adminEmails = [
   "akarshsingh551@gmail.com",
   "ns008072@gmail.com",
@@ -1114,7 +1102,6 @@ window.loadGallery = async function(){
 window.loadCategoryStats = async function(){
   const snapshot = await getDocs(collection(db,"gallery"));
 
-  // Normalise any old lowercase/variant values to current standard
   const normalise = (cat) => {
     if(!cat) return "Memories";
     const c = cat.trim();
@@ -1136,10 +1123,10 @@ window.loadCategoryStats = async function(){
   snapshot.forEach(item => {
     const cat = normalise(item.data().category);
     if(count[cat] !== undefined) count[cat]++;
-    else count[cat] = 1; // unknown category still counted in total
+    else count[cat] = 1;
   });
 
-  const total = snapshot.size; // use actual Firestore doc count
+  const total = snapshot.size;
   document.getElementById("totalCount").textContent = total;
   document.getElementById("categoryStats").innerHTML = cats.map(c => `
     <div class="cat-item">
@@ -1181,7 +1168,6 @@ window.loadDonations = async function(){
   snapshot.forEach(item => {
     allDonations.push({ id: item.id, ...item.data() });
   });
-  // Sort newest first
   allDonations.sort((a,b) => {
     const ta = a.createdAt?.seconds || 0;
     const tb = b.createdAt?.seconds || 0;
@@ -1336,7 +1322,6 @@ window.exportDonationsExcel = function(){
     return;
   }
 
-  // Build rows — one per donation
   const rows = allDonations.map((d, i) => ({
     "Sr No": i + 1,
     "Name": d.name || "",
@@ -1354,26 +1339,23 @@ window.exportDonationsExcel = function(){
       : ""
   }));
 
-  // Create workbook
   const ws = XLSX.utils.json_to_sheet(rows);
 
-  // Column widths
   ws["!cols"] = [
-    {wch:6},  // Sr No
-    {wch:20}, // Name
-    {wch:14}, // Mobile
-    {wch:14}, // Pauti
-    {wch:12}, // Amount
-    {wch:24}, // Transaction ID
-    {wch:12}, // Status
-    {wch:50}, // Screenshot URL
-    {wch:22}, // Date
+    {wch:6},
+    {wch:20},
+    {wch:14},
+    {wch:14},
+    {wch:12},
+    {wch:24},
+    {wch:12},
+    {wch:50},
+    {wch:22},
   ];
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Donations");
 
-  // Generate filename with today's date
   const today = new Date().toLocaleDateString("en-IN", {
     day:"2-digit", month:"2-digit", year:"numeric"
   }).replace(/\//g,"-");
@@ -1437,7 +1419,6 @@ window.switchTab = function(name, btn){
 // ---- SEND NOTIFICATION (via Cloudflare Worker -> OneSignal) ----
 const NOTIFY_WORKER_URL = "https://kurarcha-notify.kurar-cha-ekdant2026.workers.dev";
 
-// Pre-fill saved admin secret if present
 window.addEventListener("DOMContentLoaded", function(){
   const saved = localStorage.getItem("kurarcha_admin_secret");
   if(saved) document.getElementById("notifySecret").value = saved;
