@@ -10,7 +10,8 @@
 <style>
 
 /* ===== RESET ===== */
-*{ box-sizing:border-box; margin:0; padding:0; }
+*{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+button, a, [onclick]{ -webkit-touch-callout:none; }
 
 /* ===== ROOT VARIABLES ===== */
 :root{
@@ -416,7 +417,6 @@ body::after{
   background:var(--glass);
   border:1px solid var(--glass-border);
   aspect-ratio:1/1;
-  group:true;
 }
 .photo-item img{
   width:100%;
@@ -544,7 +544,6 @@ body::after{
 
 
 /* DONATIONS TAB */
-.donations-section{ margin-top:28px; }
 
 .tab-bar{
   display:flex;
@@ -846,10 +845,10 @@ body::after{
   </div>
 
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="filterDonations('all')">All</button>
-    <button class="tab-btn" onclick="filterDonations('Pending')">⏳ Pending</button>
-    <button class="tab-btn" onclick="filterDonations('Approved')">✅ Approved</button>
-    <button class="tab-btn" onclick="filterDonations('Rejected')">❌ Rejected</button>
+    <button class="tab-btn active" data-filter="all" onclick="filterDonations('all', event)">All</button>
+    <button class="tab-btn" data-filter="Pending" onclick="filterDonations('Pending', event)">⏳ Pending</button>
+    <button class="tab-btn" data-filter="Approved" onclick="filterDonations('Approved', event)">✅ Approved</button>
+    <button class="tab-btn" data-filter="Rejected" onclick="filterDonations('Rejected', event)">❌ Rejected</button>
   </div>
 
   <div id="donationList"><div class="empty-donations">Loading donations...</div></div>
@@ -912,6 +911,26 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+// ---- ESCAPE HELPER ----
+// Donation form fields (name, mobile, pauti, transaction ID) come from the
+// public-facing site, not just the admin. Without escaping, a malicious
+// donation submission could inject markup with an onerror/onload handler
+// that runs inside this admin dashboard the moment the Donations tab is
+// viewed — including reading localStorage (e.g. the OneSignal admin
+// secret) or acting on Firestore with the logged-in admin's session. Every
+// piece of user-supplied or Firestore-sourced text gets passed through
+// this before being placed into innerHTML.
+function escapeHtml(value){
+  return String(value ?? "").replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[c]));
+}
+window.escapeHtml = escapeHtml;
 
 // ---- TOAST ----
 function showToast(msg, type="info"){
@@ -1163,11 +1182,11 @@ window.loadNotificationHistory = async function(){
         <div class="donation-card">
           <div class="d-row">
             <div>
-              <div class="d-name">${d.title || "(no title)"}</div>
-              <div class="d-meta" style="margin-top:6px;">${d.message || ""}</div>
+              <div class="d-name">${escapeHtml(d.title || "(no title)")}</div>
+              <div class="d-meta" style="margin-top:6px;">${escapeHtml(d.message || "")}</div>
               <div class="d-meta" style="margin-top:8px;">
-                <span>👤 ${d.sentBy || "unknown"}</span>
-                <span>🕒 ${when}</span>
+                <span>👤 ${escapeHtml(d.sentBy || "unknown")}</span>
+                <span>🕒 ${escapeHtml(when)}</span>
               </div>
             </div>
           </div>
@@ -1180,10 +1199,10 @@ window.loadNotificationHistory = async function(){
   }
 };
 
-window.filterDonations = function(filter){
+window.filterDonations = function(filter, evt){
   currentFilter = filter;
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-  event.target.classList.add("active");
+  (evt?.target || document.querySelector(`.tab-btn[data-filter="${filter}"]`))?.classList.add("active");
   renderDonations();
 };
 
@@ -1202,20 +1221,20 @@ function renderDonations(){
     <div class="donation-card">
       <div class="d-row">
         <div>
-          <div class="d-name">${d.name || "—"}</div>
+          <div class="d-name">${escapeHtml(d.name || "—")}</div>
           <div class="d-meta">
-            <span>📱 ${d.mobile || "—"}</span>
-            <span>🎫 ${d.pauti || "—"}</span>
-            <span>🔖 ${d.transactionId || "—"}</span>
+            <span>📱 ${escapeHtml(d.mobile || "—")}</span>
+            <span>🎫 ${escapeHtml(d.pauti || "—")}</span>
+            <span>🔖 ${escapeHtml(d.transactionId || "—")}</span>
           </div>
-          <span class="d-status status-${(d.status||"pending").toLowerCase()}">${d.status || "Pending"}</span>
+          <span class="d-status status-${escapeHtml((d.status||"pending").toLowerCase())}">${escapeHtml(d.status || "Pending")}</span>
         </div>
-        <div class="d-amount">₹${d.amount || "—"}</div>
+        <div class="d-amount">₹${escapeHtml(d.amount || "—")}</div>
       </div>
       
 
       <div class="d-actions">
-        ${d.screenshotUrl ? `<button class="btn-screenshot" onclick="window.open('${d.screenshotUrl}','_blank')">📷 Screenshot</button>` : ""}
+        ${d.screenshotUrl ? `<button class="btn-screenshot" onclick="window.open('${encodeURI(d.screenshotUrl)}','_blank')">📷 Screenshot</button>` : ""}
         <textarea id="comment-${d.id}"
 placeholder="Write reason / comment..."
 style="
@@ -1229,7 +1248,7 @@ color:white;
 resize:vertical;
 min-height:70px;
 font-family:Inter,sans-serif;
-">${d.adminComment || ""}</textarea>
+">${escapeHtml(d.adminComment || "")}</textarea>
         ${d.status !== "Approved" ? `<button class="btn-approve" onclick="updateDonation('${d.id}','Approved', document.getElementById('comment-${d.id}').value)">✅ Approve</button>` : ""}
         ${d.status !== "Rejected" ? `<button class="btn-reject" onclick="updateDonation('${d.id}','Rejected', document.getElementById('comment-${d.id}').value)">❌ Reject</button>` : ""}
       </div>
@@ -1349,6 +1368,14 @@ window.chooseCategory=function(value,text){
  document.getElementById("categoryPopup").style.display="none";
 
 }
+
+document.addEventListener("click", function(e){
+  const popup = document.getElementById("categoryPopup");
+  const trigger = document.querySelector(".select-box");
+  if(popup.style.display === "block" && !popup.contains(e.target) && !trigger.contains(e.target)){
+    popup.style.display = "none";
+  }
+});
 
 // ---- MAIN TAB SWITCHING ----
 window.switchTab = function(name, btn){
