@@ -27,7 +27,9 @@
 
 *{
 box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
 }
+button, a, [onclick]{ -webkit-touch-callout:none; }
 
 
 body{
@@ -387,7 +389,7 @@ const db=getFirestore(app);
 
 
 
-document.getElementById("year").innerHTML=new Date().getFullYear();
+document.getElementById("year").textContent=new Date().getFullYear();
 
 
 
@@ -398,75 +400,93 @@ const category=params.get("category");
 
 
 
-document.getElementById("title").innerHTML=category;
+// The category comes straight from the URL — never insert it via innerHTML,
+// since that would let anyone craft a link with HTML/script in it that runs
+// on this page. textContent always renders it as plain text, safely, and
+// also covers the case where no ?category= is present at all.
+document.getElementById("title").textContent = category || "Gallery";
 
 
 
-const q=query(
+const galleryEl = document.getElementById("gallery");
 
-collection(db,"gallery"),
+try {
 
-where("category","==",category)
+  const q=query(
 
-);
+  collection(db,"gallery"),
 
+  where("category","==",category)
 
-
-const snapshot=await getDocs(q);
-
-
-
-let html="";
+  );
 
 
 
-snapshot.forEach((doc)=>{
+  const snapshot=await getDocs(q);
 
+  if(snapshot.empty){
 
-const data=doc.data();
+    galleryEl.innerHTML = `
+      <div class="no-image">
+        🙏 No Images Available
+        <br>
+        Images will be uploaded soon.
+      </div>
+    `;
 
+  } else {
 
-html+=`
-<div class="card">
-  <img src="${data.imageUrl}" 
-       style="cursor:zoom-in;" 
-       onclick="openLightbox('${data.imageUrl}')" 
-       onerror="this.src='images/placeholder.jpg'">
-  <div style="display:flex;gap:8px;justify-content:center;margin-top:10px;">
-    <button class="btn" onclick="openLightbox('${data.imageUrl}')">🔍 View</button>
-    <button class="btn" onclick="downloadImage('${data.imageUrl}')">⬇ Download</button>
-  </div>
-</div>
-`;
+    galleryEl.innerHTML = "";
 
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      const url = data.imageUrl;
 
-});
+      const card = document.createElement("div");
+      card.className = "card";
 
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = category ? `${category} photo` : "Gallery photo";
+      img.style.cursor = "zoom-in";
+      img.loading = "lazy";
+      img.addEventListener("click", () => openLightbox(url));
+      img.addEventListener("error", function(){ this.src = "images/placeholder.jpg"; }, { once:true });
 
+      const actions = document.createElement("div");
+      actions.style.cssText = "display:flex;gap:8px;justify-content:center;margin-top:10px;";
 
+      const viewBtn = document.createElement("button");
+      viewBtn.className = "btn";
+      viewBtn.textContent = "🔍 View";
+      viewBtn.addEventListener("click", () => openLightbox(url));
 
-if(html===""){
+      const downloadBtn = document.createElement("button");
+      downloadBtn.className = "btn";
+      downloadBtn.textContent = "⬇ Download";
+      downloadBtn.addEventListener("click", () => downloadImage(url));
 
+      actions.appendChild(viewBtn);
+      actions.appendChild(downloadBtn);
+      card.appendChild(img);
+      card.appendChild(actions);
+      galleryEl.appendChild(card);
+    });
 
-html=`
+  }
 
-<div class="no-image">
+} catch(e){
 
-🙏 No Images Available
-
-<br>
-
-Images will be uploaded soon.
-
-</div>
-
-`;
+  console.warn("Failed to load gallery:", e);
+  galleryEl.innerHTML = `
+    <div class="no-image">
+      ⚠️ Couldn't load photos right now.
+      <br>
+      Please try again in a moment.
+    </div>
+  `;
 
 }
-
-
-
-document.getElementById("gallery").innerHTML=html;
 
 // Download image — using Cloudinary fl_attachment for direct download
 window.downloadImage = function(url){
