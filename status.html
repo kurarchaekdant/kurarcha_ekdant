@@ -19,6 +19,8 @@
 --font-body:'Mukta', sans-serif;
 --ink:#2a0f0c;
 }
+*{ -webkit-tap-highlight-color:transparent; }
+button, a, [onclick]{ -webkit-touch-callout:none; }
 body{
 margin:0;
 font-family:var(--font-body);
@@ -97,7 +99,7 @@ animation:fadeIn .25s;
 from{opacity:0;transform:translateY(-5px);}
 to{opacity:1;transform:translateY(0);}
 }
-footer{text-align:center;padding:20px}.foot-mark{font-family:'Yatra One',serif;color:var(--gold);display:block}
+footer{text-align:center;padding:10px 24px;font-size:.78rem;border-top:1px solid rgba(238,196,99,.2);}.foot-mark{font-family:'Yatra One',serif;color:var(--gold);font-size:.92rem;display:block;margin-bottom:2px;}
 </style>
 </head>
 <body>
@@ -146,7 +148,7 @@ Your Pauti Status
 
 </div>
 </div></main>
-<footer><span class="foot-mark">गणपती बाप्पा मोरया</span>© <span id="year"></span> Kurarcha Ekdant</footer>
+<footer><span class="foot-mark">गणपती बाप्पा मोरया</span><div>© <span id="year"></span> Kurarcha Ekdant · All Rights Reserved</div></footer>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -186,6 +188,13 @@ window.checkStatus=async()=>{
     showMessage("⚠️ Please enter your Pauti Number");
     return;
 }
+
+const btn = document.getElementById("checkBtn");
+const originalLabel = btn.textContent;
+btn.disabled = true;
+btn.textContent = "Checking...";
+
+try{
  const q=query(collection(db,"donations"),where("mobile","==",m),where("pauti","==",p));
  const s=await getDocs(q);
  if(s.empty){
@@ -255,6 +264,14 @@ if (d.adminComment && d.adminComment.trim() !== "") {
     document.getElementById("rComment").textContent = d.adminComment;
 } else {
     document.getElementById("commentRow").style.display = "none";
+}
+
+} catch(e){
+    console.warn("Status check failed:", e);
+    showMessage("⚠️ Couldn't check status right now. Please try again in a moment.");
+} finally {
+    btn.disabled = false;
+    btn.textContent = originalLabel;
 }
 }
 </script>
