@@ -14,7 +14,8 @@
 --font-body:'Mukta',sans-serif;  
 }  
   
-*{box-sizing:border-box;}  
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+button, a, [onclick]{ -webkit-touch-callout:none; }  
   
 body{  
 margin:0;  
@@ -46,8 +47,9 @@ color:var(--cream);
 }  
   
 .brand img{  
-width:55px;  
-height:55px;  
+width:65px;  
+height:65px;  
+flex-shrink:0;
 }  
   
 .brand-text{  
@@ -164,18 +166,19 @@ transform:translateY(-2px);
 /* FOOTER */  
 footer{  
 background:var(--maroon);  
-color:rgba(251,236,210,.7);  
+color:rgba(251,236,210,.6);  
 text-align:center;  
-padding:22px;  
-font-size:.85rem;  
+padding:10px 24px;  
+font-size:.78rem;  
 border-top:1px solid rgba(238,196,99,.2);  
 }  
   
 .foot-mark{  
 font-family:var(--font-display);  
 color:var(--gold);  
+font-size:.92rem;
 display:block;  
-margin-bottom:5px;  
+margin-bottom:2px;  
 }  
   
 /* UPI APP SELECTION */  
@@ -301,7 +304,7 @@ margin:0;
 margin-top:15px;  
 padding-top:15px;  
 border-top:1px solid rgba(238,196,99,.25);  
-}b  
+}  
   
 .form-error{  
   display:none;  
@@ -405,7 +408,7 @@ I have Pauti Number
 <input type="radio" name="pautiMode" onclick="setMode('dont')">  
 I don’t have Pauti Number  
 </label>  </div>  <input id="pauti" placeholder="Select an option above" disabled  
-oninput="this.value=this.value.toUpperCase()">
+oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9-]/g,'')">
 
 <button id="payBtn">Proceed To Pay</button>
 
@@ -460,9 +463,9 @@ OK
   <button type="button" id="goBackBtn" style="margin-top:18px;background:transparent;border:1px solid var(--gold);color:var(--gold);">Go Back</button>
   <button type="button" id="iPaidBtn" style="margin-top:10px;">I've Completed Payment</button>
 </div>  
-</div>  </div>  </main>  <footer>  
+</div>  </main>  <footer>  
 <span class="foot-mark">गणपती बाप्पा मोरया</span>  
-© <span id="year"></span> Kurarcha Ekdant  
+<div>© <span id="year"></span> Kurarcha Ekdant · All Rights Reserved</div>  
 </footer>  <script type="module">  
   
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";  
@@ -493,7 +496,7 @@ const db = getFirestore(app);
   
   
   
-document.getElementById("year").innerHTML =  
+document.getElementById("year").textContent =  
 new Date().getFullYear();  
   
   
@@ -502,7 +505,7 @@ const urlParams = new URLSearchParams(window.location.search);
   
 let amount = urlParams.get("amount") || 0;  
   
-document.getElementById("amount").innerHTML =  
+document.getElementById("amount").textContent =  
 "₹"+amount;  
 
 // If the page is opened without a valid amount, lock the whole form —
@@ -638,7 +641,7 @@ window.showFormError = function(msg){
   
 let box = document.getElementById("formError");  
   
-box.innerHTML = msg;  
+box.textContent = msg;  
 box.style.display = "block";  
 box.classList.add("show");  
   
@@ -748,7 +751,7 @@ document.getElementById("payBtn").style.display="none";
 document.getElementById("upiApps").style.display="block";  
 
 // populate QR now that the amount/pauti are finalized
-document.getElementById("qrAmt").innerHTML = amount;
+document.getElementById("qrAmt").textContent = amount;
 renderQrCode();
   
 }  
@@ -798,7 +801,7 @@ let selectedProofFile = null;
 function handleProofSelection(fileList){
   if(fileList && fileList.length > 0){
     selectedProofFile = fileList[0];
-    document.getElementById("proofPreviewName").innerHTML =
+    document.getElementById("proofPreviewName").textContent =
       "✅ Selected: " + selectedProofFile.name;
   }
 }
@@ -1002,8 +1005,11 @@ try {
   console.warn("Firestore save failed:", dbErr);
 }
 
-document.getElementById("successPauti").innerHTML =
-"Your Pauti Number: <b>"+pautiNumber+"</b>";
+const successPautiEl = document.getElementById("successPauti");
+successPautiEl.textContent = "Your Pauti Number: ";
+const pautiBold = document.createElement("b");
+pautiBold.textContent = pautiNumber;
+successPautiEl.appendChild(pautiBold);
 
 
 document.getElementById("finalSuccess").style.display="block";
@@ -1011,27 +1017,27 @@ document.getElementById("finalSuccess").style.display="block";
 
 // CREATE RECEIPT IMAGE
 
-document.getElementById("receiptName").innerHTML =
+document.getElementById("receiptName").textContent =
 "Name: " + document.getElementById("name").value;
 
 
-document.getElementById("receiptMobile").innerHTML =
+document.getElementById("receiptMobile").textContent =
 "Mobile: " + document.getElementById("mobile").value;
 
 
-document.getElementById("receiptAmount").innerHTML =
+document.getElementById("receiptAmount").textContent =
 "Amount: ₹" + amount;
 
 
-document.getElementById("receiptTxn").innerHTML =
+document.getElementById("receiptTxn").textContent =
 "Transaction ID: " + transactionId;
 
 
-document.getElementById("receiptPauti").innerHTML =
+document.getElementById("receiptPauti").textContent =
 "Pauti Number: " + pautiNumber;
 
 
-document.getElementById("receiptDate").innerHTML =
+document.getElementById("receiptDate").textContent =
 "Date: " + new Date().toLocaleString("en-IN", {
   day: "2-digit",
   month: "2-digit",
@@ -1079,7 +1085,7 @@ function showSuccess(msg){
 
 let box = document.getElementById("formSuccess");
 
-box.innerHTML = msg;
+box.textContent = msg;
 box.style.display="block";
 }
 document.getElementById("homeBtn").addEventListener("click", function(){
