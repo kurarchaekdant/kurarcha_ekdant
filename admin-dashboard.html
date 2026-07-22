@@ -653,7 +653,7 @@ body::after{
 /* ===== MAIN TAB NAVIGATION ===== */
 .main-tabs{
   display:grid;
-  grid-template-columns:1fr 1fr 1fr;
+  grid-template-columns:repeat(auto-fit, minmax(110px, 1fr));
   gap:8px;
   margin-bottom:24px;
   background:var(--glass);
@@ -728,6 +728,130 @@ body::after{
   color:var(--text-muted);
   min-height:20px;
 }
+
+/* ===== NET BALANCE CARD ===== */
+.balance-card{
+  grid-column:1 / -1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:14px;
+}
+.balance-card .bal-item{ text-align:center; flex:1; min-width:110px; }
+.balance-card .bal-label{
+  font-size:.68rem; font-weight:700; color:var(--text-muted);
+  letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px;
+}
+.balance-card .bal-num{ font-size:1.3rem; font-weight:800; }
+.bal-collected{ color:#4ade80; }
+.bal-expense{ color:#f87171; }
+.bal-net{ color:var(--gold-light); font-size:1.6rem; }
+.balance-card .bal-divider{ width:1px; align-self:stretch; background:var(--glass-border); }
+
+/* ===== TYPE FILTER / SOURCE TABS ===== */
+.type-tab-bar{ display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+.type-tab-btn{
+  padding:8px 16px; border-radius:999px; border:1px solid var(--glass-border);
+  background:var(--glass); color:var(--text-muted); font-size:.78rem; font-weight:700;
+  cursor:pointer; font-family:'Inter',sans-serif; transition:all .2s;
+}
+.type-tab-btn.active{
+  background:rgba(96,165,250,.15); border-color:rgba(96,165,250,.4); color:#93c5fd;
+}
+.type-badge{
+  display:inline-block; font-size:.65rem; font-weight:700; padding:2px 9px;
+  border-radius:999px; letter-spacing:.04em; text-transform:uppercase; margin-left:8px;
+}
+.type-online{ background:rgba(96,165,250,.12); color:#93c5fd; border:1px solid rgba(96,165,250,.3); }
+.type-cash{ background:rgba(215,153,33,.15); color:var(--gold-light); border:1px solid rgba(215,153,33,.3); }
+
+/* ===== PAID / UNPAID TOGGLE ===== */
+.paid-toggle{
+  display:inline-flex; align-items:center; gap:8px; cursor:pointer;
+  padding:8px 14px; border-radius:999px; border:1px solid var(--glass-border);
+  background:var(--glass); font-size:.78rem; font-weight:700; font-family:'Inter',sans-serif;
+  color:var(--text-muted); user-select:none;
+}
+.paid-toggle .switch{
+  width:34px; height:19px; border-radius:999px; background:rgba(255,255,255,.15);
+  position:relative; transition:background .2s; flex-shrink:0;
+}
+.paid-toggle .switch::after{
+  content:''; position:absolute; top:2px; left:2px; width:15px; height:15px;
+  border-radius:50%; background:#fff; transition:transform .2s;
+}
+.paid-toggle.is-paid .switch{ background:#22c55e; }
+.paid-toggle.is-paid .switch::after{ transform:translateX(15px); }
+.paid-toggle.is-paid{ color:#4ade80; }
+
+/* ===== DATE INPUT (dark theme) ===== */
+input[type="date"]{
+  width:100%; padding:12px 14px; background:rgba(255,255,255,.03);
+  border:1px solid var(--glass-border); border-radius:var(--radius-sm);
+  color:var(--text); font-family:'Inter',sans-serif; font-size:.9rem; outline:none;
+  color-scheme:dark;
+}
+input[type="date"]:focus{ border-color:rgba(215,153,33,.5); }
+
+/* ===== CASH ENTRY FORM ===== */
+.cash-form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
+.cash-form-grid .full{ grid-column:1 / -1; }
+.cash-form-grid label{
+  display:block; font-size:.72rem; font-weight:700; color:var(--text-muted);
+  letter-spacing:.04em; margin-bottom:6px;
+}
+.cash-form-grid input[type="text"], .cash-form-grid input[type="number"]{
+  width:100%; padding:12px 14px; background:rgba(255,255,255,.03);
+  border:1px solid var(--glass-border); border-radius:var(--radius-sm);
+  color:var(--text); font-family:'Inter',sans-serif; font-size:.9rem; outline:none;
+}
+.search-bar{
+  display:flex; gap:8px; margin-bottom:14px;
+}
+.search-bar input{
+  flex:1; padding:11px 14px; background:rgba(255,255,255,.03);
+  border:1px solid var(--glass-border); border-radius:var(--radius-sm);
+  color:var(--text); font-family:'Inter',sans-serif; font-size:.88rem; outline:none;
+}
+.search-bar button{
+  padding:11px 18px; border-radius:var(--radius-sm); border:none;
+  background:var(--gold-dim); color:var(--gold-light); font-weight:700;
+  font-size:.82rem; cursor:pointer; font-family:'Inter',sans-serif; white-space:nowrap;
+}
+
+/* ===== EXPENSE LIST ===== */
+.expense-card{
+  background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius);
+  padding:14px 18px; margin-bottom:10px; display:flex; justify-content:space-between;
+  align-items:center; gap:12px; flex-wrap:wrap;
+}
+.expense-card .exp-desc{ font-weight:700; font-size:.9rem; color:var(--text); }
+.expense-card .exp-meta{ font-size:.74rem; color:var(--text-muted); margin-top:4px; }
+.expense-card .exp-amount{ font-size:1.05rem; font-weight:800; color:#f87171; }
+.expense-card .del-exp-btn{
+  background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); color:#f87171;
+  padding:6px 12px; border-radius:8px; font-size:.72rem; font-weight:700; cursor:pointer;
+}
+
+/* ===== ADMIN MANAGEMENT ===== */
+.admin-row{
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+  background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius-sm);
+  padding:14px 16px; margin-bottom:10px; flex-wrap:wrap;
+}
+.admin-row .a-email{ font-weight:700; font-size:.88rem; color:var(--text); }
+.role-badge{
+  font-size:.65rem; font-weight:700; padding:3px 10px; border-radius:999px;
+  letter-spacing:.05em; text-transform:uppercase; margin-left:8px;
+}
+.role-super{ background:rgba(215,153,33,.15); color:var(--gold-light); border:1px solid rgba(215,153,33,.35); }
+.role-admin{ background:rgba(148,163,184,.12); color:var(--text-muted); border:1px solid var(--glass-border); }
+.remove-admin-btn{
+  background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); color:#f87171;
+  padding:6px 12px; border-radius:8px; font-size:.72rem; font-weight:700; cursor:pointer;
+}
+.locked-note{ font-size:.68rem; color:var(--text-dim); font-style:italic; }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -772,13 +896,31 @@ body::after{
         <div class="cat-item"><span class="cat-name">Loading...</span></div>
       </div>
     </div>
+    <div class="glass-card balance-card" id="balanceCard" style="display:none;">
+      <div class="bal-item">
+        <div class="bal-label">Collected</div>
+        <div class="bal-num bal-collected" id="balCollected">₹0</div>
+      </div>
+      <div class="bal-divider"></div>
+      <div class="bal-item">
+        <div class="bal-label">Expenses</div>
+        <div class="bal-num bal-expense" id="balExpense">₹0</div>
+      </div>
+      <div class="bal-divider"></div>
+      <div class="bal-item">
+        <div class="bal-label">Net Balance</div>
+        <div class="bal-num bal-net" id="balNet">₹0</div>
+      </div>
+    </div>
   </div>
 
   <!-- MAIN TABS -->
-  <div class="main-tabs">
+  <div class="main-tabs" id="mainTabs">
     <button class="main-tab-btn active" onclick="switchTab('gallery', this)">🖼 Gallery</button>
-    <button class="main-tab-btn" onclick="switchTab('donations', this)">💰 Donations</button>
     <button class="main-tab-btn" onclick="switchTab('notifications', this)">🔔 Notifications</button>
+    <button class="main-tab-btn super-only" onclick="switchTab('donations', this)" style="display:none;">💰 Donations</button>
+    <button class="main-tab-btn super-only" onclick="switchTab('expenses', this)" style="display:none;">📉 Expenses</button>
+    <button class="main-tab-btn super-only" onclick="switchTab('admins', this)" style="display:none;">👑 Admins</button>
   </div>
 
   <!-- GALLERY TAB -->
@@ -837,18 +979,71 @@ body::after{
 <!-- DONATIONS TAB -->
 <div id="tab-donations" class="tab-panel">
 <div class="gallery-section donations-section" style="margin-top:0; padding-top:0; border-top:none;">
-  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:10px;">
     <div class="section-title" style="margin-bottom:0;">Donations</div>
-    <button onclick="exportDonationsExcel()" style="margin:0; width:auto; padding:8px 16px; font-size:.78rem; background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.3); color:#4ade80; border-radius:8px; cursor:pointer; font-weight:700;">
-      ⬇ Export Excel
-    </button>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button onclick="toggleCashForm()" style="margin:0; width:auto; padding:8px 16px; font-size:.78rem; background:var(--gold-dim); border:1px solid rgba(215,153,33,.35); color:var(--gold-light); border-radius:8px; cursor:pointer; font-weight:700;">
+        ➕ Add Cash Entry
+      </button>
+      <button onclick="exportDonationsExcel()" style="margin:0; width:auto; padding:8px 16px; font-size:.78rem; background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.3); color:#4ade80; border-radius:8px; cursor:pointer; font-weight:700;">
+        ⬇ Export Excel
+      </button>
+    </div>
+  </div>
+
+  <!-- Cash entry form (hidden until "+ Add Cash Entry" is tapped) -->
+  <div class="glass-card" id="cashEntryForm" style="display:none; margin-bottom:20px;">
+    <div class="section-title" style="margin-bottom:4px;">New Cash / Door-to-Door Entry</div>
+    <div class="cash-form-grid">
+      <div>
+        <label for="cashName">Donor Name</label>
+        <input type="text" id="cashName" placeholder="As written on the Pauti">
+      </div>
+      <div>
+        <label for="cashPauti">Pauti Number</label>
+        <input type="text" id="cashPauti" placeholder="e.g. 001" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9-]/g,'')">
+      </div>
+      <div>
+        <label for="cashAmount">Amount (₹)</label>
+        <input type="number" id="cashAmount" placeholder="e.g. 501" min="1">
+      </div>
+      <div>
+        <label for="cashDate">Date</label>
+        <input type="date" id="cashDate">
+      </div>
+      <div class="full">
+        <label>Payment Status</label>
+        <div class="paid-toggle" id="cashPaidToggle" onclick="this.classList.toggle('is-paid'); document.getElementById('cashPaidLabel').textContent = this.classList.contains('is-paid') ? 'Paid' : 'Unpaid';">
+          <span class="switch"></span>
+          <span id="cashPaidLabel">Unpaid</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:16px;">
+      <button class="btn-upload" style="margin:0;" onclick="submitCashEntry()">Save Entry</button>
+      <button onclick="toggleCashForm()" style="margin:0; width:auto; padding:13px 20px; background:var(--glass); border:1px solid var(--glass-border); color:var(--text-muted); border-radius:var(--radius-sm); cursor:pointer; font-weight:700; font-family:'Inter',sans-serif;">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Quick search to find a Pauti and flip Paid/Unpaid -->
+  <div class="search-bar">
+    <input type="text" id="pautiSearchInput" placeholder="🔍 Search by Pauti number..." oninput="filterDonations(currentFilter, null)">
+    <button onclick="document.getElementById('pautiSearchInput').value=''; filterDonations(currentFilter, null);">Clear</button>
+  </div>
+
+  <div class="type-tab-bar">
+    <button class="type-tab-btn active" data-type="all" onclick="filterByType('all', event)">All</button>
+    <button class="type-tab-btn" data-type="online" onclick="filterByType('online', event)">🌐 Online</button>
+    <button class="type-tab-btn" data-type="cash" onclick="filterByType('cash', event)">💵 Cash</button>
   </div>
 
   <div class="tab-bar">
-    <button class="tab-btn active" data-filter="all" onclick="filterDonations('all', event)">All</button>
+    <button class="tab-btn active" data-filter="all" onclick="filterDonations('all', event)">All Status</button>
     <button class="tab-btn" data-filter="Pending" onclick="filterDonations('Pending', event)">⏳ Pending</button>
     <button class="tab-btn" data-filter="Approved" onclick="filterDonations('Approved', event)">✅ Approved</button>
     <button class="tab-btn" data-filter="Rejected" onclick="filterDonations('Rejected', event)">❌ Rejected</button>
+    <button class="tab-btn" data-filter="Unpaid" onclick="filterDonations('Unpaid', event)">💵 Unpaid</button>
+    <button class="tab-btn" data-filter="Paid" onclick="filterDonations('Paid', event)">✅ Paid</button>
   </div>
 
   <div id="donationList"><div class="empty-donations">Loading donations...</div></div>
@@ -879,6 +1074,74 @@ body::after{
   </div>
 </div><!-- /tab-notifications -->
 
+<!-- EXPENSES TAB (Super Admin only) -->
+<div id="tab-expenses" class="tab-panel">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+    <div class="section-title" style="margin-bottom:0;">Add Expense</div>
+  </div>
+  <div class="glass-card">
+    <div class="cash-form-grid">
+      <div class="full">
+        <label for="expDesc">Description</label>
+        <input type="text" id="expDesc" placeholder="e.g. Decoration - flowers &amp; lighting">
+      </div>
+      <div>
+        <label for="expCategory">Category</label>
+        <select id="expCategory" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid var(--glass-border);border-radius:var(--radius-sm);color:var(--text);font-family:'Inter',sans-serif;font-size:.9rem;">
+          <option>Decoration</option>
+          <option>Priest / Puja</option>
+          <option>Catering / Prasad</option>
+          <option>Sound &amp; Lighting</option>
+          <option>Immersion (Visarjan)</option>
+          <option>Printing / Stationery</option>
+          <option>Miscellaneous</option>
+        </select>
+      </div>
+      <div>
+        <label for="expAmount">Amount (₹)</label>
+        <input type="number" id="expAmount" placeholder="e.g. 2500" min="1">
+      </div>
+      <div class="full">
+        <label for="expDate">Date</label>
+        <input type="date" id="expDate">
+      </div>
+    </div>
+    <button class="btn-upload" style="margin-top:16px;" onclick="addExpense()">➕ Add Expense</button>
+  </div>
+
+  <div class="section-title" style="margin-top:28px; display:flex; align-items:center; justify-content:space-between;">
+    <span>All Expenses</span>
+    <button onclick="exportExpensesExcel()" style="margin:0; width:auto; padding:8px 16px; font-size:.78rem; background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.3); color:#4ade80; border-radius:8px; cursor:pointer; font-weight:700;">
+      ⬇ Export Excel
+    </button>
+  </div>
+  <div id="expenseList"><div class="empty-donations">Loading expenses...</div></div>
+</div><!-- /tab-expenses -->
+
+<!-- ADMIN MANAGEMENT TAB (Super Admin only) -->
+<div id="tab-admins" class="tab-panel">
+  <div class="section-title">Add Admin</div>
+  <div class="glass-card">
+    <div class="cash-form-grid">
+      <div>
+        <label for="newAdminEmail">Email</label>
+        <input type="text" id="newAdminEmail" placeholder="someone@gmail.com">
+      </div>
+      <div>
+        <label for="newAdminRole">Role</label>
+        <select id="newAdminRole" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid var(--glass-border);border-radius:var(--radius-sm);color:var(--text);font-family:'Inter',sans-serif;font-size:.9rem;">
+          <option value="admin">Admin — Gallery &amp; Notifications only</option>
+          <option value="super_admin">Super Admin — Full access</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-upload" style="margin-top:16px;" onclick="addAdmin()">➕ Add Admin</button>
+  </div>
+
+  <div class="section-title" style="margin-top:28px;">Current Admins</div>
+  <div id="adminsList"><div class="empty-donations">Loading admins...</div></div>
+</div><!-- /tab-admins -->
+
 <!-- Confirm Delete Modal -->
 <div id="confirmBox">
   <div class="confirm-card">
@@ -897,7 +1160,7 @@ body::after{
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, serverTimestamp, getDocs, deleteDoc, doc, updateDoc, getDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, serverTimestamp, getDocs, deleteDoc, doc, updateDoc, getDoc, setDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCbieOt2IpLohjduy1Qs0NqVgYIrT28M9M",
@@ -946,33 +1209,81 @@ function showToast(msg, type="info"){
 }
 window.showToast = showToast;
 
-// ---- AUTH ----
-// Same allowlist as admin-login.html. This is a UX convenience so a non-admin
-// account doesn't just sit on a broken-looking dashboard — the actual data
-// access control has to live in Firestore Security Rules, since anything
-// checked only here can be bypassed via devtools.
-const adminEmails = [
+// ---- AUTH & ROLES ----
+// Same founder allowlist as admin-login.html. Founders are ALWAYS treated
+// as Super Admin, with or without a matching doc in the "admins" collection
+// — this is a deliberate safety net so the two original site owners can
+// never lock themselves out, even if the "admins" collection is empty,
+// broken, or misconfigured. Everyone else's access is looked up from the
+// "admins" Firestore collection, managed via the Admins tab.
+// This is a UX convenience only — the real access control has to live in
+// Firestore Security Rules, since anything checked only here can be
+// bypassed via devtools.
+const founderEmails = [
   "akarshsingh551@gmail.com",
   "ns008072@gmail.com",
 ];
 
-onAuthStateChanged(auth, (user) => {
+window.currentRole = null;   // "super_admin" | "admin"
+window.currentEmail = null;
+
+async function resolveRole(email){
+  const lower = (email || "").toLowerCase();
+  if(founderEmails.map(e => e.toLowerCase()).includes(lower)){
+    return "super_admin";
+  }
+  try{
+    const snap = await getDoc(doc(db, "admins", lower));
+    if(snap.exists()){
+      return snap.data().role === "super_admin" ? "super_admin" : "admin";
+    }
+  } catch(e){
+    console.warn("Failed to resolve admin role:", e);
+  }
+  return null; // not an admin at all
+}
+
+function applyRoleUI(role){
+  const isSuper = role === "super_admin";
+  document.querySelectorAll(".super-only").forEach(el => {
+    el.style.display = isSuper ? "" : "none";
+  });
+  const balanceCard = document.getElementById("balanceCard");
+  if(balanceCard) balanceCard.style.display = isSuper ? "flex" : "none";
+}
+
+onAuthStateChanged(auth, async (user) => {
   if(!user){
     window.location.replace("index.html");
     return;
   }
-  const allowed = adminEmails.map(e => e.toLowerCase()).includes((user.email || "").toLowerCase());
-  if(!allowed){
+
+  const role = await resolveRole(user.email);
+  if(!role){
+    // Signed in with valid Firebase credentials, but not on the admin list at all.
     signOut(auth).then(() => window.location.replace("index.html"));
     return;
   }
+
+  window.currentRole = role;
+  window.currentEmail = (user.email || "").toLowerCase();
+
+  applyRoleUI(role);
+
   document.body.style.display = "block";
-  document.getElementById("adminEmail").textContent = user.email;
+  document.getElementById("adminEmail").textContent =
+    user.email + (role === "super_admin" ? " · Super Admin" : " · Admin");
+
   loadGallery();
   loadCategoryStats();
   loadVisitorCount();
-  loadDonations();
   loadNotificationHistory();
+
+  if(role === "super_admin"){
+    loadDonations();
+    loadExpenses();
+    loadAdmins();
+  }
 });
 
 // ---- LOGOUT ----
@@ -1140,6 +1451,7 @@ document.getElementById("cancelDelete").onclick = function(){
 // ---- DONATIONS ----
 let allDonations = [];
 let currentFilter = "all";
+let currentTypeFilter = "all";
 
 window.loadDonations = async function(){
   const snapshot = await getDocs(collection(db, "donations"));
@@ -1154,6 +1466,7 @@ window.loadDonations = async function(){
     return tb - ta;
   });
   renderDonations();
+  updateBalance();
 };
 
 // ---- NOTIFICATION HISTORY ----
@@ -1221,22 +1534,64 @@ window.filterDonations = function(filter, evt){
   renderDonations();
 };
 
+window.filterByType = function(type, evt){
+  currentTypeFilter = type;
+  document.querySelectorAll(".type-tab-btn").forEach(b => b.classList.remove("active"));
+  (evt?.target || document.querySelector(`.type-tab-btn[data-type="${type}"]`))?.classList.add("active");
+  renderDonations();
+};
+
 function renderDonations(){
   const list = document.getElementById("donationList");
-  const filtered = currentFilter === "all"
-    ? allDonations
-    : allDonations.filter(d => d.status === currentFilter);
+  const searchEl = document.getElementById("pautiSearchInput");
+  const search = (searchEl?.value || "").trim().toUpperCase();
+
+  let filtered = allDonations.filter(d => {
+    const type = d.type || "online"; // records created before this feature default to online
+    if(currentTypeFilter !== "all" && type !== currentTypeFilter) return false;
+    if(currentFilter !== "all" && d.status !== currentFilter) return false;
+    if(search && !(d.pauti || "").toUpperCase().includes(search)) return false;
+    return true;
+  });
 
   if(filtered.length === 0){
-    list.innerHTML = `<div class="empty-donations">No ${currentFilter === "all" ? "" : currentFilter.toLowerCase() + " "}donations yet</div>`;
+    list.innerHTML = `<div class="empty-donations">No matching donations found</div>`;
     return;
   }
 
-  list.innerHTML = filtered.map(d => `
+  list.innerHTML = filtered.map(d => {
+    const type = d.type || "online";
+
+    if(type === "cash"){
+      const isPaid = d.status === "Paid";
+      return `
+        <div class="donation-card">
+          <div class="d-row">
+            <div>
+              <div class="d-name">${escapeHtml(d.name || "—")} <span class="type-badge type-cash">💵 Cash</span></div>
+              <div class="d-meta">
+                <span>🎫 ${escapeHtml(d.pauti || "—")}</span>
+                <span>📅 ${escapeHtml(d.date || "—")}</span>
+              </div>
+            </div>
+            <div class="d-amount">₹${escapeHtml(d.amount || "—")}</div>
+          </div>
+          <div class="d-actions">
+            <div class="paid-toggle ${isPaid ? "is-paid" : ""}" onclick="toggleCashPaid('${d.id}','${d.status}')">
+              <span class="switch"></span>
+              <span>${isPaid ? "Paid" : "Unpaid"}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Online (UPI) donation — existing flow
+    return `
     <div class="donation-card">
       <div class="d-row">
         <div>
-          <div class="d-name">${escapeHtml(d.name || "—")}</div>
+          <div class="d-name">${escapeHtml(d.name || "—")} <span class="type-badge type-online">🌐 Online</span></div>
           <div class="d-meta">
             <span>📱 ${escapeHtml(d.mobile || "—")}</span>
             <span>🎫 ${escapeHtml(d.pauti || "—")}</span>
@@ -1246,7 +1601,7 @@ function renderDonations(){
         </div>
         <div class="d-amount">₹${escapeHtml(d.amount || "—")}</div>
       </div>
-      
+
 
       <div class="d-actions">
         ${d.screenshotUrl ? `<button class="btn-screenshot" onclick="window.open('${encodeURI(d.screenshotUrl)}','_blank')">📷 Screenshot</button>` : ""}
@@ -1268,7 +1623,8 @@ font-family:'Inter',sans-serif;
         ${d.status !== "Rejected" ? `<button class="btn-reject" onclick="updateDonation('${d.id}','Rejected', document.getElementById('comment-${d.id}').value)">❌ Reject</button>` : ""}
       </div>
     </div>
-  `).join("");
+  `;
+  }).join("");
 }
 
 window.updateDonation = async function(id, status, comment){
@@ -1295,6 +1651,267 @@ window.updateDonation = async function(id, status, comment){
 
   }
 };
+
+// ---- CASH / DOOR-TO-DOOR ENTRIES ----
+window.toggleCashForm = function(){
+  const form = document.getElementById("cashEntryForm");
+  const showing = form.style.display !== "none";
+  form.style.display = showing ? "none" : "block";
+  if(!showing){
+    // default the date picker to today when opening
+    const dateInput = document.getElementById("cashDate");
+    if(dateInput && !dateInput.value){
+      dateInput.value = new Date().toISOString().split("T")[0];
+    }
+  }
+};
+
+window.submitCashEntry = async function(){
+  const name = document.getElementById("cashName").value.trim();
+  const pauti = document.getElementById("cashPauti").value.trim();
+  const amount = document.getElementById("cashAmount").value.trim();
+  const dateVal = document.getElementById("cashDate").value;
+  const isPaid = document.getElementById("cashPaidToggle").classList.contains("is-paid");
+
+  if(!name){ showToast("⚠️ Enter the donor's name", "error"); return; }
+  if(!pauti){ showToast("⚠️ Enter the Pauti number", "error"); return; }
+  if(!amount || Number(amount) <= 0){ showToast("⚠️ Enter a valid amount", "error"); return; }
+  if(!dateVal){ showToast("⚠️ Pick a date", "error"); return; }
+
+  try{
+    await addDoc(collection(db, "donations"), {
+      type: "cash",
+      name: name,
+      pauti: pauti,
+      amount: amount,
+      date: dateVal,
+      status: isPaid ? "Paid" : "Unpaid",
+      addedBy: window.currentEmail || "unknown",
+      createdAt: serverTimestamp()
+    });
+
+    showToast("✅ Cash entry saved", "success");
+
+    // reset form
+    document.getElementById("cashName").value = "";
+    document.getElementById("cashPauti").value = "";
+    document.getElementById("cashAmount").value = "";
+    document.getElementById("cashPaidToggle").classList.remove("is-paid");
+    document.getElementById("cashPaidLabel").textContent = "Unpaid";
+    document.getElementById("cashEntryForm").style.display = "none";
+
+    loadDonations();
+
+  } catch(e){
+    showToast("❌ Failed to save: " + e.message, "error");
+  }
+};
+
+window.toggleCashPaid = async function(id, currentStatus){
+  const newStatus = currentStatus === "Paid" ? "Unpaid" : "Paid";
+  try{
+    await updateDoc(doc(db, "donations", id), {
+      status: newStatus,
+      reviewedAt: serverTimestamp()
+    });
+    showToast(newStatus === "Paid" ? "✅ Marked as Paid" : "💵 Marked as Unpaid", "success");
+    loadDonations();
+  } catch(e){
+    showToast("❌ Update failed: " + e.message, "error");
+  }
+};
+
+// ---- EXPENSES ----
+let allExpenses = [];
+
+window.loadExpenses = async function(){
+  const list = document.getElementById("expenseList");
+  if(!list) return;
+  try{
+    const snapshot = await getDocs(collection(db, "expenses"));
+    allExpenses = [];
+    snapshot.forEach(item => allExpenses.push({ id: item.id, ...item.data() }));
+    allExpenses.sort((a,b) => {
+      const ta = a.createdAt?.seconds || 0;
+      const tb = b.createdAt?.seconds || 0;
+      return tb - ta;
+    });
+    renderExpenses();
+    updateBalance();
+  } catch(e){
+    list.innerHTML = '<div class="empty-donations">Failed to load expenses</div>';
+    console.warn("loadExpenses failed:", e);
+  }
+};
+
+function renderExpenses(){
+  const list = document.getElementById("expenseList");
+  if(allExpenses.length === 0){
+    list.innerHTML = '<div class="empty-donations">No expenses recorded yet</div>';
+    return;
+  }
+  list.innerHTML = allExpenses.map(x => `
+    <div class="expense-card">
+      <div>
+        <div class="exp-desc">${escapeHtml(x.description || "—")}</div>
+        <div class="exp-meta">${escapeHtml(x.category || "Miscellaneous")} · 📅 ${escapeHtml(x.date || "—")}</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="exp-amount">₹${escapeHtml(x.amount || "0")}</div>
+        <button class="del-exp-btn" onclick="deleteExpense('${x.id}')">🗑 Delete</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+window.addExpense = async function(){
+  const desc = document.getElementById("expDesc").value.trim();
+  const category = document.getElementById("expCategory").value;
+  const amount = document.getElementById("expAmount").value.trim();
+  const dateVal = document.getElementById("expDate").value;
+
+  if(!desc){ showToast("⚠️ Enter a description", "error"); return; }
+  if(!amount || Number(amount) <= 0){ showToast("⚠️ Enter a valid amount", "error"); return; }
+  if(!dateVal){ showToast("⚠️ Pick a date", "error"); return; }
+
+  try{
+    await addDoc(collection(db, "expenses"), {
+      description: desc,
+      category: category,
+      amount: amount,
+      date: dateVal,
+      addedBy: window.currentEmail || "unknown",
+      createdAt: serverTimestamp()
+    });
+
+    showToast("✅ Expense added", "success");
+    document.getElementById("expDesc").value = "";
+    document.getElementById("expAmount").value = "";
+    loadExpenses();
+
+  } catch(e){
+    showToast("❌ Failed to add expense: " + e.message, "error");
+  }
+};
+
+window.deleteExpense = async function(id){
+  if(!confirm("Delete this expense? This can't be undone.")) return;
+  try{
+    await deleteDoc(doc(db, "expenses", id));
+    showToast("🗑 Expense deleted", "success");
+    loadExpenses();
+  } catch(e){
+    showToast("❌ Delete failed: " + e.message, "error");
+  }
+};
+
+function updateBalance(){
+  const collected = allDonations.reduce((sum, d) => {
+    const type = d.type || "online";
+    const counted = (type === "online" && d.status === "Approved") || (type === "cash" && d.status === "Paid");
+    return counted ? sum + (Number(d.amount) || 0) : sum;
+  }, 0);
+
+  const spent = allExpenses.reduce((sum, x) => sum + (Number(x.amount) || 0), 0);
+
+  const collectedEl = document.getElementById("balCollected");
+  const expenseEl = document.getElementById("balExpense");
+  const netEl = document.getElementById("balNet");
+  if(collectedEl) collectedEl.textContent = "₹" + collected.toLocaleString("en-IN");
+  if(expenseEl) expenseEl.textContent = "₹" + spent.toLocaleString("en-IN");
+  if(netEl) netEl.textContent = "₹" + (collected - spent).toLocaleString("en-IN");
+}
+
+// ---- ADMIN MANAGEMENT (Super Admin only) ----
+window.loadAdmins = async function(){
+  const list = document.getElementById("adminsList");
+  if(!list) return;
+  list.innerHTML = '<div class="empty-donations">Loading admins...</div>';
+
+  try{
+    const snapshot = await getDocs(collection(db, "admins"));
+    const extraAdmins = [];
+    snapshot.forEach(item => {
+      const emailLower = item.id.toLowerCase();
+      if(!founderEmails.map(e=>e.toLowerCase()).includes(emailLower)){
+        extraAdmins.push({ email: item.id, ...item.data() });
+      }
+    });
+
+    let html = "";
+
+    founderEmails.forEach(email => {
+      html += `
+        <div class="admin-row">
+          <div>
+            <span class="a-email">${escapeHtml(email)}</span>
+            <span class="role-badge role-super">Super Admin</span>
+          </div>
+          <span class="locked-note">🔒 Founder — can't be removed here</span>
+        </div>
+      `;
+    });
+
+    extraAdmins.forEach(a => {
+      const isSuper = a.role === "super_admin";
+      html += `
+        <div class="admin-row">
+          <div>
+            <span class="a-email">${escapeHtml(a.email)}</span>
+            <span class="role-badge ${isSuper ? "role-super" : "role-admin"}">${isSuper ? "Super Admin" : "Admin"}</span>
+          </div>
+          <button class="remove-admin-btn" onclick="removeAdmin('${escapeHtml(a.email)}')">🗑 Remove</button>
+        </div>
+      `;
+    });
+
+    list.innerHTML = html;
+
+  } catch(e){
+    list.innerHTML = '<div class="empty-donations">Failed to load admins</div>';
+    console.warn("loadAdmins failed:", e);
+  }
+};
+
+window.addAdmin = async function(){
+  const emailInput = document.getElementById("newAdminEmail");
+  const roleInput = document.getElementById("newAdminRole");
+  const email = emailInput.value.trim().toLowerCase();
+  const role = roleInput.value;
+
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    showToast("⚠️ Enter a valid email address", "error");
+    return;
+  }
+  if(founderEmails.map(e=>e.toLowerCase()).includes(email)){
+    showToast("⚠️ This email is already a founder Super Admin", "error");
+    return;
+  }
+
+  try{
+    await setDoc(doc(db, "admins", email), {
+      role: role,
+      addedBy: window.currentEmail || "unknown",
+      addedAt: serverTimestamp()
+    });
+    showToast("✅ Admin added", "success");
+    emailInput.value = "";
+    loadAdmins();
+  } catch(e){
+    showToast("❌ Failed to add admin: " + e.message, "error");
+  }
+};
+
+window.removeAdmin = async function(email){
+  if(!confirm(`Remove admin access for ${email}?`)) return;
+  try{
+    await deleteDoc(doc(db, "admins", email.toLowerCase()));
+    showToast("🗑 Admin removed", "success");
+    loadAdmins();
+  } catch(e){
+    showToast("❌ Failed to remove: " + e.message, "error");
+  }
+};
 // ---- EXPORT DONATIONS TO EXCEL ----
 window.exportDonationsExcel = function(){
   if(!allDonations || allDonations.length === 0){
@@ -1302,23 +1919,30 @@ window.exportDonationsExcel = function(){
     return;
   }
 
-  // Build rows — one per donation
-  const rows = allDonations.map((d, i) => ({
-    "Sr No": i + 1,
-    "Name": d.name || "",
-    "Mobile": d.mobile || "",
-    "Pauti Number": d.pauti || "",
-    "Amount (₹)": d.amount || "",
-    "Transaction ID": d.transactionId || "",
-    "Status": d.status || "Pending",
-    "Screenshot URL": d.screenshotUrl || "",
-    "Date": d.createdAt?.seconds
-      ? new Date(d.createdAt.seconds * 1000).toLocaleString("en-IN", {
-          day:"2-digit", month:"2-digit", year:"numeric",
-          hour:"2-digit", minute:"2-digit", hour12:true
-        })
-      : ""
-  }));
+  // Build rows — one per donation, Online and Cash combined in the same sheet
+  const rows = allDonations.map((d, i) => {
+    const type = d.type || "online";
+    const isCash = type === "cash";
+    return {
+      "Sr No": i + 1,
+      "Type": isCash ? "Cash" : "Online",
+      "Name": d.name || "",
+      "Mobile": isCash ? "" : (d.mobile || ""),
+      "Pauti Number": d.pauti || "",
+      "Amount (₹)": d.amount || "",
+      "Transaction ID": isCash ? "" : (d.transactionId || ""),
+      "Status": d.status || (isCash ? "Unpaid" : "Pending"),
+      "Screenshot URL": isCash ? "" : (d.screenshotUrl || ""),
+      "Date": isCash
+        ? (d.date || "")
+        : (d.createdAt?.seconds
+            ? new Date(d.createdAt.seconds * 1000).toLocaleString("en-IN", {
+                day:"2-digit", month:"2-digit", year:"numeric",
+                hour:"2-digit", minute:"2-digit", hour12:true
+              })
+            : "")
+    };
+  });
 
   // Create workbook
   const ws = XLSX.utils.json_to_sheet(rows);
@@ -1326,6 +1950,7 @@ window.exportDonationsExcel = function(){
   // Column widths
   ws["!cols"] = [
     {wch:6},  // Sr No
+    {wch:9},  // Type
     {wch:20}, // Name
     {wch:14}, // Mobile
     {wch:14}, // Pauti
@@ -1345,6 +1970,35 @@ window.exportDonationsExcel = function(){
   }).replace(/\//g,"-");
 
   XLSX.writeFile(wb, "KurarchaEkdant-Donations-" + today + ".xlsx");
+  showToast("✅ Excel downloaded!", "success");
+};
+
+window.exportExpensesExcel = function(){
+  if(!allExpenses || allExpenses.length === 0){
+    showToast("⚠️ No expenses to export", "info");
+    return;
+  }
+
+  const rows = allExpenses.map((x, i) => ({
+    "Sr No": i + 1,
+    "Description": x.description || "",
+    "Category": x.category || "",
+    "Amount (₹)": x.amount || "",
+    "Date": x.date || "",
+    "Added By": x.addedBy || ""
+  }));
+
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws["!cols"] = [{wch:6},{wch:34},{wch:20},{wch:12},{wch:14},{wch:26}];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Expenses");
+
+  const today = new Date().toLocaleDateString("en-IN", {
+    day:"2-digit", month:"2-digit", year:"numeric"
+  }).replace(/\//g,"-");
+
+  XLSX.writeFile(wb, "KurarchaEkdant-Expenses-" + today + ".xlsx");
   showToast("✅ Excel downloaded!", "success");
 };
 
