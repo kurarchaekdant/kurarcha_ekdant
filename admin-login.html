@@ -573,6 +573,12 @@ import {
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+import {
+  getFirestore,
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyCbieOt2IpLohjduy1Qs0NqVgYIrT28M9M",
@@ -589,22 +595,39 @@ const app = initializeApp(firebaseConfig);
 
 
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-// Add more Admin email
-const adminEmails = [
+// Founders always have access, with or without a matching Firestore doc —
+// same safety net as admin-dashboard.html, so these two accounts can never
+// be locked out. Everyone else is looked up from the "admins" collection,
+// which is managed from the dashboard's Admins tab. Both files must agree
+// on who's allowed in, or an admin added via the dashboard would be
+// rejected right here at login, before ever reaching the dashboard.
+const founderEmails = [
   "akarshsingh551@gmail.com",
   "ns008072@gmail.com",
 ];
 
+async function isAuthorized(email){
+  const lower = (email || "").toLowerCase();
+  if(founderEmails.map(e => e.toLowerCase()).includes(lower)) return true;
+  try{
+    const snap = await getDoc(doc(db, "admins", lower));
+    return snap.exists();
+  } catch(e){
+    console.warn("Failed to check admin list:", e);
+    return false;
+  }
+}
+
 window.loginFirebase = function(email,password){
 
-  return signInWithEmailAndPassword(auth,email,password).then((cred) => {
+  return signInWithEmailAndPassword(auth,email,password).then(async (cred) => {
     // Password was correct, but only allowlisted emails may actually use
     // this dashboard. Reject and sign out anyone else immediately — this
     // is a UX convenience only; the real enforcement is in Firestore
     // Security Rules, since anything client-side can be bypassed via devtools.
-    const authedEmail = (cred.user.email || "").toLowerCase();
-    const allowed = adminEmails.map(e => e.toLowerCase()).includes(authedEmail);
+    const allowed = await isAuthorized(cred.user.email);
     if(!allowed){
       return signOut(auth).then(() => Promise.reject({ code: "auth/not-authorized" }));
     }
@@ -631,7 +654,7 @@ window.closeReset = () => {
 
 
 
-window.sendReset = function(){
+window.sendReset = async function(){
 
   const email = document.getElementById("resetEmail").value.trim();
 
@@ -644,7 +667,8 @@ window.sendReset = function(){
   }
 
 
-  if(!adminEmails.includes(email)){
+  const allowed = await isAuthorized(email);
+  if(!allowed){
 
     showMessage("Access Denied");
     return;
